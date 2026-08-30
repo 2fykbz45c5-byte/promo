@@ -1,0 +1,6592 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>StudyPulse — Organise tes études</title>
+
+<meta
+    name="description"
+    content="StudyPulse aide les élèves tunisiens à organiser leurs études, leurs tâches, leur emploi du temps et leurs révisions."
+>
+
+<meta name="theme-color" content="#6366f1">
+
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+<style>
+
+/* =========================================================
+   STUDYPULSE — PREMIUM LANDING PAGE
+   COMPLETE / RESPONSIVE / MULTILINGUAL
+========================================================= */
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px;
+}
+
+body {
+    font-family:
+        "Inter",
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background:
+        radial-gradient(
+            circle at 15% 10%,
+            rgba(99,102,241,.07),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 20%,
+            rgba(124,58,237,.06),
+            transparent 30%
+        ),
+        #f8f9fd;
+
+    color: #111827;
+    line-height: 1.6;
+
+    overflow-x: hidden;
+}
+
+::selection {
+    background: #6366f1;
+    color: #ffffff;
+}
+
+body,
+button,
+select,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+select {
+    font: inherit;
+}
+
+button {
+    border: 0;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+.container {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root {
+
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --secondary: #7c3aed;
+    --accent: #8b5cf6;
+
+    --text: #111827;
+    --text-soft: #374151;
+    --muted: #6b7280;
+
+    --white: #ffffff;
+    --bg: #f8f9fd;
+    --surface: #ffffff;
+    --surface-soft: #f4f5ff;
+
+    --border: rgba(17,24,39,.08);
+
+    --shadow-sm:
+        0 4px 20px rgba(15,23,42,.05);
+
+    --shadow:
+        0 18px 50px rgba(15,23,42,.08);
+
+    --shadow-lg:
+        0 35px 90px rgba(15,23,42,.14);
+
+    --radius-sm: 14px;
+    --radius: 22px;
+    --radius-lg: 30px;
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.navbar {
+    position: sticky;
+    top: 14px;
+    z-index: 1000;
+
+    width: min(1180px, calc(100% - 30px));
+
+    margin: 14px auto 0;
+
+    background: rgba(255,255,255,.80);
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    border:
+        1px solid rgba(255,255,255,.85);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 35px rgba(15,23,42,.07);
+
+    transition:
+        box-shadow .25s ease,
+        background .25s ease;
+}
+
+.navbar:hover {
+    box-shadow:
+        0 12px 45px rgba(15,23,42,.10);
+}
+
+.nav-inner {
+    min-height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 20px;
+    font-weight: 800;
+
+    letter-spacing: -.5px;
+
+    flex-shrink: 0;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 12px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6366f1,
+            #7c3aed
+        );
+
+    box-shadow:
+        0 8px 22px rgba(99,102,241,.30);
+
+    position: relative;
+    overflow: hidden;
+}
+
+.logo-icon::after {
+    content: "";
+
+    position: absolute;
+
+    width: 20px;
+    height: 20px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.16);
+
+    top: -6px;
+    right: -5px;
+}
+
+
+/* =========================================================
+   NAV LINKS
+========================================================= */
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 27px;
+
+    color: #4b5563;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.nav-links a {
+    position: relative;
+
+    transition:
+        color .2s ease,
+        background .2s ease,
+        transform .2s ease;
+}
+
+.nav-links a:not(.nav-cta)::after {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    bottom: -8px;
+
+    width: 0;
+    height: 2px;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--primary),
+            var(--secondary)
+        );
+
+    transform: translateX(-50%);
+
+    transition: width .2s ease;
+}
+
+.nav-links a:not(.nav-cta):hover {
+    color: var(--primary);
+}
+
+.nav-links a:not(.nav-cta):hover::after {
+    width: 100%;
+}
+
+
+/* NAV CTA */
+
+.nav-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 9px 15px;
+
+    border-radius: 11px;
+
+    color: #ffffff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--secondary)
+        );
+
+    box-shadow:
+        0 7px 18px rgba(99,102,241,.20);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.nav-cta:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 11px 25px rgba(99,102,241,.28);
+}
+
+
+/* =========================================================
+   NAV ACTIONS
+========================================================= */
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   LANGUAGE
+========================================================= */
+
+.language {
+    position: relative;
+}
+
+.language select {
+    appearance: none;
+    -webkit-appearance: none;
+
+    min-width: 125px;
+
+    padding:
+        9px
+        34px
+        9px
+        12px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 12px;
+
+    background:
+        rgba(255,255,255,.85);
+
+    color: var(--text);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    outline: none;
+
+    cursor: pointer;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+.language select:hover,
+.language select:focus {
+    border-color:
+        rgba(99,102,241,.35);
+
+    box-shadow:
+        0 0 0 3px rgba(99,102,241,.06);
+}
+
+.language::after {
+    content: "⌄";
+
+    position: absolute;
+
+    right: 12px;
+    top: 5px;
+
+    font-size: 15px;
+
+    pointer-events: none;
+
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   MENU BUTTON
+========================================================= */
+
+.menu-btn {
+    display: none;
+
+    width: 42px;
+    height: 42px;
+
+    place-items: center;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    color: #111827;
+
+    font-size: 21px;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+}
+
+.menu-btn:hover {
+    background: #f4f4ff;
+    color: var(--primary);
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    position: relative;
+
+    padding:
+        120px 0
+        105px;
+
+    overflow: hidden;
+}
+
+.hero::before {
+    content: "";
+
+    position: absolute;
+
+    width: 650px;
+    height: 650px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(99,102,241,.13),
+            transparent 68%
+        );
+
+    top: -300px;
+    left: -260px;
+
+    pointer-events: none;
+}
+
+.hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 500px;
+    height: 500px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(124,58,237,.10),
+            transparent 70%
+        );
+
+    right: -250px;
+    bottom: -250px;
+
+    pointer-events: none;
+}
+
+.hero-grid {
+    position: relative;
+    z-index: 2;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.02fr)
+        minmax(0, .98fr);
+
+    gap: 70px;
+
+    align-items: center;
+}
+
+
+/* =========================================================
+   HERO COPY
+========================================================= */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding:
+        8px
+        13px;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(99,102,241,.10),
+            rgba(124,58,237,.08)
+        );
+
+    border:
+        1px solid rgba(99,102,241,.12);
+
+    color: #514fc9;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    margin-bottom: 22px;
+
+    animation:
+        fadeUp .6s ease both;
+}
+
+.hero h1 {
+    max-width: 720px;
+
+    font-size:
+        clamp(45px, 6vw, 76px);
+
+    line-height: .98;
+
+    letter-spacing: -4px;
+
+    font-weight: 800;
+
+    margin-bottom: 26px;
+
+    animation:
+        fadeUp .7s .05s ease both;
+}
+
+.gradient {
+    background:
+        linear-gradient(
+            120deg,
+            #6366f1 10%,
+            #7c3aed 50%,
+            #8b5cf6 90%
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+}
+
+.hero p {
+    max-width: 620px;
+
+    color: var(--muted);
+
+    font-size: 17px;
+
+    line-height: 1.8;
+
+    margin-bottom: 34px;
+
+    animation:
+        fadeUp .7s .1s ease both;
+}
+
+
+/* =========================================================
+   HERO BUTTONS
+========================================================= */
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    animation:
+        fadeUp .7s .15s ease both;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 50px;
+
+    padding:
+        13px
+        21px;
+
+    border-radius: 14px;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    border:
+        1px solid transparent;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease,
+        color .2s ease;
+}
+
+.btn-primary {
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6366f1,
+            #7c3aed
+        );
+
+    box-shadow:
+        0 12px 28px rgba(99,102,241,.25);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 18px 35px rgba(99,102,241,.32);
+}
+
+.btn-secondary {
+    color: #374151;
+
+    background:
+        rgba(255,255,255,.90);
+
+    border-color:
+        var(--border);
+
+    box-shadow:
+        var(--shadow-sm);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+
+    border-color:
+        rgba(99,102,241,.25);
+
+    color: var(--primary);
+}
+
+
+/* =========================================================
+   HERO TRUST
+========================================================= */
+
+.hero-trust {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-top: 28px;
+
+    animation:
+        fadeUp .7s .20s ease both;
+}
+
+.hero-trust > div {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    padding:
+        8px
+        11px;
+
+    border:
+        1px solid rgba(17,24,39,.06);
+
+    border-radius: 11px;
+
+    background:
+        rgba(255,255,255,.65);
+
+    color: #6b7280;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.hero-trust strong {
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   HERO DASHBOARD
+========================================================= */
+
+.hero-card {
+    position: relative;
+
+    min-height: 460px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    animation:
+        fadeIn .8s .15s ease both;
+}
+
+.glow {
+    position: absolute;
+
+    width: 360px;
+    height: 360px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(99,102,241,.28),
+            rgba(124,58,237,.10),
+            transparent 70%
+        );
+
+    filter: blur(25px);
+
+    animation:
+        pulseGlow 4s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.dashboard {
+    position: relative;
+
+    width: min(510px, 100%);
+
+    padding: 17px;
+
+    border-radius: 27px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #111528,
+            #171b32
+        );
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+        0 45px 100px rgba(15,23,42,.28);
+
+    transform:
+        perspective(1000px)
+        rotateY(-3deg)
+        rotateX(2deg);
+
+    transition:
+        transform .4s ease;
+}
+
+.dashboard:hover {
+    transform:
+        perspective(1000px)
+        rotateY(0)
+        rotateX(0)
+        translateY(-5px);
+}
+
+
+/* dashboard top */
+
+.dash-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    color: #ffffff;
+
+    padding:
+        3px
+        4px
+        15px;
+}
+
+.dash-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.mini-logo {
+    width: 25px;
+    height: 25px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6366f1,
+            #7c3aed
+        );
+
+    color: white;
+
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.dots {
+    display: flex;
+    gap: 5px;
+}
+
+.dots span {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #555d78;
+}
+
+
+/* =========================================================
+   DASHBOARD BODY
+========================================================= */
+
+.dash-body {
+    display: grid;
+
+    grid-template-columns:
+        90px
+        1fr;
+
+    gap: 10px;
+}
+
+
+/* sidebar */
+
+.dash-side {
+    background:
+        #1b2037;
+
+    border-radius: 16px;
+
+    padding:
+        12px
+        7px;
+}
+
+.side-line {
+    height: 9px;
+
+    border-radius: 99px;
+
+    background:
+        #353b55;
+
+    margin:
+        14px 4px;
+}
+
+.side-line.active {
+    background:
+        linear-gradient(
+            90deg,
+            #6366f1,
+            #8b5cf6
+        );
+
+    box-shadow:
+        0 0 12px rgba(99,102,241,.35);
+}
+
+
+/* content */
+
+.dash-content {
+    background:
+        #f5f6fb;
+
+    border-radius: 16px;
+
+    padding: 15px;
+
+    min-width: 0;
+}
+
+.dash-welcome {
+    margin-bottom: 15px;
+}
+
+.fake-title {
+    width: 125px;
+    height: 12px;
+
+    border-radius: 99px;
+
+    background: #22283c;
+
+    margin-bottom: 7px;
+}
+
+.fake-subtitle {
+    width: 80px;
+    height: 7px;
+
+    border-radius: 99px;
+
+    background: #b7bccb;
+}
+
+
+/* =========================================================
+   MINI STATS
+========================================================= */
+
+.mini-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 8px;
+
+    margin-bottom: 10px;
+}
+
+.mini-stat {
+    padding:
+        10px 8px;
+
+    border:
+        1px solid #e6e8ef;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    text-align: center;
+}
+
+.mini-stat strong {
+    display: block;
+
+    color: #22283c;
+
+    font-size: 14px;
+
+    line-height: 1.2;
+}
+
+.mini-stat small {
+    color: #8a91a3;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   TASK CARDS
+========================================================= */
+
+.task {
+    position: relative;
+
+    background: #ffffff;
+
+    border:
+        1px solid #e8eaf1;
+
+    border-radius: 14px;
+
+    padding: 13px;
+
+    margin-bottom: 9px;
+
+    box-shadow:
+        0 4px 15px rgba(15,23,42,.04);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.task:hover {
+    transform: translateX(3px);
+
+    box-shadow:
+        0 8px 22px rgba(15,23,42,.07);
+}
+
+.task-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    margin-bottom: 3px;
+}
+
+.task strong {
+    display: block;
+
+    color: #1f2937;
+
+    font-size: 11px;
+
+    min-width: 0;
+}
+
+.task-head span {
+    flex-shrink: 0;
+
+    color: #6366f1;
+
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.task small {
+    color: #8a91a3;
+
+    font-size: 9px;
+}
+
+
+/* progress */
+
+.progress {
+    margin-top: 10px;
+
+    height: 5px;
+
+    border-radius: 99px;
+
+    overflow: hidden;
+
+    background:
+        #eceef5;
+}
+
+.progress i {
+    display: block;
+
+    height: 100%;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            #6366f1,
+            #8b5cf6
+        );
+}
+
+
+/* =========================================================
+   GENERAL SECTIONS
+========================================================= */
+
+section {
+    position: relative;
+
+    padding:
+        100px 0;
+}
+
+.section-head {
+    max-width: 720px;
+
+    margin:
+        0 auto
+        55px;
+
+    text-align: center;
+}
+
+.eyebrow {
+    display: inline-block;
+
+    color: var(--primary);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1.5px;
+
+    margin-bottom: 11px;
+}
+
+.section-head h2 {
+    font-size:
+        clamp(31px, 4vw, 46px);
+
+    line-height: 1.08;
+
+    letter-spacing: -2px;
+
+    margin-bottom: 16px;
+}
+
+.section-head p {
+    max-width: 650px;
+
+    margin: auto;
+
+    color: var(--muted);
+
+    font-size: 15px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   VALUE SECTION
+========================================================= */
+
+.value-section {
+    background:
+        #f8f9fd;
+}
+
+.value-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+}
+
+.value-card {
+    position: relative;
+
+    padding: 32px 28px;
+
+    background:
+        rgba(255,255,255,.90);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 23px;
+
+    box-shadow:
+        var(--shadow-sm);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
+}
+
+.value-card:hover {
+    transform:
+        translateY(-6px);
+
+    box-shadow:
+        var(--shadow);
+
+    border-color:
+        rgba(99,102,241,.15);
+}
+
+.value-icon {
+    width: 52px;
+    height: 52px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef0ff,
+            #f4efff
+        );
+
+    font-size: 24px;
+
+    margin-bottom: 19px;
+}
+
+.value-card h3 {
+    font-size: 18px;
+
+    margin-bottom: 9px;
+}
+
+.value-card p {
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   PROBLEM
+========================================================= */
+
+.problem {
+    background:
+        #ffffff;
+
+    border-top:
+        1px solid rgba(15,23,42,.04);
+
+    border-bottom:
+        1px solid rgba(15,23,42,.04);
+}
+
+.problem-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+}
+
+.info-card {
+    position: relative;
+
+    padding: 30px;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 23px;
+
+    box-shadow:
+        var(--shadow-sm);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
+}
+
+.info-card:hover {
+    transform:
+        translateY(-6px);
+
+    box-shadow:
+        var(--shadow);
+
+    border-color:
+        rgba(99,102,241,.15);
+}
+
+.info-card .icon {
+    width: 52px;
+    height: 52px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef0ff,
+            #f4efff
+        );
+
+    font-size: 24px;
+
+    margin-bottom: 20px;
+}
+
+.info-card h3 {
+    font-size: 18px;
+
+    margin-bottom: 9px;
+
+    letter-spacing: -.3px;
+}
+
+.info-card p {
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   FEATURES
+========================================================= */
+
+#features {
+    background:
+        linear-gradient(
+            180deg,
+            #f8f9fd,
+            #ffffff
+        );
+}
+
+.feature-category {
+    margin-bottom: 60px;
+}
+
+.feature-category:last-child {
+    margin-bottom: 0;
+}
+
+.category-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    margin-bottom: 22px;
+}
+
+.category-title > span {
+    width: 48px;
+    height: 48px;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef0ff,
+            #f4efff
+        );
+
+    font-size: 22px;
+}
+
+.category-title h3 {
+    font-size: 21px;
+
+    margin-bottom: 2px;
+}
+
+.category-title p {
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.features-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 17px;
+}
+
+.feature {
+    position: relative;
+
+    min-height: 190px;
+
+    padding: 25px;
+
+    background:
+        rgba(255,255,255,.92);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 5px 22px rgba(15,23,42,.035);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
+}
+
+.feature::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(99,102,241,.04),
+            transparent 50%
+        );
+
+    opacity: 0;
+
+    transition: opacity .25s ease;
+
+    pointer-events: none;
+}
+
+.feature:hover {
+    transform:
+        translateY(-6px);
+
+    box-shadow:
+        0 20px 45px rgba(15,23,42,.08);
+
+    border-color:
+        rgba(99,102,241,.18);
+}
+
+.feature:hover::before {
+    opacity: 1;
+}
+
+.feature-icon {
+    width: 48px;
+    height: 48px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f0f1ff,
+            #f7f1ff
+        );
+
+    font-size: 24px;
+
+    margin-bottom: 17px;
+}
+
+.feature h3 {
+    position: relative;
+
+    font-size: 15px;
+
+    line-height: 1.4;
+
+    margin-bottom: 7px;
+}
+
+.feature p {
+    position: relative;
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   EXPERIENCE
+========================================================= */
+
+.experience {
+    background:
+        #ffffff;
+}
+
+.experience-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 17px;
+}
+
+.experience-card {
+    position: relative;
+
+    padding: 28px 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #fafaff
+        );
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 22px;
+
+    box-shadow:
+        var(--shadow-sm);
+
+    overflow: hidden;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.experience-card:hover {
+    transform:
+        translateY(-6px);
+
+    box-shadow:
+        var(--shadow);
+}
+
+.experience-number {
+    position: absolute;
+
+    top: 18px;
+    right: 20px;
+
+    color:
+        rgba(99,102,241,.16);
+
+    font-size: 30px;
+
+    font-weight: 900;
+
+    letter-spacing: -2px;
+}
+
+.experience-icon {
+    width: 50px;
+    height: 50px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef0ff,
+            #f4efff
+        );
+
+    font-size: 23px;
+
+    margin-bottom: 19px;
+}
+
+.experience-card h3 {
+    font-size: 16px;
+
+    margin-bottom: 8px;
+}
+
+.experience-card p {
+    color: var(--muted);
+
+    font-size: 12px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   TUNISIA
+========================================================= */
+
+.tunisia {
+    overflow: hidden;
+
+    color: #ffffff;
+
+    background:
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(99,102,241,.20),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(124,58,237,.18),
+            transparent 30%
+        ),
+        #0e1222;
+}
+
+.tunisia::before {
+    content: "";
+
+    position: absolute;
+
+    width: 400px;
+    height: 400px;
+
+    border:
+        1px solid rgba(255,255,255,.05);
+
+    border-radius: 50%;
+
+    right: -170px;
+    top: -170px;
+}
+
+.tunisia-box {
+    position: relative;
+
+    padding:
+        60px
+        30px;
+
+    text-align: center;
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    border-radius: 30px;
+
+    background:
+        rgba(255,255,255,.045);
+
+    backdrop-filter: blur(12px);
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.18);
+}
+
+.tunisia-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 20px;
+}
+
+.tunisia-box .flag {
+    font-size: 48px;
+
+    margin-bottom: 15px;
+}
+
+.tunisia-box h2 {
+    font-size:
+        clamp(30px, 4vw, 47px);
+
+    line-height: 1.1;
+
+    letter-spacing: -1.5px;
+
+    margin-bottom: 15px;
+}
+
+.tunisia-box p {
+    max-width: 680px;
+
+    margin: auto;
+
+    color: #aeb6ca;
+
+    font-size: 14px;
+
+    line-height: 1.8;
+}
+
+.tunisia-points {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 28px;
+}
+
+.tunisia-points span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    padding:
+        9px
+        13px;
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    border-radius: 999px;
+
+    background:
+        rgba(255,255,255,.04);
+
+    color: #c9cee0;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   HOW IT WORKS
+========================================================= */
+
+#how {
+    background:
+        #f8f9fd;
+}
+
+.steps-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+}
+
+.step-number {
+    width: 45px;
+    height: 45px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef0ff,
+            #f3edff
+        );
+
+    color: var(--primary);
+
+    font-size: 13px;
+
+    font-weight: 900;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   COMING SOON
+========================================================= */
+
+#coming {
+    background:
+        linear-gradient(
+            180deg,
+            #f1f3ff 0%,
+            #f8f9fd 100%
+        );
+}
+
+.coming-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 17px;
+}
+
+.coming-card {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns:
+        auto
+        1fr
+        auto;
+
+    align-items: center;
+
+    gap: 15px;
+
+    min-height: 125px;
+
+    padding:
+        20px;
+
+    background:
+        rgba(255,255,255,.72);
+
+    border:
+        1px dashed rgba(99,102,241,.18);
+
+    border-radius: 20px;
+
+    opacity: .92;
+
+    transition:
+        transform .25s ease,
+        opacity .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
+
+.coming-card:hover {
+    transform:
+        translateY(-5px);
+
+    opacity: 1;
+
+    border-style: solid;
+
+    border-color:
+        rgba(99,102,241,.30);
+
+    box-shadow:
+        0 18px 40px rgba(15,23,42,.07);
+}
+
+.coming-card .feature-icon {
+    margin: 0;
+}
+
+.coming-card h3 {
+    font-size: 14px;
+
+    margin-bottom: 5px;
+}
+
+.coming-card p {
+    color: var(--muted);
+
+    font-size: 11px;
+
+    line-height: 1.6;
+}
+
+.coming-soon-tag {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding:
+        4px
+        8px;
+
+    border-radius: 999px;
+
+    background:
+        #fef3c7;
+
+    color:
+        #a16207;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: .5px;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   CORE IDEA
+========================================================= */
+
+.core-section {
+    background:
+        #ffffff;
+}
+
+.core-box {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 20px;
+
+    overflow: hidden;
+
+    padding:
+        30px;
+
+    border:
+        1px solid rgba(99,102,241,.10);
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f1f2ff,
+            #f8f3ff
+        );
+
+    box-shadow:
+        0 10px 30px rgba(99,102,241,.05);
+}
+
+.core-icon {
+    width: 55px;
+    height: 55px;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    border-radius: 17px;
+
+    background:
+        #ffffff;
+
+    box-shadow:
+        0 8px 25px rgba(99,102,241,.08);
+
+    font-size: 25px;
+}
+
+.core-box .eyebrow {
+    margin-bottom: 5px;
+}
+
+.core-box p {
+    color: #37366f;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   CTA
+========================================================= */
+
+.cta {
+    padding:
+        100px 0
+        110px;
+
+    background:
+        #ffffff;
+}
+
+.cta-box {
+    position: relative;
+
+    overflow: hidden;
+
+    padding:
+        75px 30px;
+
+    border-radius: 32px;
+
+    text-align: center;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5b5cf4,
+            #7137d8
+        );
+
+    box-shadow:
+        0 35px 80px rgba(99,102,241,.25);
+}
+
+.cta-box::before {
+    content: "";
+
+    position: absolute;
+
+    width: 450px;
+    height: 450px;
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
+    border-radius: 50%;
+
+    left: -220px;
+    top: -260px;
+}
+
+.cta-box::after {
+    content: "";
+
+    position: absolute;
+
+    width: 380px;
+    height: 380px;
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
+    border-radius: 50%;
+
+    right: -200px;
+    bottom: -250px;
+}
+
+.cta-box > * {
+    position: relative;
+
+    z-index: 2;
+}
+
+.cta-badge {
+    display: inline-flex;
+
+    padding:
+        7px
+        12px;
+
+    margin-bottom: 15px;
+
+    border:
+        1px solid rgba(255,255,255,.16);
+
+    border-radius: 999px;
+
+    background:
+        rgba(255,255,255,.08);
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+.cta-box h2 {
+    font-size:
+        clamp(31px, 5vw, 51px);
+
+    line-height: 1.05;
+
+    letter-spacing: -2px;
+
+    margin-bottom: 16px;
+}
+
+.cta-box p {
+    max-width: 600px;
+
+    margin:
+        0 auto
+        30px;
+
+    color: #e8e7ff;
+
+    font-size: 14px;
+}
+
+.cta .btn-primary {
+    background:
+        #ffffff;
+
+    color:
+        #4f46e5;
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.12);
+}
+
+.cta .btn-primary:hover {
+    color:
+        #3730a3;
+
+    transform:
+        translateY(-3px);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+    padding:
+        40px 0
+        25px;
+
+    color:
+        #9da5ba;
+
+    background:
+        #090c18;
+
+    border-top:
+        1px solid rgba(255,255,255,.05);
+}
+
+.footer-inner {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    padding-bottom: 28px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.06);
+}
+
+.footer-logo {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color:
+        #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+.footer-logo .logo-icon {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 10px;
+
+    font-size: 13px;
+}
+
+.footer-inner p {
+    margin-top: 9px;
+
+    color:
+        #7f879d;
+
+    font-size: 11px;
+}
+
+.footer-links {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 20px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.footer-links a {
+    transition:
+        color .2s ease;
+}
+
+.footer-links a:hover {
+    color:
+        #ffffff;
+}
+
+.footer-bottom {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding-top: 22px;
+
+    color:
+        #626b82;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   RTL
+========================================================= */
+
+html[dir="rtl"] body {
+    font-family:
+        "Noto Sans Arabic",
+        Tahoma,
+        Arial,
+        sans-serif;
+}
+
+html[dir="rtl"] .hero h1,
+html[dir="rtl"] .section-head,
+html[dir="rtl"] .info-card,
+html[dir="rtl"] .feature,
+html[dir="rtl"] .value-card,
+html[dir="rtl"] .experience-card {
+    letter-spacing: 0;
+}
+
+html[dir="rtl"] .language::after {
+    right: auto;
+    left: 12px;
+}
+
+html[dir="rtl"] .language select {
+    padding:
+        9px
+        12px
+        9px
+        34px;
+}
+
+html[dir="rtl"] .coming-soon-tag {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+html[dir="rtl"] .experience-number {
+    right: auto;
+    left: 20px;
+}
+
+html[dir="rtl"] .task:hover {
+    transform: translateX(-3px);
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .nav-links {
+        gap: 17px;
+    }
+
+    .hero-grid {
+        gap: 45px;
+    }
+
+    .features-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .experience-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .coming-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .steps-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET / MENU
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .container {
+        width:
+            min(92%, 760px);
+    }
+
+    .nav-links {
+        display: none;
+
+        position: absolute;
+
+        top: calc(100% + 10px);
+
+        left: 0;
+        right: 0;
+
+        padding: 14px;
+
+        background:
+            rgba(255,255,255,.97);
+
+        backdrop-filter:
+            blur(20px);
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 18px;
+
+        box-shadow:
+            var(--shadow);
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 4px;
+    }
+
+    .nav-links.open {
+        display: flex;
+
+        animation:
+            menuOpen .2s ease both;
+    }
+
+    .nav-links a {
+        padding:
+            12px 14px;
+
+        border-radius: 10px;
+    }
+
+    .nav-links a:hover {
+        background:
+            #f4f4ff;
+    }
+
+    .nav-links a::after {
+        display: none !important;
+    }
+
+    .nav-cta {
+        margin-top: 4px;
+
+        text-align: center;
+    }
+
+    .menu-btn {
+        display: grid;
+    }
+
+    .hero-grid {
+        grid-template-columns:
+            1fr;
+
+        text-align: center;
+
+        gap: 65px;
+    }
+
+    .hero h1,
+    .hero p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-actions,
+    .hero-trust {
+        justify-content: center;
+    }
+
+    .hero-card {
+        min-height: 400px;
+    }
+
+    .value-grid {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+    .problem-grid {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .container {
+        width:
+            calc(100% - 28px);
+    }
+
+    .navbar {
+        width:
+            calc(100% - 20px);
+
+        top: 8px;
+
+        margin-top: 8px;
+    }
+
+    .nav-inner {
+        min-height:
+            64px;
+    }
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .logo-icon {
+        width: 37px;
+        height: 37px;
+    }
+
+    .language select {
+        min-width: 45px;
+        width: 45px;
+
+        padding:
+            9px
+            25px
+            9px
+            8px;
+
+        font-size: 0;
+    }
+
+    .language select option {
+        font-size: 13px;
+    }
+
+    .language::after {
+        right: 8px;
+    }
+
+    html[dir="rtl"] .language::after {
+        left: 8px;
+        right: auto;
+    }
+
+    .hero {
+        padding:
+            75px 0
+            65px;
+    }
+
+    .hero h1 {
+        font-size:
+            clamp(40px, 12vw, 57px);
+
+        letter-spacing:
+            -2.5px;
+    }
+
+    .hero p {
+        font-size:
+            15px;
+
+        line-height:
+            1.75;
+    }
+
+    .hero-actions {
+        flex-direction:
+            column;
+    }
+
+    .hero-actions .btn {
+        width:
+            100%;
+    }
+
+    .hero-trust {
+        gap: 7px;
+    }
+
+    .hero-trust > div {
+        font-size:
+            10px;
+    }
+
+    .hero-card {
+        min-height:
+            350px;
+    }
+
+    .dashboard {
+        width:
+            100%;
+
+        padding:
+            12px;
+
+        border-radius:
+            20px;
+
+        transform:
+            none;
+    }
+
+    .dashboard:hover {
+        transform:
+            translateY(-3px);
+    }
+
+    .dash-body {
+        grid-template-columns:
+            58px
+            1fr;
+    }
+
+    .dash-side {
+        padding:
+            8px 5px;
+    }
+
+    .side-line {
+        margin:
+            12px 3px;
+    }
+
+    .dash-content {
+        padding:
+            10px;
+    }
+
+    .task {
+        padding:
+            10px;
+    }
+
+    .mini-stat {
+        padding:
+            8px 5px;
+    }
+
+    section {
+        padding:
+            72px 0;
+    }
+
+    .section-head {
+        margin-bottom:
+            38px;
+    }
+
+    .section-head h2 {
+        font-size:
+            31px;
+
+        letter-spacing:
+            -1.2px;
+    }
+
+    .section-head p {
+        font-size:
+            14px;
+    }
+
+    .value-grid,
+    .problem-grid,
+    .steps-grid,
+    .features-grid,
+    .experience-grid,
+    .coming-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .feature-category {
+        margin-bottom:
+            45px;
+    }
+
+    .info-card,
+    .value-card,
+    .feature {
+        padding:
+            23px;
+    }
+
+    .feature {
+        min-height:
+            auto;
+    }
+
+    .category-title {
+        align-items:
+            flex-start;
+    }
+
+    .coming-card {
+        grid-template-columns:
+            auto
+            1fr;
+
+        align-items:
+            center;
+    }
+
+    .coming-soon-tag {
+        grid-column:
+            2;
+
+        justify-self:
+            start;
+    }
+
+    .tunisia-box {
+        padding:
+            45px 22px;
+    }
+
+    .tunisia-content {
+        flex-direction:
+            column;
+
+        gap:
+            5px;
+    }
+
+    .tunisia-box h2 {
+        font-size:
+            31px;
+    }
+
+    .tunisia-points {
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+    }
+
+    .tunisia-points span {
+        justify-content:
+            center;
+    }
+
+    .core-box {
+        align-items:
+            flex-start;
+
+        padding:
+            24px 20px;
+    }
+
+    .cta {
+        padding:
+            70px 0
+            80px;
+    }
+
+    .cta-box {
+        padding:
+            55px 20px;
+
+        border-radius:
+            25px;
+    }
+
+    .cta-box h2 {
+        font-size:
+            34px;
+    }
+
+    .footer-inner {
+        flex-direction:
+            column;
+
+        align-items:
+            center;
+
+        text-align:
+            center;
+    }
+
+    .footer-links {
+        justify-content:
+            center;
+    }
+
+    .footer-bottom {
+        flex-direction:
+            column;
+
+        text-align:
+            center;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 430px) {
+
+    .hero h1 {
+        font-size:
+            39px;
+    }
+
+    .badge {
+        font-size:
+            10px;
+
+        padding:
+            7px 10px;
+    }
+
+    .hero-trust {
+        display:
+            grid;
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .hero-trust > div {
+        justify-content:
+            center;
+    }
+
+    .dash-body {
+        grid-template-columns:
+            48px
+            1fr;
+    }
+
+    .task strong {
+        font-size:
+            10px;
+    }
+
+    .task small {
+        font-size:
+            9px;
+    }
+
+    .task-head span {
+        font-size:
+            8px;
+    }
+
+    .mini-stat strong {
+        font-size:
+            12px;
+    }
+
+    .mini-stat small {
+        font-size:
+            7px;
+    }
+
+    .core-box {
+        flex-direction:
+            column;
+    }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior:
+            auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration:
+            .01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+
+        transition-duration:
+            .01ms !important;
+    }
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes fadeUp {
+
+    from {
+        opacity: 0;
+        transform:
+            translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+        transform:
+            scale(.96);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            scale(1);
+    }
+}
+
+@keyframes pulseGlow {
+
+    0%,
+    100% {
+        transform:
+            scale(1);
+
+        opacity:
+            .7;
+    }
+
+    50% {
+        transform:
+            scale(1.08);
+
+        opacity:
+            .95;
+    }
+}
+
+@keyframes menuOpen {
+
+    from {
+        opacity: 0;
+        transform:
+            translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0);
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+====================================================== -->
+
+<header class="navbar">
+
+    <div class="container nav-inner">
+
+        <a
+            class="logo"
+            href="#top"
+            aria-label="StudyPulse"
+        >
+            <span class="logo-icon">S</span>
+            <span>StudyPulse</span>
+        </a>
+
+
+        <nav
+            class="nav-links"
+            id="navLinks"
+            aria-label="Navigation"
+        >
+
+            <a
+                href="#about"
+                data-i18n="nav_about"
+            >
+                À propos
+            </a>
+
+            <a
+                href="#features"
+                data-i18n="nav_features"
+            >
+                Fonctionnalités
+            </a>
+
+            <a
+                href="#experience"
+                data-i18n="nav_experience"
+            >
+                Expérience
+            </a>
+
+            <a
+                href="#coming"
+                data-i18n="nav_coming"
+            >
+                Bientôt
+            </a>
+
+            <a
+                href="#start"
+                class="nav-cta"
+                data-i18n="nav_start"
+            >
+                Commencer
+            </a>
+
+        </nav>
+
+
+        <div class="nav-actions">
+
+            <div class="language">
+
+                <select
+                    id="languageSelect"
+                    aria-label="Language"
+                >
+
+                    <option value="fr">
+                        🇫🇷 Français
+                    </option>
+
+                    <option value="en">
+                        🇬🇧 English
+                    </option>
+
+                    <option value="ar">
+                        🇸🇦 العربية
+                    </option>
+
+                    <option value="tn">
+                        🇹🇳 تونسي
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                class="menu-btn"
+                id="menuBtn"
+                type="button"
+                aria-label="Menu"
+                aria-expanded="false"
+            >
+                ☰
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<main id="top">
+
+
+<!-- =====================================================
+     HERO
+====================================================== -->
+
+<section
+    class="hero"
+    id="about"
+>
+
+    <div class="container hero-grid">
+
+
+        <div class="hero-copy">
+
+            <div
+                class="badge"
+                data-i18n="badge"
+            >
+                🇹🇳 Créé pour les élèves tunisiens
+            </div>
+
+
+            <h1>
+
+                <span data-i18n="hero1">
+                    Organise tes études.
+                </span>
+
+                <br>
+
+                <span
+                    class="gradient"
+                    data-i18n="hero2"
+                >
+                    Progresse avec StudyPulse.
+                </span>
+
+            </h1>
+
+
+            <p data-i18n="hero_text">
+                StudyPulse réunit ton planning, tes tâches,
+                tes révisions et ton suivi scolaire dans un seul espace.
+            </p>
+
+
+            <div class="hero-actions">
+
+                <a
+                    href="#start"
+                    class="btn btn-primary"
+                    data-i18n="hero_button"
+                >
+                    🚀 Commencer avec StudyPulse
+                </a>
+
+                <a
+                    href="#features"
+                    class="btn btn-secondary"
+                    data-i18n="hero_more"
+                >
+                    Découvrir les fonctionnalités
+                </a>
+
+            </div>
+
+
+            <div class="hero-trust">
+
+                <div>
+                    <strong>📅</strong>
+                    <span data-i18n="hero_trust1">
+                        Planning
+                    </span>
+                </div>
+
+                <div>
+                    <strong>✅</strong>
+                    <span data-i18n="hero_trust2">
+                        Tasks
+                    </span>
+                </div>
+
+                <div>
+                    <strong>📚</strong>
+                    <span data-i18n="hero_trust3">
+                        Révisions
+                    </span>
+                </div>
+
+                <div>
+                    <strong>📊</strong>
+                    <span data-i18n="hero_trust4">
+                        Progression
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DASHBOARD -->
+
+        <div class="hero-card">
+
+            <div class="glow"></div>
+
+
+            <div class="dashboard">
+
+                <div class="dash-top">
+
+                    <div class="dash-brand">
+
+                        <span class="mini-logo">
+                            S
+                        </span>
+
+                        <span>
+                            StudyPulse
+                        </span>
+
+                    </div>
+
+
+                    <div class="dots">
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dash-body">
+
+
+                    <aside class="dash-side">
+
+                        <div class="side-line active"></div>
+                        <div class="side-line"></div>
+                        <div class="side-line"></div>
+                        <div class="side-line"></div>
+                        <div class="side-line"></div>
+
+                    </aside>
+
+
+                    <div class="dash-content">
+
+
+                        <div class="dash-welcome">
+
+                            <div class="fake-title"></div>
+                            <div class="fake-subtitle"></div>
+
+                        </div>
+
+
+                        <div class="mini-stats">
+
+                            <div class="mini-stat">
+
+                                <strong>08</strong>
+
+                                <small>
+                                    Tasks
+                                </small>
+
+                            </div>
+
+
+                            <div class="mini-stat">
+
+                                <strong>72%</strong>
+
+                                <small>
+                                    Progress
+                                </small>
+
+                            </div>
+
+
+                            <div class="mini-stat">
+
+                                <strong>04</strong>
+
+                                <small>
+                                    Sessions
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="task">
+
+                            <div class="task-head">
+
+                                <strong>
+                                    📐 Mathématiques
+                                </strong>
+
+                                <span>
+                                    90 min
+                                </span>
+
+                            </div>
+
+                            <small>
+                                Révision — Fonctions
+                            </small>
+
+                            <div class="progress">
+                                <i style="width:78%"></i>
+                            </div>
+
+                        </div>
+
+
+                        <div class="task">
+
+                            <div class="task-head">
+
+                                <strong>
+                                    ⚛️ Sciences physiques
+                                </strong>
+
+                                <span>
+                                    60 min
+                                </span>
+
+                            </div>
+
+                            <small>
+                                Exercices — Électricité
+                            </small>
+
+                            <div class="progress">
+                                <i style="width:52%"></i>
+                            </div>
+
+                        </div>
+
+
+                        <div class="task">
+
+                            <div class="task-head">
+
+                                <strong>
+                                    💻 Informatique
+                                </strong>
+
+                                <span>
+                                    90 min
+                                </span>
+
+                            </div>
+
+                            <small>
+                                Programmation
+                            </small>
+
+                            <div class="progress">
+                                <i style="width:84%"></i>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     VALUE
+====================================================== -->
+
+<section class="value-section">
+
+    <div class="container">
+
+        <div class="section-head">
+
+            <div
+                class="eyebrow"
+                data-i18n="value_eyebrow"
+            >
+                Une seule plateforme
+            </div>
+
+            <h2 data-i18n="value_title">
+                Tout ton parcours scolaire, au même endroit.
+            </h2>
+
+            <p data-i18n="value_text">
+                StudyPulse transforme ton organisation quotidienne
+                en un espace clair, simple et adapté à ta façon de travailler.
+            </p>
+
+        </div>
+
+
+        <div class="value-grid">
+
+
+            <article class="value-card">
+
+                <div class="value-icon">
+                    📅
+                </div>
+
+                <h3 data-i18n="value1_title">
+                    Organiser
+                </h3>
+
+                <p data-i18n="value1_text">
+                    Ton emploi du temps, tes tâches et tes échéances restent organisés.
+                </p>
+
+            </article>
+
+
+            <article class="value-card">
+
+                <div class="value-icon">
+                    📚
+                </div>
+
+                <h3 data-i18n="value2_title">
+                    Étudier
+                </h3>
+
+                <p data-i18n="value2_text">
+                    Planifie tes révisions et tes sessions selon tes matières.
+                </p>
+
+            </article>
+
+
+            <article class="value-card">
+
+                <div class="value-icon">
+                    📈
+                </div>
+
+                <h3 data-i18n="value3_title">
+                    Progresser
+                </h3>
+
+                <p data-i18n="value3_text">
+                    Visualise ton activité et vois ce que tu as déjà accompli.
+                </p>
+
+            </article>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     PROBLEM
+====================================================== -->
+
+<section class="problem">
+
+    <div class="container">
+
+        <div class="section-head">
+
+            <div
+                class="eyebrow"
+                data-i18n="problem_eyebrow"
+            >
+                Le problème
+            </div>
+
+            <h2 data-i18n="problem_title">
+                Quand tout est dispersé, étudier devient plus compliqué.
+            </h2>
+
+            <p data-i18n="problem_text">
+                Planning, devoirs, contrôles et révisions peuvent rapidement
+                devenir difficiles à gérer.
+            </p>
+
+        </div>
+
+
+        <div class="problem-grid">
+
+
+            <article class="info-card">
+
+                <div class="icon">
+                    📅
+                </div>
+
+                <h3 data-i18n="problem1_title">
+                    Planning dispersé
+                </h3>
+
+                <p data-i18n="problem1_text">
+                    Ton emploi du temps et tes révisions peuvent être répartis
+                    dans plusieurs endroits.
+                </p>
+
+            </article>
+
+
+            <article class="info-card">
+
+                <div class="icon">
+                    🧠
+                </div>
+
+                <h3 data-i18n="problem2_title">
+                    Trop de choses à retenir
+                </h3>
+
+                <p data-i18n="problem2_text">
+                    Devoirs, contrôles, tâches et dates importantes peuvent
+                    facilement être oubliés.
+                </p>
+
+            </article>
+
+
+            <article class="info-card">
+
+                <div class="icon">
+                    📊
+                </div>
+
+                <h3 data-i18n="problem3_title">
+                    Difficile de voir ses progrès
+                </h3>
+
+                <p data-i18n="problem3_text">
+                    Sans une vue claire, il est difficile de savoir ce qui est
+                    terminé et ce qui reste à faire.
+                </p>
+
+            </article>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FEATURES
+====================================================== -->
+
+<section id="features">
+
+    <div class="container">
+
+        <div class="section-head">
+
+            <div
+                class="eyebrow"
+                data-i18n="features_eyebrow"
+            >
+                La solution
+            </div>
+
+            <h2 data-i18n="features_title">
+                Un espace pensé pour ta vie scolaire.
+            </h2>
+
+            <p data-i18n="features_text">
+                Les outils essentiels pour organiser, étudier et suivre ton évolution.
+            </p>
+
+        </div>
+
+
+        <!-- ORGANISATION -->
+
+        <div class="feature-category">
+
+            <div class="category-title">
+
+                <span>📅</span>
+
+                <div>
+
+                    <h3 data-i18n="cat1_title">
+                        Organisation
+                    </h3>
+
+                    <p data-i18n="cat1_text">
+                        Gère facilement ton quotidien scolaire.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="features-grid">
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        📅
+                    </div>
+
+                    <h3 data-i18n="f1_title">
+                        Emploi du temps
+                    </h3>
+
+                    <p data-i18n="f1_text">
+                        Organise et consulte ton planning facilement.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        ✅
+                    </div>
+
+                    <h3 data-i18n="f2_title">
+                        Tasks & devoirs
+                    </h3>
+
+                    <p data-i18n="f2_text">
+                        Ajoute tes tâches et suis leur avancement.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        🗓️
+                    </div>
+
+                    <h3 data-i18n="f3_title">
+                        Calendrier
+                    </h3>
+
+                    <p data-i18n="f3_text">
+                        Visualise tes tâches et sessions dans un calendrier.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        📄
+                    </div>
+
+                    <h3 data-i18n="f4_title">
+                        Import PDF
+                    </h3>
+
+                    <p data-i18n="f4_text">
+                        Importe ton emploi du temps et gagne du temps.
+                    </p>
+
+                </article>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- STUDY -->
+
+        <div class="feature-category">
+
+            <div class="category-title">
+
+                <span>📚</span>
+
+                <div>
+
+                    <h3 data-i18n="cat2_title">
+                        Étude
+                    </h3>
+
+                    <p data-i18n="cat2_text">
+                        Planifie ton travail et tes révisions.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="features-grid">
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        📚
+                    </div>
+
+                    <h3 data-i18n="f5_title">
+                        Révisions
+                    </h3>
+
+                    <p data-i18n="f5_text">
+                        Planifie tes séances de révision.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        ⏱️
+                    </div>
+
+                    <h3 data-i18n="f6_title">
+                        Sessions d'étude
+                    </h3>
+
+                    <p data-i18n="f6_text">
+                        Définis la durée de chaque session.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        📖
+                    </div>
+
+                    <h3 data-i18n="f7_title">
+                        Matières
+                    </h3>
+
+                    <p data-i18n="f7_text">
+                        Accède aux matières adaptées à ta classe et ta section.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        🎯
+                    </div>
+
+                    <h3 data-i18n="f8_title">
+                        Objectifs
+                    </h3>
+
+                    <p data-i18n="f8_text">
+                        Fixe tes objectifs scolaires et suis leur évolution.
+                    </p>
+
+                </article>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- TRACKING -->
+
+        <div class="feature-category">
+
+            <div class="category-title">
+
+                <span>📈</span>
+
+                <div>
+
+                    <h3 data-i18n="cat3_title">
+                        Suivi
+                    </h3>
+
+                    <p data-i18n="cat3_text">
+                        Comprends ton activité et tes progrès.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="features-grid">
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        📊
+                    </div>
+
+                    <h3 data-i18n="f9_title">
+                        Statistiques
+                    </h3>
+
+                    <p data-i18n="f9_text">
+                        Visualise ton activité et ta progression.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        📈
+                    </div>
+
+                    <h3 data-i18n="f10_title">
+                        Progression
+                    </h3>
+
+                    <p data-i18n="f10_text">
+                        Suis les tâches que tu as accomplies.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        📑
+                    </div>
+
+                    <h3 data-i18n="f11_title">
+                        Rapports
+                    </h3>
+
+                    <p data-i18n="f11_text">
+                        Génère des rapports sur ton activité scolaire.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        🏆
+                    </div>
+
+                    <h3 data-i18n="f12_title">
+                        Achievements
+                    </h3>
+
+                    <p data-i18n="f12_text">
+                        Découvre tes accomplissements au fil du temps.
+                    </p>
+
+                </article>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- COMMUNICATION -->
+
+        <div class="feature-category">
+
+            <div class="category-title">
+
+                <span>💬</span>
+
+                <div>
+
+                    <h3 data-i18n="cat4_title">
+                        Communication
+                    </h3>
+
+                    <p data-i18n="cat4_text">
+                        Reste connecté à ton environnement scolaire.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="features-grid">
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        💬
+                    </div>
+
+                    <h3 data-i18n="f13_title">
+                        Chat
+                    </h3>
+
+                    <p data-i18n="f13_text">
+                        Communique avec les utilisateurs de la plateforme.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        🎤
+                    </div>
+
+                    <h3 data-i18n="f14_title">
+                        Messages vocaux
+                    </h3>
+
+                    <p data-i18n="f14_text">
+                        Envoie et reçois des messages vocaux.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        👥
+                    </div>
+
+                    <h3 data-i18n="f15_title">
+                        Sections
+                    </h3>
+
+                    <p data-i18n="f15_text">
+                        Organise-toi avec les élèves de ta section.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        🔔
+                    </div>
+
+                    <h3 data-i18n="f16_title">
+                        Notifications
+                    </h3>
+
+                    <p data-i18n="f16_text">
+                        Reste informé des informations importantes.
+                    </p>
+
+                </article>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     EXPERIENCE
+====================================================== -->
+
+<section
+    id="experience"
+    class="experience"
+>
+
+    <div class="container">
+
+        <div class="section-head">
+
+            <div
+                class="eyebrow"
+                data-i18n="experience_eyebrow"
+            >
+                Ton expérience
+            </div>
+
+            <h2 data-i18n="experience_title">
+                De la première tâche jusqu'au suivi de tes progrès.
+            </h2>
+
+            <p data-i18n="experience_text">
+                StudyPulse accompagne ton organisation tout au long de ta journée.
+            </p>
+
+        </div>
+
+
+        <div class="experience-grid">
+
+
+            <article class="experience-card">
+
+                <span class="experience-number">
+                    01
+                </span>
+
+                <div class="experience-icon">
+                    🌅
+                </div>
+
+                <h3 data-i18n="exp1_title">
+                    Tu sais ce qui t'attend
+                </h3>
+
+                <p data-i18n="exp1_text">
+                    Consulte ton planning et les tâches prévues.
+                </p>
+
+            </article>
+
+
+            <article class="experience-card">
+
+                <span class="experience-number">
+                    02
+                </span>
+
+                <div class="experience-icon">
+                    📚
+                </div>
+
+                <h3 data-i18n="exp2_title">
+                    Tu sais quoi travailler
+                </h3>
+
+                <p data-i18n="exp2_text">
+                    Organise tes révisions et tes sessions par matière.
+                </p>
+
+            </article>
+
+
+            <article class="experience-card">
+
+                <span class="experience-number">
+                    03
+                </span>
+
+                <div class="experience-icon">
+                    ✅
+                </div>
+
+                <h3 data-i18n="exp3_title">
+                    Tu vois ce que tu accomplis
+                </h3>
+
+                <p data-i18n="exp3_text">
+                    Termine tes tâches et garde une trace de ton activité.
+                </p>
+
+            </article>
+
+
+            <article class="experience-card">
+
+                <span class="experience-number">
+                    04
+                </span>
+
+                <div class="experience-icon">
+                    📈
+                </div>
+
+                <h3 data-i18n="exp4_title">
+                    Tu vois tes progrès
+                </h3>
+
+                <p data-i18n="exp4_text">
+                    Analyse ton évolution et avance progressivement.
+                </p>
+
+            </article>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     TUNISIA
+====================================================== -->
+
+<section class="tunisia">
+
+    <div class="container">
+
+        <div class="tunisia-box">
+
+            <div class="tunisia-content">
+
+                <div class="flag">
+                    🇹🇳
+                </div>
+
+                <div>
+
+                    <div
+                        class="eyebrow"
+                        data-i18n="tunisia_eyebrow"
+                    >
+                        Made for Tunisia
+                    </div>
+
+                    <h2 data-i18n="tunisia_title">
+                        Pensé pour les élèves tunisiens.
+                    </h2>
+
+                    <p data-i18n="tunisia_text">
+                        StudyPulse est développé autour des besoins des élèves
+                        en Tunisie et de leur organisation scolaire.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="tunisia-points">
+
+                <span>
+                    🇹🇳
+                    <b data-i18n="tunisia_point1">
+                        Système scolaire tunisien
+                    </b>
+                </span>
+
+                <span>
+                    📚
+                    <b data-i18n="tunisia_point2">
+                        Matières adaptées
+                    </b>
+                </span>
+
+                <span>
+                    🗓️
+                    <b data-i18n="tunisia_point3">
+                        Organisation scolaire
+                    </b>
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     HOW IT WORKS
+====================================================== -->
+
+<section id="how">
+
+    <div class="container">
+
+        <div class="section-head">
+
+            <div
+                class="eyebrow"
+                data-i18n="how_eyebrow"
+            >
+                Simple et rapide
+            </div>
+
+            <h2 data-i18n="how_title">
+                Commence en quelques étapes.
+            </h2>
+
+            <p data-i18n="how_text">
+                Pas besoin de compliquer ton organisation.
+            </p>
+
+        </div>
+
+
+        <div class="steps-grid">
+
+
+            <article class="info-card">
+
+                <div class="step-number">
+                    01
+                </div>
+
+                <h3 data-i18n="step1_title">
+                    Crée ton compte
+                </h3>
+
+                <p data-i18n="step1_text">
+                    Inscris-toi et prépare ton espace StudyPulse.
+                </p>
+
+            </article>
+
+
+            <article class="info-card">
+
+                <div class="step-number">
+                    02
+                </div>
+
+                <h3 data-i18n="step2_title">
+                    Configure ton espace
+                </h3>
+
+                <p data-i18n="step2_text">
+                    Ajoute ta classe, ta section, ton planning et tes matières.
+                </p>
+
+            </article>
+
+
+            <article class="info-card">
+
+                <div class="step-number">
+                    03
+                </div>
+
+                <h3 data-i18n="step3_title">
+                    Organise ton travail
+                </h3>
+
+                <p data-i18n="step3_text">
+                    Ajoute tes tâches, sessions et révisions.
+                </p>
+
+            </article>
+
+
+            <article class="info-card">
+
+                <div class="step-number">
+                    04
+                </div>
+
+                <h3 data-i18n="step4_title">
+                    Progresse
+                </h3>
+
+                <p data-i18n="step4_text">
+                    Suis ton activité et avance vers tes objectifs.
+                </p>
+
+            </article>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     COMING SOON
+====================================================== -->
+
+<section
+    id="coming"
+    class="coming-section"
+>
+
+    <div class="container">
+
+        <div class="section-head">
+
+            <div
+                class="eyebrow"
+                data-i18n="coming_eyebrow"
+            >
+                🚀 Bientôt disponible
+            </div>
+
+            <h2 data-i18n="coming_title">
+                StudyPulse continue d'évoluer.
+            </h2>
+
+            <p data-i18n="coming_text">
+                De nouvelles fonctionnalités arrivent progressivement
+                pour enrichir ton expérience.
+            </p>
+
+        </div>
+
+
+        <div class="coming-grid">
+
+
+            <article class="coming-card">
+
+                <div class="feature-icon">
+                    🧠
+                </div>
+
+                <div>
+
+                    <h3 data-i18n="soon1_title">
+                        Quiz & Practice
+                    </h3>
+
+                    <p data-i18n="soon1_text">
+                        Entraîne-toi et mesure tes résultats.
+                    </p>
+
+                </div>
+
+                <span
+                    class="coming-soon-tag"
+                    data-i18n="soon_tag"
+                >
+                    Bientôt
+                </span>
+
+            </article>
+
+
+            <article class="coming-card">
+
+                <div class="feature-icon">
+                    ⏱️
+                </div>
+
+                <div>
+
+                    <h3 data-i18n="soon2_title">
+                        Focus Mode
+                    </h3>
+
+                    <p data-i18n="soon2_text">
+                        Concentre-toi sur une session sans distractions.
+                    </p>
+
+                </div>
+
+                <span
+                    class="coming-soon-tag"
+                    data-i18n="soon_tag"
+                >
+                    Bientôt
+                </span>
+
+            </article>
+
+
+            <article class="coming-card">
+
+                <div class="feature-icon">
+                    📝
+                </div>
+
+                <div>
+
+                    <h3 data-i18n="soon3_title">
+                        Notes
+                    </h3>
+
+                    <p data-i18n="soon3_text">
+                        Crée et retrouve tes notes par matière.
+                    </p>
+
+                </div>
+
+                <span
+                    class="coming-soon-tag"
+                    data-i18n="soon_tag"
+                >
+                    Bientôt
+                </span>
+
+            </article>
+
+
+            <article class="coming-card">
+
+                <div class="feature-icon">
+                    📖
+                </div>
+
+                <div>
+
+                    <h3 data-i18n="soon4_title">
+                        Study Center
+                    </h3>
+
+                    <p data-i18n="soon4_text">
+                        Un espace dédié à tes matières et ressources.
+                    </p>
+
+                </div>
+
+                <span
+                    class="coming-soon-tag"
+                    data-i18n="soon_tag"
+                >
+                    Bientôt
+                </span>
+
+            </article>
+
+
+            <article class="coming-card">
+
+                <div class="feature-icon">
+                    🔔
+                </div>
+
+                <div>
+
+                    <h3 data-i18n="soon5_title">
+                        Smart Reminders
+                    </h3>
+
+                    <p data-i18n="soon5_text">
+                        Des rappels pour ne pas oublier les moments importants.
+                    </p>
+
+                </div>
+
+                <span
+                    class="coming-soon-tag"
+                    data-i18n="soon_tag"
+                >
+                    Bientôt
+                </span>
+
+            </article>
+
+
+            <article class="coming-card">
+
+                <div class="feature-icon">
+                    🗓️
+                </div>
+
+                <div>
+
+                    <h3 data-i18n="soon6_title">
+                        Exams & Tests
+                    </h3>
+
+                    <p data-i18n="soon6_text">
+                        Prépare tes contrôles et garde les dates importantes.
+                    </p>
+
+                </div>
+
+                <span
+                    class="coming-soon-tag"
+                    data-i18n="soon_tag"
+                >
+                    Bientôt
+                </span>
+
+            </article>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     CORE IDEA
+====================================================== -->
+
+<section class="core-section">
+
+    <div class="container">
+
+        <div class="core-box">
+
+            <div class="core-icon">
+                💡
+            </div>
+
+            <div>
+
+                <span
+                    class="eyebrow"
+                    data-i18n="core_eyebrow"
+                >
+                    L'idée derrière StudyPulse
+                </span>
+
+                <p data-i18n="core_idea">
+                    StudyPulse aide l'élève à savoir quoi étudier,
+                    quand étudier, ce qui est terminé et ce qui reste —
+                    tout en un seul endroit.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     CTA
+====================================================== -->
+
+<section
+    class="cta"
+    id="start"
+>
+
+    <div class="container">
+
+        <div class="cta-box">
+
+            <div class="cta-badge">
+                🇹🇳 StudyPulse
+            </div>
+
+            <h2 data-i18n="cta_title">
+                Prêt à mieux organiser tes études ?
+            </h2>
+
+            <p data-i18n="cta_text">
+                Rejoins StudyPulse et transforme ton organisation scolaire
+                en une expérience plus simple.
+            </p>
+
+
+            <div class="cta-actions">
+
+                <!-- CHANGE THIS LINK IF YOUR SIGNUP PAGE HAS ANOTHER NAME -->
+
+                <a
+                    href="signup.html"
+                    class="btn btn-primary"
+                    data-i18n="cta_button"
+                >
+                    🚀 Commencer maintenant
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
+
+<footer>
+
+    <div class="container">
+
+
+        <div class="footer-inner">
+
+
+            <div>
+
+                <a
+                    class="footer-logo"
+                    href="#top"
+                >
+
+                    <span class="logo-icon">
+                        S
+                    </span>
+
+                    <span>
+                        StudyPulse
+                    </span>
+
+                </a>
+
+
+                <p data-i18n="footer_text">
+                    Organise. Étudie. Progresse.
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <a
+                    href="#about"
+                    data-i18n="nav_about"
+                >
+                    À propos
+                </a>
+
+                <a
+                    href="#features"
+                    data-i18n="nav_features"
+                >
+                    Fonctionnalités
+                </a>
+
+                <a
+                    href="#coming"
+                    data-i18n="nav_coming"
+                >
+                    Bientôt
+                </a>
+
+                <a
+                    href="#start"
+                    data-i18n="contact"
+                >
+                    Contact
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <span>
+                © 2026 StudyPulse
+            </span>
+
+            <span data-i18n="footer_made">
+                Fait pour les élèves, pensé pour leurs études.
+            </span>
+
+        </div>
+
+
+    </div>
+
+</footer>
+
+
+
+<script>
+
+/* =========================================================
+   STUDYPULSE — LANGUAGE SYSTEM
+========================================================= */
+
+const translations = {
+
+
+/* =====================================================
+   FRANÇAIS
+===================================================== */
+
+fr: {
+
+    nav_about: "À propos",
+    nav_features: "Fonctionnalités",
+    nav_experience: "Expérience",
+    nav_coming: "Bientôt",
+    nav_start: "Commencer",
+
+    badge: "🇹🇳 Créé pour les élèves tunisiens",
+
+    hero1: "Organise tes études.",
+    hero2: "Progresse avec StudyPulse.",
+
+    hero_text:
+        "StudyPulse réunit ton planning, tes tâches, tes révisions et ton suivi scolaire dans un seul espace.",
+
+    hero_button:
+        "🚀 Commencer avec StudyPulse",
+
+    hero_more:
+        "Découvrir les fonctionnalités",
+
+    hero_trust1: "Planning",
+    hero_trust2: "Tasks",
+    hero_trust3: "Révisions",
+    hero_trust4: "Progression",
+
+
+    value_eyebrow:
+        "Une seule plateforme",
+
+    value_title:
+        "Tout ton parcours scolaire, au même endroit.",
+
+    value_text:
+        "StudyPulse transforme ton organisation quotidienne en un espace clair, simple et adapté à ta façon de travailler.",
+
+    value1_title:
+        "Organiser",
+
+    value1_text:
+        "Ton emploi du temps, tes tâches et tes échéances restent organisés.",
+
+    value2_title:
+        "Étudier",
+
+    value2_text:
+        "Planifie tes révisions et tes sessions selon tes matières.",
+
+    value3_title:
+        "Progresser",
+
+    value3_text:
+        "Visualise ton activité et vois ce que tu as déjà accompli.",
+
+
+    problem_eyebrow:
+        "Le problème",
+
+    problem_title:
+        "Quand tout est dispersé, étudier devient plus compliqué.",
+
+    problem_text:
+        "Planning, devoirs, contrôles et révisions peuvent rapidement devenir difficiles à gérer.",
+
+    problem1_title:
+        "Planning dispersé",
+
+    problem1_text:
+        "Ton emploi du temps et tes révisions peuvent être répartis dans plusieurs endroits.",
+
+    problem2_title:
+        "Trop de choses à retenir",
+
+    problem2_text:
+        "Devoirs, contrôles, tâches et dates importantes peuvent facilement être oubliés.",
+
+    problem3_title:
+        "Difficile de voir ses progrès",
+
+    problem3_text:
+        "Sans une vue claire, il est difficile de savoir ce qui est terminé et ce qui reste à faire.",
+
+
+    features_eyebrow:
+        "La solution",
+
+    features_title:
+        "Un espace pensé pour ta vie scolaire.",
+
+    features_text:
+        "Les outils essentiels pour organiser, étudier et suivre ton évolution.",
+
+
+    cat1_title:
+        "Organisation",
+
+    cat1_text:
+        "Gère facilement ton quotidien scolaire.",
+
+    cat2_title:
+        "Étude",
+
+    cat2_text:
+        "Planifie ton travail et tes révisions.",
+
+    cat3_title:
+        "Suivi",
+
+    cat3_text:
+        "Comprends ton activité et tes progrès.",
+
+    cat4_title:
+        "Communication",
+
+    cat4_text:
+        "Reste connecté à ton environnement scolaire.",
+
+
+    f1_title:
+        "Emploi du temps",
+
+    f1_text:
+        "Organise et consulte ton planning facilement.",
+
+    f2_title:
+        "Tasks & devoirs",
+
+    f2_text:
+        "Ajoute tes tâches et suis leur avancement.",
+
+    f3_title:
+        "Calendrier",
+
+    f3_text:
+        "Visualise tes tâches et sessions dans un calendrier.",
+
+    f4_title:
+        "Import PDF",
+
+    f4_text:
+        "Importe ton emploi du temps et gagne du temps.",
+
+    f5_title:
+        "Révisions",
+
+    f5_text:
+        "Planifie tes séances de révision.",
+
+    f6_title:
+        "Sessions d'étude",
+
+    f6_text:
+        "Définis la durée de chaque session.",
+
+    f7_title:
+        "Matières",
+
+    f7_text:
+        "Accède aux matières adaptées à ta classe et ta section.",
+
+    f8_title:
+        "Objectifs",
+
+    f8_text:
+        "Fixe tes objectifs scolaires et suis leur évolution.",
+
+    f9_title:
+        "Statistiques",
+
+    f9_text:
+        "Visualise ton activité et ta progression.",
+
+    f10_title:
+        "Progression",
+
+    f10_text:
+        "Suis les tâches que tu as accomplies.",
+
+    f11_title:
+        "Rapports",
+
+    f11_text:
+        "Génère des rapports sur ton activité scolaire.",
+
+    f12_title:
+        "Achievements",
+
+    f12_text:
+        "Découvre tes accomplissements au fil du temps.",
+
+    f13_title:
+        "Chat",
+
+    f13_text:
+        "Communique avec les utilisateurs de la plateforme.",
+
+    f14_title:
+        "Messages vocaux",
+
+    f14_text:
+        "Envoie et reçois des messages vocaux.",
+
+    f15_title:
+        "Sections",
+
+    f15_text:
+        "Organise-toi avec les élèves de ta section.",
+
+    f16_title:
+        "Notifications",
+
+    f16_text:
+        "Reste informé des informations importantes.",
+
+
+    experience_eyebrow:
+        "Ton expérience",
+
+    experience_title:
+        "De la première tâche jusqu'au suivi de tes progrès.",
+
+    experience_text:
+        "StudyPulse accompagne ton organisation tout au long de ta journée.",
+
+    exp1_title:
+        "Tu sais ce qui t'attend",
+
+    exp1_text:
+        "Consulte ton planning et les tâches prévues.",
+
+    exp2_title:
+        "Tu sais quoi travailler",
+
+    exp2_text:
+        "Organise tes révisions et tes sessions par matière.",
+
+    exp3_title:
+        "Tu vois ce que tu accomplis",
+
+    exp3_text:
+        "Termine tes tâches et garde une trace de ton activité.",
+
+    exp4_title:
+        "Tu vois tes progrès",
+
+    exp4_text:
+        "Analyse ton évolution et avance progressivement.",
+
+
+    tunisia_eyebrow:
+        "Made for Tunisia",
+
+    tunisia_title:
+        "Pensé pour les élèves tunisiens.",
+
+    tunisia_text:
+        "StudyPulse est développé autour des besoins des élèves en Tunisie et de leur organisation scolaire.",
+
+    tunisia_point1:
+        "Système scolaire tunisien",
+
+    tunisia_point2:
+        "Matières adaptées",
+
+    tunisia_point3:
+        "Organisation scolaire",
+
+
+    how_eyebrow:
+        "Simple et rapide",
+
+    how_title:
+        "Commence en quelques étapes.",
+
+    how_text:
+        "Pas besoin de compliquer ton organisation.",
+
+    step1_title:
+        "Crée ton compte",
+
+    step1_text:
+        "Inscris-toi et prépare ton espace StudyPulse.",
+
+    step2_title:
+        "Configure ton espace",
+
+    step2_text:
+        "Ajoute ta classe, ta section, ton planning et tes matières.",
+
+    step3_title:
+        "Organise ton travail",
+
+    step3_text:
+        "Ajoute tes tâches, sessions et révisions.",
+
+    step4_title:
+        "Progresse",
+
+    step4_text:
+        "Suis ton activité et avance vers tes objectifs.",
+
+
+    coming_eyebrow:
+        "🚀 Bientôt disponible",
+
+    coming_title:
+        "StudyPulse continue d'évoluer.",
+
+    coming_text:
+        "De nouvelles fonctionnalités arrivent progressivement pour enrichir ton expérience.",
+
+    soon_tag:
+        "Bientôt",
+
+    soon1_title:
+        "Quiz & Practice",
+
+    soon1_text:
+        "Entraîne-toi et mesure tes résultats.",
+
+    soon2_title:
+        "Focus Mode",
+
+    soon2_text:
+        "Concentre-toi sur une session sans distractions.",
+
+    soon3_title:
+        "Notes",
+
+    soon3_text:
+        "Crée et retrouve tes notes par matière.",
+
+    soon4_title:
+        "Study Center",
+
+    soon4_text:
+        "Un espace dédié à tes matières et ressources.",
+
+    soon5_title:
+        "Smart Reminders",
+
+    soon5_text:
+        "Des rappels pour ne pas oublier les moments importants.",
+
+    soon6_title:
+        "Exams & Tests",
+
+    soon6_text:
+        "Prépare tes contrôles et garde les dates importantes.",
+
+
+    core_eyebrow:
+        "L'idée derrière StudyPulse",
+
+    core_idea:
+        "StudyPulse aide l'élève à savoir quoi étudier, quand étudier, ce qui est terminé et ce qui reste — tout en un seul endroit.",
+
+
+    cta_title:
+        "Prêt à mieux organiser tes études ?",
+
+    cta_text:
+        "Rejoins StudyPulse et transforme ton organisation scolaire en une expérience plus simple.",
+
+    cta_button:
+        "🚀 Commencer maintenant",
+
+    contact:
+        "Contact",
+
+    footer_text:
+        "Organise. Étudie. Progresse.",
+
+    footer_made:
+        "Fait pour les élèves, pensé pour leurs études."
+
+},
+
+
+
+/* =====================================================
+   ENGLISH
+===================================================== */
+
+en: {
+
+    nav_about:
+        "About",
+
+    nav_features:
+        "Features",
+
+    nav_experience:
+        "Experience",
+
+    nav_coming:
+        "Coming Soon",
+
+    nav_start:
+        "Get started",
+
+
+    badge:
+        "🇹🇳 Built for Tunisian students",
+
+    hero1:
+        "Organize your studies.",
+
+    hero2:
+        "Progress with StudyPulse.",
+
+    hero_text:
+        "StudyPulse brings your schedule, tasks, revision sessions and academic progress together in one place.",
+
+    hero_button:
+        "🚀 Get started with StudyPulse",
+
+    hero_more:
+        "Explore features",
+
+    hero_trust1:
+        "Schedule",
+
+    hero_trust2:
+        "Tasks",
+
+    hero_trust3:
+        "Revision",
+
+    hero_trust4:
+        "Progress",
+
+
+    value_eyebrow:
+        "One platform",
+
+    value_title:
+        "Your entire school journey, in one place.",
+
+    value_text:
+        "StudyPulse turns your daily organization into a clear and simple space adapted to the way you study.",
+
+    value1_title:
+        "Organize",
+
+    value1_text:
+        "Keep your schedule, tasks and deadlines organized.",
+
+    value2_title:
+        "Study",
+
+    value2_text:
+        "Plan your revision sessions around your subjects.",
+
+    value3_title:
+        "Progress",
+
+    value3_text:
+        "See your activity and everything you have accomplished.",
+
+
+    problem_eyebrow:
+        "The problem",
+
+    problem_title:
+        "When everything is scattered, studying becomes harder.",
+
+    problem_text:
+        "Schedules, homework, tests and revision can quickly become difficult to manage.",
+
+    problem1_title:
+        "Scattered planning",
+
+    problem1_text:
+        "Your schedule and revision plans can be spread across different places.",
+
+    problem2_title:
+        "Too much to remember",
+
+    problem2_text:
+        "Homework, tests, tasks and important dates can easily be forgotten.",
+
+    problem3_title:
+        "Hard to see progress",
+
+    problem3_text:
+        "Without a clear overview, it is difficult to know what is done and what remains.",
+
+
+    features_eyebrow:
+        "The solution",
+
+    features_title:
+        "A space designed around your school life.",
+
+    features_text:
+        "The essential tools to organize, study and track your progress.",
+
+
+    cat1_title:
+        "Organization",
+
+    cat1_text:
+        "Manage your school day easily.",
+
+    cat2_title:
+        "Study",
+
+    cat2_text:
+        "Plan your work and revision.",
+
+    cat3_title:
+        "Tracking",
+
+    cat3_text:
+        "Understand your activity and progress.",
+
+    cat4_title:
+        "Communication",
+
+    cat4_text:
+        "Stay connected with your school environment.",
+
+
+    f1_title:
+        "Schedule",
+
+    f1_text:
+        "Organize and view your schedule easily.",
+
+    f2_title:
+        "Tasks & homework",
+
+    f2_text:
+        "Add tasks and track their progress.",
+
+    f3_title:
+        "Calendar",
+
+    f3_text:
+        "View your tasks and sessions in a calendar.",
+
+    f4_title:
+        "PDF Import",
+
+    f4_text:
+        "Import your schedule and save time.",
+
+    f5_title:
+        "Revision",
+
+    f5_text:
+        "Plan your revision sessions.",
+
+    f6_title:
+        "Study sessions",
+
+    f6_text:
+        "Set the duration of each session.",
+
+    f7_title:
+        "Subjects",
+
+    f7_text:
+        "Access subjects adapted to your class and section.",
+
+    f8_title:
+        "Goals",
+
+    f8_text:
+        "Set academic goals and track their progress.",
+
+    f9_title:
+        "Statistics",
+
+    f9_text:
+        "Visualize your activity and progress.",
+
+    f10_title:
+        "Progress",
+
+    f10_text:
+        "Track the tasks you have completed.",
+
+    f11_title:
+        "Reports",
+
+    f11_text:
+        "Generate reports about your school activity.",
+
+    f12_title:
+        "Achievements",
+
+    f12_text:
+        "Discover your accomplishments over time.",
+
+    f13_title:
+        "Chat",
+
+    f13_text:
+        "Communicate with users on the platform.",
+
+    f14_title:
+        "Voice messages",
+
+    f14_text:
+        "Send and receive voice messages.",
+
+    f15_title:
+        "Sections",
+
+    f15_text:
+        "Organize yourself with students from your section.",
+
+    f16_title:
+        "Notifications",
+
+    f16_text:
+        "Stay informed about important information.",
+
+
+    experience_eyebrow:
+        "Your experience",
+
+    experience_title:
+        "From your first task to tracking your progress.",
+
+    experience_text:
+        "StudyPulse supports your organization throughout your day.",
+
+    exp1_title:
+        "Know what's coming",
+
+    exp1_text:
+        "Check your schedule and upcoming tasks.",
+
+    exp2_title:
+        "Know what to study",
+
+    exp2_text:
+        "Organize your revision sessions by subject.",
+
+    exp3_title:
+        "See what you accomplish",
+
+    exp3_text:
+        "Complete tasks and keep track of your activity.",
+
+    exp4_title:
+        "See your progress",
+
+    exp4_text:
+        "Understand your progress and keep moving forward.",
+
+
+    tunisia_eyebrow:
+        "Made for Tunisia",
+
+    tunisia_title:
+        "Designed for Tunisian students.",
+
+    tunisia_text:
+        "StudyPulse is built around the needs of students in Tunisia and their school organization.",
+
+    tunisia_point1:
+        "Tunisian school system",
+
+    tunisia_point2:
+        "Adapted subjects",
+
+    tunisia_point3:
+        "School organization",
+
+
+    how_eyebrow:
+        "Simple and fast",
+
+    how_title:
+        "Get started in a few steps.",
+
+    how_text:
+        "You don't need to complicate your organization.",
+
+    step1_title:
+        "Create your account",
+
+    step1_text:
+        "Sign up and set up your StudyPulse space.",
+
+    step2_title:
+        "Set up your space",
+
+    step2_text:
+        "Add your class, section, schedule and subjects.",
+
+    step3_title:
+        "Organize your work",
+
+    step3_text:
+        "Add tasks, sessions and revision plans.",
+
+    step4_title:
+        "Make progress",
+
+    step4_text:
+        "Track your activity and move toward your goals.",
+
+
+    coming_eyebrow:
+        "🚀 Coming soon",
+
+    coming_title:
+        "StudyPulse keeps evolving.",
+
+    coming_text:
+        "New features are coming progressively to make your experience even better.",
+
+    soon_tag:
+        "Soon",
+
+    soon1_title:
+        "Quiz & Practice",
+
+    soon1_text:
+        "Practice and measure your results.",
+
+    soon2_title:
+        "Focus Mode",
+
+    soon2_text:
+        "Focus on a study session without distractions.",
+
+    soon3_title:
+        "Notes",
+
+    soon3_text:
+        "Create and find your notes by subject.",
+
+    soon4_title:
+        "Study Center",
+
+    soon4_text:
+        "A dedicated space for subjects and resources.",
+
+    soon5_title:
+        "Smart Reminders",
+
+    soon5_text:
+        "Reminders to help you remember important moments.",
+
+    soon6_title:
+        "Exams & Tests",
+
+    soon6_text:
+        "Prepare for tests and keep important dates.",
+
+
+    core_eyebrow:
+        "The idea behind StudyPulse",
+
+    core_idea:
+        "StudyPulse helps students know what to study, when to study, what is completed and what remains — all in one place.",
+
+
+    cta_title:
+        "Ready to organize your studies better?",
+
+    cta_text:
+        "Join StudyPulse and turn your school organization into a simpler experience.",
+
+    cta_button:
+        "🚀 Start now",
+
+    contact:
+        "Contact",
+
+    footer_text:
+        "Organize. Study. Progress.",
+
+    footer_made:
+        "Made for students, designed for their studies."
+
+},
+
+
+
+/* =====================================================
+   ARABIC
+===================================================== */
+
+ar: {
+
+    nav_about:
+        "عن StudyPulse",
+
+    nav_features:
+        "المميزات",
+
+    nav_experience:
+        "تجربتك",
+
+    nav_coming:
+        "قريبًا",
+
+    nav_start:
+        "ابدأ الآن",
+
+
+    badge:
+        "🇹🇳 صُمم للتلاميذ في تونس",
+
+    hero1:
+        "نظّم دراستك.",
+
+    hero2:
+        "وتقدّم مع StudyPulse.",
+
+    hero_text:
+        "StudyPulse يجمع جدولك ومهامك وحصص المراجعة وتقدمك الدراسي في مكان واحد.",
+
+    hero_button:
+        "🚀 ابدأ مع StudyPulse",
+
+    hero_more:
+        "اكتشف المميزات",
+
+    hero_trust1:
+        "الجدول",
+
+    hero_trust2:
+        "المهام",
+
+    hero_trust3:
+        "المراجعة",
+
+    hero_trust4:
+        "التقدم",
+
+
+    value_eyebrow:
+        "منصة واحدة",
+
+    value_title:
+        "كل مسارك الدراسي في مكان واحد.",
+
+    value_text:
+        "StudyPulse يحول تنظيمك اليومي إلى مساحة واضحة وبسيطة تناسب طريقة دراستك.",
+
+    value1_title:
+        "نظّم",
+
+    value1_text:
+        "حافظ على تنظيم جدولك ومهامك ومواعيدك.",
+
+    value2_title:
+        "ادرس",
+
+    value2_text:
+        "خطط لحصص المراجعة حسب المواد.",
+
+    value3_title:
+        "تقدّم",
+
+    value3_text:
+        "شاهد نشاطك وما أنجزته.",
+
+
+    problem_eyebrow:
+        "المشكلة",
+
+    problem_title:
+        "عندما يكون كل شيء متشتتًا، تصبح الدراسة أصعب.",
+
+    problem_text:
+        "الجدول والواجبات والاختبارات والمراجعة يمكن أن تصبح صعبة التنظيم.",
+
+    problem1_title:
+        "جدول متشتت",
+
+    problem1_text:
+        "قد يكون جدولك وخطة المراجعة موزعين في أماكن مختلفة.",
+
+    problem2_title:
+        "أشياء كثيرة يجب تذكرها",
+
+    problem2_text:
+        "يمكن نسيان الواجبات والاختبارات والمهام والمواعيد المهمة بسهولة.",
+
+    problem3_title:
+        "صعوبة رؤية التقدم",
+
+    problem3_text:
+        "بدون رؤية واضحة، من الصعب معرفة ما تم إنجازه وما تبقى.",
+
+
+    features_eyebrow:
+        "الحل",
+
+    features_title:
+        "مساحة مصممة لحياتك الدراسية.",
+
+    features_text:
+        "الأدوات الأساسية لتنظيم دراستك ومتابعة تقدمك.",
+
+
+    cat1_title:
+        "التنظيم",
+
+    cat1_text:
+        "نظّم يومك الدراسي بسهولة.",
+
+    cat2_title:
+        "الدراسة",
+
+    cat2_text:
+        "خطط لعملك ومراجعتك.",
+
+    cat3_title:
+        "المتابعة",
+
+    cat3_text:
+        "افهم نشاطك وتقدمك.",
+
+    cat4_title:
+        "التواصل",
+
+    cat4_text:
+        "ابق على اتصال بمحيطك الدراسي.",
+
+
+    f1_title:
+        "جدول الدراسة",
+
+    f1_text:
+        "نظّم جدولك واطلع عليه بسهولة.",
+
+    f2_title:
+        "المهام والواجبات",
+
+    f2_text:
+        "أضف مهامك وتابع تقدمها.",
+
+    f3_title:
+        "التقويم",
+
+    f3_text:
+        "شاهد مهامك وحصصك في تقويم واحد.",
+
+    f4_title:
+        "استيراد PDF",
+
+    f4_text:
+        "استورد جدولك الدراسي ووفر الوقت.",
+
+    f5_title:
+        "المراجعة",
+
+    f5_text:
+        "خطط لحصص المراجعة.",
+
+    f6_title:
+        "جلسات الدراسة",
+
+    f6_text:
+        "حدد مدة كل جلسة.",
+
+    f7_title:
+        "المواد",
+
+    f7_text:
+        "الوصول إلى المواد المناسبة لصفك وشعبتك.",
+
+    f8_title:
+        "الأهداف",
+
+    f8_text:
+        "حدد أهدافك الدراسية وتابع تقدمك.",
+
+    f9_title:
+        "الإحصائيات",
+
+    f9_text:
+        "شاهد نشاطك وتقدمك.",
+
+    f10_title:
+        "التقدم",
+
+    f10_text:
+        "تابع المهام التي أنجزتها.",
+
+    f11_title:
+        "التقارير",
+
+    f11_text:
+        "أنشئ تقارير حول نشاطك الدراسي.",
+
+    f12_title:
+        "الإنجازات",
+
+    f12_text:
+        "اكتشف إنجازاتك مع مرور الوقت.",
+
+    f13_title:
+        "الدردشة",
+
+    f13_text:
+        "تواصل مع مستخدمي المنصة.",
+
+    f14_title:
+        "الرسائل الصوتية",
+
+    f14_text:
+        "أرسل واستقبل رسائل صوتية.",
+
+    f15_title:
+        "الأقسام",
+
+    f15_text:
+        "نظّم دراستك مع تلاميذ قسمك.",
+
+    f16_title:
+        "الإشعارات",
+
+    f16_text:
+        "ابق على اطلاع بالمعلومات المهمة.",
+
+
+    experience_eyebrow:
+        "تجربتك",
+
+    experience_title:
+        "من أول مهمة إلى متابعة تقدمك.",
+
+    experience_text:
+        "StudyPulse يرافق تنظيمك الدراسي طوال يومك.",
+
+    exp1_title:
+        "تعرف ما ينتظرك",
+
+    exp1_text:
+        "اطلع على جدولك والمهام القادمة.",
+
+    exp2_title:
+        "تعرف ماذا تدرس",
+
+    exp2_text:
+        "نظّم مراجعتك وحصصك حسب المادة.",
+
+    exp3_title:
+        "ترى ما أنجزته",
+
+    exp3_text:
+        "أكمل مهامك واحتفظ بسجل لنشاطك.",
+
+    exp4_title:
+        "ترى تقدمك",
+
+    exp4_text:
+        "تابع تطورك واستمر في التقدم.",
+
+
+    tunisia_eyebrow:
+        "صنع لتونس",
+
+    tunisia_title:
+        "صُمم خصيصًا للتلاميذ التونسيين.",
+
+    tunisia_text:
+        "تم تطوير StudyPulse انطلاقًا من احتياجات التلاميذ في تونس وتنظيمهم الدراسي.",
+
+    tunisia_point1:
+        "النظام الدراسي التونسي",
+
+    tunisia_point2:
+        "مواد مناسبة",
+
+    tunisia_point3:
+        "تنظيم دراسي",
+
+
+    how_eyebrow:
+        "بسيط وسريع",
+
+    how_title:
+        "ابدأ في خطوات بسيطة.",
+
+    how_text:
+        "لا تحتاج إلى تعقيد تنظيم دراستك.",
+
+    step1_title:
+        "أنشئ حسابك",
+
+    step1_text:
+        "سجل وأنشئ مساحة StudyPulse الخاصة بك.",
+
+    step2_title:
+        "جهّز مساحتك",
+
+    step2_text:
+        "أضف صفك وشعبتك وجدولك وموادك.",
+
+    step3_title:
+        "نظّم عملك",
+
+    step3_text:
+        "أضف المهام والجلسات وخطة المراجعة.",
+
+    step4_title:
+        "تقدّم",
+
+    step4_text:
+        "تابع نشاطك وتقدم نحو أهدافك.",
+
+
+    coming_eyebrow:
+        "🚀 قريبًا",
+
+    coming_title:
+        "StudyPulse يواصل التطور.",
+
+    coming_text:
+        "ميزات جديدة ستصل تدريجيًا لتحسين تجربتك.",
+
+    soon_tag:
+        "قريبًا",
+
+    soon1_title:
+        "اختبارات وتدريب",
+
+    soon1_text:
+        "تدرّب وقس نتائجك.",
+
+    soon2_title:
+        "وضع التركيز",
+
+    soon2_text:
+        "ركز على جلسة دراسة بدون تشتيت.",
+
+    soon3_title:
+        "الملاحظات",
+
+    soon3_text:
+        "أنشئ ملاحظاتك وابحث عنها حسب المادة.",
+
+    soon4_title:
+        "مركز الدراسة",
+
+    soon4_text:
+        "مساحة خاصة للمواد والموارد.",
+
+    soon5_title:
+        "التذكيرات الذكية",
+
+    soon5_text:
+        "تذكيرات تساعدك على عدم نسيان المواعيد المهمة.",
+
+    soon6_title:
+        "الاختبارات والفروض",
+
+    soon6_text:
+        "حضّر لاختباراتك واحتفظ بالمواعيد المهمة.",
+
+
+    core_eyebrow:
+        "الفكرة وراء StudyPulse",
+
+    core_idea:
+        "StudyPulse يساعد التلميذ على معرفة ماذا يدرس، متى يدرس، ما أنجزه وما تبقى — كل ذلك في مكان واحد.",
+
+
+    cta_title:
+        "هل أنت مستعد لتنظيم دراستك بشكل أفضل؟",
+
+    cta_text:
+        "انضم إلى StudyPulse واجعل تنظيم دراستك أبسط.",
+
+    cta_button:
+        "🚀 ابدأ الآن",
+
+    contact:
+        "تواصل معنا",
+
+    footer_text:
+        "نظّم. ادرس. تقدّم.",
+
+    footer_made:
+        "صُنع للتلاميذ، وصُمم لدراستهم."
+
+},
+
+
+
+/* =====================================================
+   TUNISIAN
+===================================================== */
+
+tn: {
+
+    nav_about:
+        "علاش StudyPulse؟",
+
+    nav_features:
+        "المميزات",
+
+    nav_experience:
+        "تجربتك",
+
+    nav_coming:
+        "قريبًا",
+
+    nav_start:
+        "إبدأ توّا",
+
+
+    badge:
+        "🇹🇳 معمول للتلامذة التوانسة",
+
+    hero1:
+        "نظّم قرايتك.",
+
+    hero2:
+        "وتقدّم مع StudyPulse.",
+
+    hero_text:
+        "StudyPulse يجمعلك الـplanning، les tâches، les révisions والتقدم الدراسي الكل في بلاصة وحدة.",
+
+    hero_button:
+        "🚀 إبدأ مع StudyPulse",
+
+    hero_more:
+        "شوف المميزات",
+
+    hero_trust1:
+        "Planning",
+
+    hero_trust2:
+        "Tasks",
+
+    hero_trust3:
+        "Révisions",
+
+    hero_trust4:
+        "Progression",
+
+
+    value_eyebrow:
+        "منصة وحدة",
+
+    value_title:
+        "كل organisation scolaire متاعك في بلاصة وحدة.",
+
+    value_text:
+        "StudyPulse يحوّل organisation متاعك اليومية لبلاصة واضحة وساهلة وتناسب طريقة قرايتك.",
+
+    value1_title:
+        "نظّم",
+
+    value1_text:
+        "خلي planning، tasks والـdeadlines متاعك منظّمين.",
+
+    value2_title:
+        "إقرا",
+
+    value2_text:
+        "برمج les révisions والـsessions حسب المواد.",
+
+    value3_title:
+        "تقدّم",
+
+    value3_text:
+        "شوف النشاط متاعك وشنوّة كملت.",
+
+
+    problem_eyebrow:
+        "المشكل",
+
+    problem_title:
+        "كي يكون كل شي متشتّت، القراية تولّي أصعب.",
+
+    problem_text:
+        "Planning، devoirs، contrôles والـrévisions ينجموا يولو صعيبين في التنظيم.",
+
+    problem1_title:
+        "Planning متشتّت",
+
+    problem1_text:
+        "الـplanning والـrévisions متاعك ينجموا يكونوا موزعين في برشا بلايص.",
+
+    problem2_title:
+        "برشا حاجات لازم تتفكر",
+
+    problem2_text:
+        "Devoirs، contrôles، tâches ومواعيد مهمة تنجم تتنسى بسهولة.",
+
+    problem3_title:
+        "صعيب تشوف تقدمك",
+
+    problem3_text:
+        "من غير رؤية واضحة، صعيب تعرف شنوّة كملت وشنوّة مازال.",
+
+
+    features_eyebrow:
+        "الحل",
+
+    features_title:
+        "بلاصة معمولة على خاطر حياتك الدراسية.",
+
+    features_text:
+        "الأدوات الأساسية باش تنظّم، تقرى وتتابع تقدمك.",
+
+
+    cat1_title:
+        "Organisation",
+
+    cat1_text:
+        "نظّم نهارك الدراسي بسهولة.",
+
+    cat2_title:
+        "Étude",
+
+    cat2_text:
+        "برمج خدمتك والـrévisions متاعك.",
+
+    cat3_title:
+        "Suivi",
+
+    cat3_text:
+        "افهم النشاط والتقدم متاعك.",
+
+    cat4_title:
+        "Communication",
+
+    cat4_text:
+        "خليك متصل بالمحيط الدراسي متاعك.",
+
+
+    f1_title:
+        "Emploi du temps",
+
+    f1_text:
+        "نظّم وشوف الـplanning متاعك بسهولة.",
+
+    f2_title:
+        "Tasks & devoirs",
+
+    f2_text:
+        "زيد مهامك وتابع وين وصلت فيها.",
+
+    f3_title:
+        "Calendrier",
+
+    f3_text:
+        "شوف tasks والـsessions متاعك في calendrier.",
+
+    f4_title:
+        "Import PDF",
+
+    f4_text:
+        "دخل emploi du temps متاعك من PDF ووفر وقت.",
+
+    f5_title:
+        "Révisions",
+
+    f5_text:
+        "برمج حصص الـrévision متاعك.",
+
+    f6_title:
+        "Sessions d'étude",
+
+    f6_text:
+        "حدّد المدة لكل session.",
+
+    f7_title:
+        "Matières",
+
+    f7_text:
+        "شوف المواد المناسبة للـclasse والشعبة متاعك.",
+
+    f8_title:
+        "Objectifs",
+
+    f8_text:
+        "حدّد objectifs متاعك وتابع التقدم.",
+
+    f9_title:
+        "Statistiques",
+
+    f9_text:
+        "شوف النشاط والتقدم متاعك.",
+
+    f10_title:
+        "Progression",
+
+    f10_text:
+        "تتبع المهام اللي كملتهم.",
+
+    f11_title:
+        "Rapports",
+
+    f11_text:
+        "أعمل reports على النشاط الدراسي متاعك.",
+
+    f12_title:
+        "Achievements",
+
+    f12_text:
+        "شوف الإنجازات اللي حققتها مع الوقت.",
+
+    f13_title:
+        "Chat",
+
+    f13_text:
+        "تواصل مع utilisateurs متاع المنصة.",
+
+    f14_title:
+        "Messages vocaux",
+
+    f14_text:
+        "أرسل واستقبل messages vocaux.",
+
+    f15_title:
+        "Sections",
+
+    f15_text:
+        "نظّم وخدم مع التلامذة متاع section.",
+
+    f16_title:
+        "Notifications",
+
+    f16_text:
+        "خليك ديما على علم بالحاجات المهمة.",
+
+
+    experience_eyebrow:
+        "تجربتك",
+
+    experience_title:
+        "من أول tâche حتى لمتابعة تقدمك.",
+
+    experience_text:
+        "StudyPulse يرافق organisation متاع قرايتك طول النهار.",
+
+    exp1_title:
+        "تعرف شنوّة يستناك",
+
+    exp1_text:
+        "شوف الـplanning والـtasks الجايين.",
+
+    exp2_title:
+        "تعرف شنوّة تقرى",
+
+    exp2_text:
+        "نظّم الـrévisions والـsessions حسب matière.",
+
+    exp3_title:
+        "تشوف شنوّة كملت",
+
+    exp3_text:
+        "كمّل tasks متاعك وخلي historique لنشاطك.",
+
+    exp4_title:
+        "تشوف تقدمك",
+
+    exp4_text:
+        "تابع تطورك وتقدّم شوية بشوية.",
+
+
+    tunisia_eyebrow:
+        "Made for Tunisia",
+
+    tunisia_title:
+        "معمول مخصوص للتلامذة التوانسة.",
+
+    tunisia_text:
+        "StudyPulse تطوّر حسب احتياجات التلامذة في تونس وطريقة organisation متاعهم الدراسية.",
+
+    tunisia_point1:
+        "Système scolaire التونسي",
+
+    tunisia_point2:
+        "Matières مناسبة",
+
+    tunisia_point3:
+        "Organisation scolaire",
+
+
+    how_eyebrow:
+        "ساهل وسريع",
+
+    how_title:
+        "إبدأ في شوية خطوات.",
+
+    how_text:
+        "ماكش محتاج تعقّد organisation متاع قرايتك.",
+
+    step1_title:
+        "إعمل compte",
+
+    step1_text:
+        "سجّل وحضّر espace StudyPulse متاعك.",
+
+    step2_title:
+        "جهّز espace متاعك",
+
+    step2_text:
+        "زيد classe، section، planning والمواد متاعك.",
+
+    step3_title:
+        "نظّم خدمتك",
+
+    step3_text:
+        "زيد tasks، sessions والـrévisions.",
+
+    step4_title:
+        "تقدّم",
+
+    step4_text:
+        "تابع النشاط متاعك وتقدّم نحو objectifs متاعك.",
+
+
+    coming_eyebrow:
+        "🚀 قريبًا",
+
+    coming_title:
+        "StudyPulse مازال يتطوّر.",
+
+    coming_text:
+        "Features جديدة باش تهبط تدريجيًا وتحسّن expérience متاعك.",
+
+    soon_tag:
+        "قريبًا",
+
+    soon1_title:
+        "Quiz & Practice",
+
+    soon1_text:
+        "تدرّب وقيس النتائج متاعك.",
+
+    soon2_title:
+        "Focus Mode",
+
+    soon2_text:
+        "ركّز في session متاع قراية من غير distraction.",
+
+    soon3_title:
+        "Notes",
+
+    soon3_text:
+        "أعمل notes ولقاهم حسب matière.",
+
+    soon4_title:
+        "Study Center",
+
+    soon4_text:
+        "بلاصة خاصة بالمواد والـresources.",
+
+    soon5_title:
+        "Smart Reminders",
+
+    soon5_text:
+        "Rappels يعاونوك ما تنساش الحاجات المهمة.",
+
+    soon6_title:
+        "Exams & Tests",
+
+    soon6_text:
+        "حضّر للـcontrôles وخلي المواعيد المهمة قدامك.",
+
+
+    core_eyebrow:
+        "الفكرة وراء StudyPulse",
+
+    core_idea:
+        "StudyPulse تعاون التلميذ يعرف شنوّة يقرى، وقتاش يقرى، شنوّة كمل وشنوّة مازال عليه — الكل في بلاصة وحدة.",
+
+
+    cta_title:
+        "مستعد تنظّم قرايتك خير؟",
+
+    cta_text:
+        "إنضم لـStudyPulse وخلي organisation متاع قرايتك أسهل.",
+
+    cta_button:
+        "🚀 إبدأ توّا",
+
+    contact:
+        "Contact",
+
+    footer_text:
+        "نظّم. إقرا. تقدّم.",
+
+    footer_made:
+        "معمول للتلامذة، ومصمم على خاطر قرايتهم."
+
+}
+
+};
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const languageSelect =
+    document.getElementById("languageSelect");
+
+const navLinks =
+    document.getElementById("navLinks");
+
+const menuBtn =
+    document.getElementById("menuBtn");
+
+
+/* =========================================================
+   SET LANGUAGE
+========================================================= */
+
+function setLanguage(lang) {
+
+    const dict =
+        translations[lang] ||
+        translations.fr;
+
+
+    /* Translate */
+
+    document
+        .querySelectorAll("[data-i18n]")
+        .forEach(element => {
+
+            const key =
+                element.getAttribute("data-i18n");
+
+            if (
+                Object.prototype.hasOwnProperty.call(
+                    dict,
+                    key
+                )
+            ) {
+
+                element.textContent =
+                    dict[key];
+
+            }
+
+        });
+
+
+    /* Direction */
+
+    const isRTL =
+        lang === "ar" ||
+        lang === "tn";
+
+
+    document.documentElement.dir =
+        isRTL
+            ? "rtl"
+            : "ltr";
+
+
+    document.documentElement.lang =
+        lang;
+
+
+    /* Update select */
+
+    languageSelect.value =
+        lang;
+
+
+    /* Save */
+
+    try {
+
+        localStorage.setItem(
+            "studypulse_promo_language",
+            lang
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Language preference could not be saved."
+        );
+
+    }
+
+
+    /* Update page title */
+
+    const titles = {
+
+        fr:
+            "StudyPulse — Organise tes études",
+
+        en:
+            "StudyPulse — Organize your studies",
+
+        ar:
+            "StudyPulse — نظّم دراستك",
+
+        tn:
+            "StudyPulse — نظّم قرايتك"
+
+    };
+
+
+    document.title =
+        titles[lang] ||
+        titles.fr;
+}
+
+
+/* =========================================================
+   LANGUAGE EVENT
+========================================================= */
+
+languageSelect.addEventListener(
+    "change",
+    event => {
+
+        setLanguage(
+            event.target.value
+        );
+
+    }
+);
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+function closeMenu() {
+
+    navLinks.classList.remove(
+        "open"
+    );
+
+    menuBtn.setAttribute(
+        "aria-expanded",
+        "false"
+    );
+
+    menuBtn.textContent =
+        "☰";
+}
+
+
+menuBtn.addEventListener(
+    "click",
+    () => {
+
+        const isOpen =
+            navLinks.classList.toggle(
+                "open"
+            );
+
+        menuBtn.setAttribute(
+            "aria-expanded",
+            String(isOpen)
+        );
+
+        menuBtn.textContent =
+            isOpen
+                ? "✕"
+                : "☰";
+
+    }
+);
+
+
+/* =========================================================
+   CLOSE MENU ON NAVIGATION
+========================================================= */
+
+document
+    .querySelectorAll(".nav-links a")
+    .forEach(link => {
+
+        link.addEventListener(
+            "click",
+            closeMenu
+        );
+
+    });
+
+
+/* =========================================================
+   CLOSE MENU WHEN CLICKING OUTSIDE
+========================================================= */
+
+document.addEventListener(
+    "click",
+    event => {
+
+        if (
+            !navLinks.contains(event.target) &&
+            !menuBtn.contains(event.target)
+        ) {
+
+            closeMenu();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   ESCAPE KEY
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeMenu();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   INITIAL LANGUAGE
+========================================================= */
+
+let savedLanguage =
+    "fr";
+
+try {
+
+    savedLanguage =
+        localStorage.getItem(
+            "studypulse_promo_language"
+        ) || "fr";
+
+} catch (error) {
+
+    savedLanguage =
+        "fr";
+
+}
+
+
+if (
+    !translations[savedLanguage]
+) {
+
+    savedLanguage =
+        "fr";
+
+}
+
+
+setLanguage(
+    savedLanguage
+);
+
+
+/* =========================================================
+   PREVENT EMPTY # LINKS
+========================================================= */
+
+document
+    .querySelectorAll('a[href="#"]')
+    .forEach(link => {
+
+        link.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+
+            }
+        );
+
+    });
+
+</script>
+
+
+</body>
+</html>
