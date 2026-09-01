@@ -1,0 +1,3623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Admin Control | User Management Dashboard</title>
+    <link rel="icon" type="image/png" href="c850b450-afb2-4bdc-bb15-813a48c9237a.png">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <style>
+    /* =========================================================
+       STUDYPULSE — USER GOVERNANCE DASHBOARD
+    ========================================================= */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        /* =========================================================
+           LIGHT THEME
+        ========================================================= */
+
+        --bg: #f8fafc;
+        --bg-soft: #f1f5f9;
+
+        --card: #ffffff;
+        --card-hover: #ffffff;
+
+        --cyan: #06b6d4;
+        --cyan-light: #0891b2;
+
+        --purple: #8b5cf6;
+        --purple-light: #7c3aed;
+
+        --green: #22c55e;
+        --green-light: #16a34a;
+
+        --yellow: #f59e0b;
+        --yellow-light: #d97706;
+
+        --red: #ef4444;
+        --red-light: #dc2626;
+
+        --blue: #3b82f6;
+        --blue-light: #2563eb;
+
+        --text: #0f172a;
+        --text-soft: #334155;
+        --text-muted: #64748b;
+
+        --border: #e2e8f0;
+        --border-hover: rgba(6, 182, 212, 0.45);
+
+        --shadow:
+            0 10px 30px rgba(15, 23, 42, 0.07);
+
+        --shadow-lg:
+            0 20px 50px rgba(15, 23, 42, 0.10);
+
+        --radius-lg: 24px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
+    }
+
+
+    /* =========================================================
+       BODY
+    ========================================================= */
+
+    body {
+        min-height: 100vh;
+
+        font-family:
+            Inter,
+            "Segoe UI",
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            sans-serif;
+
+        color: var(--text);
+
+        background:
+            radial-gradient(
+                circle at 10% 0%,
+                rgba(6, 182, 212, 0.08),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 90% 10%,
+                rgba(139, 92, 246, 0.08),
+                transparent 30%
+            ),
+            var(--bg);
+
+        padding: 32px;
+    }
+
+
+    /* =========================================================
+       CONTAINER
+    ========================================================= */
+
+    .container {
+        width: 100%;
+        max-width: 1500px;
+        margin: 0 auto;
+    }
+
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    .header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+        gap: 32px;
+        margin-bottom: 28px;
+    }
+
+
+    /* =========================================================
+       TITLE
+    ========================================================= */
+
+    .title-section {
+        min-width: 260px;
+    }
+
+    .title-section h1 {
+        font-size: clamp(1.5rem, 2.5vw, 2.15rem);
+
+        font-weight: 800;
+
+        letter-spacing: -0.04em;
+
+        line-height: 1.2;
+
+        background:
+            linear-gradient(
+                135deg,
+                var(--cyan),
+                var(--purple)
+            );
+
+        -webkit-background-clip: text;
+        background-clip: text;
+
+        color: transparent;
+    }
+
+    .title-section p {
+        margin-top: 8px;
+
+        color: var(--text-muted);
+
+        font-size: 0.88rem;
+
+        line-height: 1.5;
+    }
+
+
+    /* =========================================================
+       STATS
+    ========================================================= */
+
+    .stats {
+        display: grid;
+
+        grid-template-columns:
+            repeat(5, minmax(95px, 1fr));
+
+        gap: 10px;
+
+        width: min(100%, 650px);
+    }
+
+    .stat-card {
+        position: relative;
+
+        min-width: 0;
+
+        padding: 15px 12px;
+
+        text-align: center;
+
+        background:
+            linear-gradient(
+                145deg,
+                #ffffff,
+                #f8fafc
+            );
+
+        border: 1px solid var(--border);
+
+        border-radius: var(--radius-md);
+
+        box-shadow:
+            0 8px 25px rgba(15, 23, 42, 0.06);
+
+        transition:
+            transform 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+
+        border-color:
+            rgba(6, 182, 212, 0.28);
+
+        background: #ffffff;
+
+        box-shadow:
+            0 14px 30px rgba(15, 23, 42, 0.09);
+    }
+
+    .stat-number {
+        font-size: 1.45rem;
+
+        font-weight: 800;
+
+        line-height: 1;
+
+        color: var(--cyan-light);
+    }
+
+    .stat-label {
+        margin-top: 7px;
+
+        color: var(--text-muted);
+
+        font-size: 0.62rem;
+
+        font-weight: 700;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.08em;
+    }
+
+
+    /* =========================================================
+       FILTER BAR
+    ========================================================= */
+
+    .filter-bar {
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 14px;
+
+        margin-bottom: 24px;
+
+        padding: 10px;
+
+        background:
+            rgba(255, 255, 255, 0.92);
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 18px;
+
+        backdrop-filter: blur(18px);
+
+        -webkit-backdrop-filter: blur(18px);
+
+        box-shadow:
+            0 10px 30px rgba(15, 23, 42, 0.06);
+    }
+
+
+    /* =========================================================
+       FILTER GROUP
+    ========================================================= */
+
+    .filter-group {
+        display: flex;
+
+        align-items: center;
+
+        gap: 4px;
+
+        padding: 4px;
+
+        background:
+            #f1f5f9;
+
+        border:
+            1px solid #e2e8f0;
+
+        border-radius: 13px;
+
+        overflow-x: auto;
+
+        scrollbar-width: none;
+    }
+
+    .filter-group::-webkit-scrollbar {
+        display: none;
+    }
+
+
+    /* =========================================================
+       FILTER BUTTON
+    ========================================================= */
+
+    .filter-btn {
+        flex-shrink: 0;
+
+        border: none;
+
+        outline: none;
+
+        padding: 8px 13px;
+
+        border-radius: 9px;
+
+        background: transparent;
+
+        color: var(--text-muted);
+
+        font-size: 0.72rem;
+
+        font-weight: 700;
+
+        cursor: pointer;
+
+        transition:
+            background 0.2s ease,
+            color 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    .filter-btn:hover {
+        color: var(--text);
+
+        background:
+            #e2e8f0;
+    }
+
+    .filter-btn.active {
+        color: #ffffff;
+
+        background:
+            linear-gradient(
+                135deg,
+                var(--cyan),
+                #22d3ee
+            );
+
+        box-shadow:
+            0 5px 18px
+            rgba(6, 182, 212, 0.22);
+    }
+
+
+    /* =========================================================
+       SEARCH
+    ========================================================= */
+
+    .search-box {
+        position: relative;
+
+        flex-shrink: 0;
+    }
+
+    .search-box::before {
+        content: "⌕";
+
+        position: absolute;
+
+        left: 13px;
+
+        top: 50%;
+
+        transform:
+            translateY(-52%);
+
+        color: var(--text-muted);
+
+        font-size: 1rem;
+
+        pointer-events: none;
+    }
+
+    .search-box input {
+        width: 250px;
+
+        padding:
+            10px
+            14px
+            10px
+            36px;
+
+        background:
+            #ffffff;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 11px;
+
+        outline: none;
+
+        color: var(--text);
+
+        font-size: 0.76rem;
+
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease;
+    }
+
+    .search-box input::placeholder {
+        color: #94a3b8;
+    }
+
+    .search-box input:focus {
+        border-color:
+            rgba(6, 182, 212, 0.55);
+
+        background:
+            #ffffff;
+
+        box-shadow:
+            0 0 0 3px
+            rgba(6, 182, 212, 0.08);
+    }
+
+
+    /* =========================================================
+       ADVANCED FILTERS
+    ========================================================= */
+
+    .advanced-filters {
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 8px;
+    }
+
+
+    /* =========================================================
+       SELECT FILTER
+    ========================================================= */
+
+    .select-filter {
+        height: 36px;
+
+        padding:
+            0 32px 0 12px;
+
+        border-radius: 10px;
+
+        border:
+            1px solid var(--border);
+
+        background:
+            #ffffff;
+
+        color:
+            var(--text-soft);
+
+        font-family: inherit;
+
+        font-size: 0.7rem;
+
+        font-weight: 650;
+
+        outline: none;
+
+        cursor: pointer;
+
+        transition:
+            border-color 0.2s ease,
+            background 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .select-filter:hover {
+        border-color:
+            rgba(6, 182, 212, 0.35);
+
+        background:
+            #f8fafc;
+    }
+
+    .select-filter:focus {
+        border-color:
+            rgba(6, 182, 212, 0.55);
+
+        background:
+            #ffffff;
+
+        box-shadow:
+            0 0 0 3px
+            rgba(6, 182, 212, 0.08);
+    }
+
+    .select-filter option {
+        background:
+            #ffffff;
+
+        color:
+            #334155;
+    }
+
+
+    /* =========================================================
+       USERS GRID
+    ========================================================= */
+
+    .users-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                auto-fill,
+                minmax(350px, 1fr)
+            );
+
+        gap: 18px;
+    }
+
+
+    /* =========================================================
+       USER CARD
+    ========================================================= */
+
+    .user-card {
+        position: relative;
+
+        overflow: hidden;
+
+        padding: 20px;
+
+        background:
+            linear-gradient(
+                145deg,
+                #ffffff,
+                #f8fafc
+            );
+
+        border:
+            1px solid var(--border);
+
+        border-radius:
+            var(--radius-lg);
+
+        box-shadow:
+            0 12px 35px
+            rgba(15, 23, 42, 0.07);
+
+        transition:
+            transform 0.25s ease,
+            border-color 0.25s ease,
+            box-shadow 0.25s ease,
+            background 0.25s ease;
+    }
+
+
+    /* =========================================================
+       SUBTLE TOP ACCENT
+    ========================================================= */
+
+    .user-card::before {
+        content: "";
+
+        position: absolute;
+
+        top: 0;
+
+        left: 25px;
+
+        right: 25px;
+
+        height: 1px;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                rgba(6, 182, 212, 0.5),
+                transparent
+            );
+
+        opacity: 0.7;
+    }
+
+    .user-card:hover {
+        transform:
+            translateY(-4px);
+
+        border-color:
+            var(--border-hover);
+
+        background:
+            #ffffff;
+
+        box-shadow:
+            0 22px 45px
+            rgba(15, 23, 42, 0.11);
+    }
+
+
+    /* =========================================================
+       USER HEADER
+    ========================================================= */
+
+    .user-header {
+        display: flex;
+
+        align-items: center;
+
+        gap: 13px;
+
+        margin-bottom: 14px;
+    }
+
+
+    /* =========================================================
+       AVATAR
+    ========================================================= */
+
+    .avatar {
+        flex-shrink: 0;
+
+        width: 50px;
+
+        height: 50px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border-radius: 15px;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(6, 182, 212, 0.10),
+                rgba(139, 92, 246, 0.10)
+            );
+
+        border:
+            1px solid
+            rgba(6, 182, 212, 0.25);
+
+        color:
+            var(--cyan-light);
+
+        font-size: 1.1rem;
+
+        font-weight: 800;
+
+        box-shadow:
+            0 8px 20px
+            rgba(15, 23, 42, 0.06);
+    }
+
+
+    /* =========================================================
+       USER INFO
+    ========================================================= */
+
+    .user-info {
+        min-width: 0;
+
+        flex: 1;
+    }
+
+    .user-name {
+        display: flex;
+
+        align-items: center;
+
+        flex-wrap: wrap;
+
+        gap: 6px;
+
+        color:
+            var(--text);
+
+        font-size:
+            0.98rem;
+
+        font-weight:
+            750;
+
+        line-height:
+            1.35;
+    }
+
+    .user-email {
+        margin-top: 4px;
+
+        color:
+            var(--text-muted);
+
+        font-size:
+            0.7rem;
+
+        white-space:
+            nowrap;
+
+        overflow:
+            hidden;
+
+        text-overflow:
+            ellipsis;
+    }
+
+
+    /* =========================================================
+       BADGES
+    ========================================================= */
+
+    .badge {
+        display: inline-flex;
+
+        align-items: center;
+
+        width: fit-content;
+
+        padding:
+            4px 8px;
+
+        border-radius:
+            999px;
+
+        font-size:
+            0.58rem;
+
+        font-weight:
+            750;
+
+        line-height:
+            1;
+
+        white-space:
+            nowrap;
+
+        border:
+            1px solid transparent;
+    }
+
+
+    /* =========================================================
+       STATUS
+    ========================================================= */
+
+    .badge.approved {
+        background:
+            rgba(34, 197, 94, 0.09);
+
+        border-color:
+            rgba(34, 197, 94, 0.18);
+
+        color:
+            var(--green-light);
+    }
+
+    .badge.pending {
+        background:
+            rgba(245, 158, 11, 0.09);
+
+        border-color:
+            rgba(245, 158, 11, 0.18);
+
+        color:
+            var(--yellow-light);
+    }
+
+    .badge.blocked {
+        background:
+            rgba(239, 68, 68, 0.09);
+
+        border-color:
+            rgba(239, 68, 68, 0.18);
+
+        color:
+            var(--red-light);
+    }
+
+
+    /* =========================================================
+       ROLE
+    ========================================================= */
+
+    .badge.role-user {
+        background:
+            rgba(59, 130, 246, 0.09);
+
+        border-color:
+            rgba(59, 130, 246, 0.18);
+
+        color:
+            var(--blue-light);
+    }
+
+    .badge.role-moderator {
+        background:
+            rgba(139, 92, 246, 0.09);
+
+        border-color:
+            rgba(139, 92, 246, 0.18);
+
+        color:
+            var(--purple-light);
+    }
+
+
+    /* =========================================================
+       USER INFORMATION BADGES
+    ========================================================= */
+
+    .user-details {
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 6px;
+
+        margin-top: 14px;
+
+        padding-top: 13px;
+
+        border-top:
+            1px solid #e2e8f0;
+    }
+
+    .user-details .badge {
+        padding:
+            5px 9px;
+
+        font-size:
+            0.59rem;
+    }
+
+
+    /* =========================================================
+       ID
+    ========================================================= */
+
+    .user-id {
+        background:
+            rgba(6, 182, 212, 0.08);
+
+        border-color:
+            rgba(6, 182, 212, 0.18);
+
+        color:
+            var(--cyan-light);
+    }
+
+
+    /* =========================================================
+       CLASS
+    ========================================================= */
+
+    .user-class {
+        background:
+            rgba(59, 130, 246, 0.08);
+
+        border-color:
+            rgba(59, 130, 246, 0.18);
+
+        color:
+            var(--blue-light);
+    }
+
+
+    /* =========================================================
+       SECTION
+    ========================================================= */
+
+    .user-section {
+        background:
+            rgba(139, 92, 246, 0.08);
+
+        border-color:
+            rgba(139, 92, 246, 0.18);
+
+        color:
+            var(--purple-light);
+    }
+
+
+    /* =========================================================
+       OPTIONAL SUBJECT
+    ========================================================= */
+
+    .user-optional {
+        background:
+            rgba(34, 197, 94, 0.08);
+
+        border-color:
+            rgba(34, 197, 94, 0.18);
+
+        color:
+            var(--green-light);
+    }
+
+
+    /* =========================================================
+       ACTIONS
+    ========================================================= */
+
+    .card-actions {
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 7px;
+
+        margin-top: 17px;
+
+        padding-top: 14px;
+
+        border-top:
+            1px solid #e2e8f0;
+    }
+
+
+    /* =========================================================
+       BUTTONS
+    ========================================================= */
+
+    .btn {
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        min-height: 32px;
+
+        padding:
+            7px 12px;
+
+        border-radius:
+            9px;
+
+        border:
+            1px solid var(--border);
+
+        background:
+            #ffffff;
+
+        color:
+            var(--text-soft);
+
+        font-family:
+            inherit;
+
+        font-size:
+            0.68rem;
+
+        font-weight:
+            700;
+
+        cursor:
+            pointer;
+
+        transition:
+            transform 0.2s ease,
+            background 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+        transform:
+            translateY(-1px);
+    }
+
+    .btn:active {
+        transform:
+            translateY(0);
+    }
+
+
+    /* =========================================================
+       PRIMARY
+    ========================================================= */
+
+    .btn-primary {
+        background:
+            rgba(6, 182, 212, 0.08);
+
+        border-color:
+            rgba(6, 182, 212, 0.28);
+
+        color:
+            var(--cyan-light);
+    }
+
+    .btn-primary:hover {
+        background:
+            rgba(6, 182, 212, 0.14);
+    }
+
+
+    /* =========================================================
+       SUCCESS
+    ========================================================= */
+
+    .btn-success {
+        background:
+            rgba(34, 197, 94, 0.08);
+
+        border-color:
+            rgba(34, 197, 94, 0.22);
+
+        color:
+            var(--green-light);
+    }
+
+    .btn-success:hover {
+        background:
+            rgba(34, 197, 94, 0.14);
+
+        box-shadow:
+            0 6px 18px
+            rgba(34, 197, 94, 0.10);
+    }
+
+
+    /* =========================================================
+       WARNING
+    ========================================================= */
+
+    .btn-warning {
+        background:
+            rgba(245, 158, 11, 0.08);
+
+        border-color:
+            rgba(245, 158, 11, 0.22);
+
+        color:
+            var(--yellow-light);
+    }
+
+    .btn-warning:hover {
+        background:
+            rgba(245, 158, 11, 0.14);
+
+        box-shadow:
+            0 6px 18px
+            rgba(245, 158, 11, 0.10);
+    }
+
+
+    /* =========================================================
+       DANGER
+    ========================================================= */
+
+    .btn-danger {
+        background:
+            rgba(239, 68, 68, 0.08);
+
+        border-color:
+            rgba(239, 68, 68, 0.22);
+
+        color:
+            var(--red-light);
+    }
+
+    .btn-danger:hover {
+        background:
+            rgba(239, 68, 68, 0.14);
+
+        box-shadow:
+            0 6px 18px
+            rgba(239, 68, 68, 0.10);
+    }
+
+
+    /* =========================================================
+       EMPTY STATE
+    ========================================================= */
+
+    .empty-state {
+        grid-column:
+            1 / -1;
+
+        min-height:
+            220px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        padding:
+            40px;
+
+        color:
+            var(--text-muted);
+
+        background:
+            rgba(255, 255, 255, 0.75);
+
+        border:
+            1px dashed #cbd5e1;
+
+        border-radius:
+            var(--radius-lg);
+
+        font-size:
+            0.85rem;
+    }
+
+
+    /* =========================================================
+       TOAST
+    ========================================================= */
+
+    .toast-msg {
+        position: fixed;
+
+        right: 22px;
+
+        bottom: 22px;
+
+        z-index: 9999;
+
+        min-width: 250px;
+
+        max-width: 380px;
+
+        padding:
+            13px 16px;
+
+        background:
+            #ffffff;
+
+        border:
+            1px solid #e2e8f0;
+
+        border-left:
+            4px solid var(--cyan);
+
+        border-radius:
+            13px;
+
+        color:
+            var(--text);
+
+        font-size:
+            0.75rem;
+
+        font-weight:
+            600;
+
+        box-shadow:
+            0 18px 45px
+            rgba(15, 23, 42, 0.12);
+
+        animation:
+            toastIn 0.3s ease forwards;
+    }
+
+    @keyframes toastIn {
+
+        from {
+            opacity: 0;
+
+            transform:
+                translateY(15px)
+                translateX(15px);
+        }
+
+        to {
+            opacity: 1;
+
+            transform:
+                translateY(0)
+                translateX(0);
+        }
+    }
+
+
+    /* =========================================================
+       TABLET
+    ========================================================= */
+
+    @media (max-width: 1100px) {
+
+        body {
+            padding: 24px;
+        }
+
+        .header {
+            flex-direction:
+                column;
+        }
+
+        .stats {
+            width:
+                100%;
+
+            max-width:
+                none;
+        }
+
+        .filter-bar {
+            align-items:
+                stretch;
+
+            flex-direction:
+                column;
+        }
+
+        .filter-group {
+            width:
+                100%;
+        }
+
+        .search-box,
+        .search-box input {
+            width:
+                100%;
+        }
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @media (max-width: 700px) {
+
+        body {
+            padding:
+                16px;
+        }
+
+        .title-section h1 {
+            font-size:
+                1.4rem;
+        }
+
+        .title-section p {
+            font-size:
+                0.76rem;
+        }
+
+        .stats {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+        }
+
+        .stat-card:last-child {
+            grid-column:
+                span 2;
+        }
+
+        .filter-bar {
+            padding:
+                8px;
+
+            border-radius:
+                15px;
+        }
+
+        .filter-group {
+            width:
+                100%;
+
+            overflow-x:
+                auto;
+        }
+
+        .advanced-filters {
+            width:
+                100%;
+        }
+
+        .select-filter {
+            flex:
+                1 1 auto;
+
+            min-width:
+                130px;
+        }
+
+        .filter-btn {
+            padding:
+                8px 11px;
+
+            font-size:
+                0.66rem;
+        }
+
+        .users-grid {
+            grid-template-columns:
+                1fr;
+
+            gap:
+                12px;
+        }
+
+        .user-card {
+            padding:
+                16px;
+
+            border-radius:
+                20px;
+        }
+
+        .avatar {
+            width:
+                44px;
+
+            height:
+                44px;
+
+            border-radius:
+                13px;
+        }
+
+        .user-name {
+            font-size:
+                0.9rem;
+        }
+
+        .card-actions {
+            gap:
+                6px;
+        }
+
+        .btn {
+            flex:
+                1;
+
+            min-width:
+                90px;
+        }
+
+        .toast-msg {
+            left:
+                16px;
+
+            right:
+                16px;
+
+            bottom:
+                16px;
+
+            min-width:
+                0;
+
+            max-width:
+                none;
+        }
+    }
+
+
+    /* =========================================================
+       SMALL PHONES
+    ========================================================= */
+
+    @media (max-width: 420px) {
+
+        .stats {
+            grid-template-columns:
+                1fr 1fr;
+
+            gap:
+                8px;
+        }
+
+        .stat-card {
+            padding:
+                13px 8px;
+        }
+
+        .stat-number {
+            font-size:
+                1.25rem;
+        }
+
+        .stat-label {
+            font-size:
+                0.56rem;
+        }
+
+        .user-details {
+            gap:
+                5px;
+        }
+
+        .user-details .badge {
+            font-size:
+                0.56rem;
+        }
+
+        .advanced-filters {
+            flex-direction:
+                column;
+        }
+
+        .select-filter {
+            width:
+                100%;
+        }
+    }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="header">
+
+        <div class="title-section">
+
+            <h1>
+                📋 User Governance
+            </h1>
+
+            <p>
+                Manage users, moderators, approvals and access
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
+
+        <div class="stats">
+
+            <div class="stat-card">
+
+                <div
+                    class="stat-number"
+                    id="totalUsers"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Total
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div
+                    class="stat-number"
+                    id="usersCount"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Users
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div
+                    class="stat-number"
+                    id="moderatorsCount"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Moderators
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div
+                    class="stat-number"
+                    id="approvedCount"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Approved
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div
+                    class="stat-number"
+                    id="blockedCount"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Blocked
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         FILTER / SEARCH
+    ====================================================== -->
+
+    <section class="filter-bar">
+
+
+        <!-- FILTERS -->
+        <div class="filter-group">
+
+            <button class="filter-btn active" data-filter="all">
+                All
+            </button>
+
+            <button class="filter-btn" data-filter="user">
+                👤 Users
+            </button>
+
+            <button class="filter-btn" data-filter="moderator">
+                🛡 Moderators
+            </button>
+
+            <button class="filter-btn" data-filter="pending">
+                ⏳ Pending
+            </button>
+
+            <button class="filter-btn" data-filter="approved">
+                ✓ Approved
+            </button>
+
+            <button class="filter-btn" data-filter="blocked">
+                × Blocked
+            </button>
+
+        </div>
+
+        <div class="advanced-filters">
+
+            <!-- CLASS -->
+            <select id="classFilter" class="select-filter">
+                <option value="all">🎓 All Classes</option>
+
+                <option value="7eme">7ème</option>
+                <option value="8eme">8ème</option>
+                <option value="9eme">9ème</option>
+
+                <option value="1ere">1ère</option>
+                <option value="2eme">2ème</option>
+                <option value="3eme">3ème</option>
+                <option value="4eme">4ème</option>
+            </select>
+
+
+            <!-- SECTION -->
+            <select id="sectionFilter" class="select-filter">
+                <option value="all">🏫 All Sections</option>
+            </select>
+
+
+
+
+            <!-- OPTIONAL SUBJECT -->
+            <select id="optionalFilter" class="select-filter">
+                <option value="all">🌍 Optional Subject</option>
+
+                <option value="allemand">🇩🇪 Allemand</option>
+                <option value="espagnol">🇪🇸 Espagnol</option>
+                <option value="italien">🇮🇹 Italien</option>
+                <option value="russe">🇷🇺 Russe</option>
+                <option value="chinois">🇨🇳 Chinois</option>
+                <option value="turc">🇹🇷 Turc</option>
+                <option value="portugais">🇵🇹 Portugais</option>
+            </select>
+
+        </div>
+        <!-- SEARCH -->
+
+        <div class="search-box">
+
+            <input
+                type="search"
+                id="searchInput"
+                autocomplete="off"
+                placeholder="Search users..."
+                aria-label="Search users"
+            >
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         USERS
+    ====================================================== -->
+
+    <main
+        class="users-grid"
+        id="usersGrid"
+    >
+
+        <div class="empty-state">
+            Loading users data from database...
+        </div>
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+    "https://rrcdstkptxddphcgxnaz.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "sb_publishable_eVNkpLJIwWp8qAaQp0ry8w__Cm0woCW";
+
+window.supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+/* =========================================================
+   EMAILJS
+========================================================= */
+
+if (typeof emailjs !== "undefined") {
+    emailjs.init({
+        publicKey: "YmjJSmZJouOFaWyCn"
+    });
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+const sections = {
+
+    "1ere": [
+
+        {
+            value: "tronc_commun",
+            label: "Tronc commun"
+        },
+
+        {
+            value: "sport",
+            label: "Sport"
+        },
+
+        {
+            value: "arts",
+            label: "Arts"
+        }
+
+    ],
+
+
+    "2eme": [
+
+        {
+            value: "lettres",
+            label: "Lettres"
+        },
+
+        {
+            value: "economie",
+            label: "Économie et gestion"
+        },
+
+        {
+            value: "sciences",
+            label: "Sciences expérimentales"
+        },
+
+        {
+            value: "informatique",
+            label: "Sciences informatiques"
+        }
+
+    ],
+
+
+    "3eme": [
+
+        {
+            value: "math",
+            label: "Mathématiques"
+        },
+
+        {
+            value: "sciences",
+            label: "Sciences expérimentales"
+        },
+
+        {
+            value: "informatique",
+            label: "Sciences informatiques"
+        },
+
+        {
+            value: "economie",
+            label: "Économie et gestion"
+        },
+
+        {
+            value: "lettres",
+            label: "Lettres"
+        },
+
+        {
+            value: "technique",
+            label: "Sciences techniques"
+        },
+
+        {
+            value: "sport",
+            label: "Sport"
+        },
+
+        {
+            value: "arts",
+            label: "Arts"
+        }
+
+    ],
+
+
+    "4eme": [
+
+        {
+            value: "math",
+            label: "Mathématiques"
+        },
+
+        {
+            value: "sciences",
+            label: "Sciences expérimentales"
+        },
+
+        {
+            value: "informatique",
+            label: "Sciences informatiques"
+        },
+
+        {
+            value: "economie",
+            label: "Économie et gestion"
+        },
+
+        {
+            value: "lettres",
+            label: "Lettres"
+        },
+
+        {
+            value: "technique",
+            label: "Sciences techniques"
+        },
+
+        {
+            value: "sport",
+            label: "Sport"
+        },
+
+        {
+            value: "arts",
+            label: "Arts"
+        }
+
+    ]
+
+};
+
+
+/* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
+
+let allUsers = [];
+
+let currentFilter = "all";
+
+let searchQuery = "";
+
+let selectedClass = "all";
+
+let selectedSection = "all";
+
+let selectedOptional = "all";
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(
+    message,
+    type = "info"
+) {
+
+    const toast =
+        document.createElement("div");
+
+    toast.className = "toast-msg";
+
+    toast.style.borderLeftColor =
+        type === "error"
+            ? "#ef4444"
+            : type === "success"
+                ? "#22c55e"
+                : "#38bdf8";
+
+    toast.innerText =
+        "🔔 " + message;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+
+        toast.remove();
+
+    }, 3000);
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHtml(str = "") {
+
+    return String(str)
+
+        .replaceAll("&", "&amp;")
+
+        .replaceAll("<", "&lt;")
+
+        .replaceAll(">", "&gt;")
+
+        .replaceAll('"', "&quot;")
+
+        .replaceAll("'", "&#039;");
+}
+
+
+/* =========================================================
+   NORMALIZE SEARCH TEXT
+========================================================= */
+
+function normalize(value) {
+
+    return String(value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+}
+
+
+/* =========================================================
+   SEARCH ALIASES
+========================================================= */
+
+const aliases = {
+
+    /* ---------------- CLASSES ---------------- */
+
+    "7eme": [
+        "7eme",
+        "7e",
+        "7eme annee",
+        "7eme annee de base"
+    ],
+
+    "8eme": [
+        "8eme",
+        "8e",
+        "8eme annee",
+        "8eme annee de base"
+    ],
+
+    "9eme": [
+        "9eme",
+        "9e",
+        "9eme annee",
+        "9eme annee de base"
+    ],
+
+    "1ere": [
+        "1ere",
+        "1er",
+        "1ere secondaire"
+    ],
+
+    "2eme": [
+        "2eme",
+        "2e",
+        "2eme secondaire"
+    ],
+
+    "3eme": [
+        "3eme",
+        "3e",
+        "3eme secondaire"
+    ],
+
+    "4eme": [
+        "4eme",
+        "4e",
+        "4eme secondaire",
+        "bac"
+    ],
+
+
+    /* ---------------- SECTIONS ---------------- */
+
+    "math": [
+        "math",
+        "maths",
+        "mathematics",
+        "mathematiques",
+        "mathematique",
+        "رياضيات"
+    ],
+
+    "sciences": [
+        "sciences",
+        "science",
+        "sciences experimentales",
+        "experimental sciences"
+    ],
+
+    "informatique": [
+        "informatique",
+        "info",
+        "computer science",
+        "computer",
+        "programming",
+        "programmation",
+        "sciences informatiques",
+        "اعلامية"
+    ],
+
+    "economie": [
+        "economie",
+        "economics",
+        "gestion",
+        "economie et gestion"
+    ],
+
+    "lettres": [
+        "lettres",
+        "literature",
+        "litterature"
+    ],
+
+    "technique": [
+        "technique",
+        "tech",
+        "sciences techniques"
+    ],
+
+    "sport": [
+        "sport",
+        "sports",
+        "sportif"
+    ],
+
+    "arts": [
+        "arts",
+        "art",
+        "artistique"
+    ],
+
+
+    /* ---------------- SUBJECTS ---------------- */
+
+    "arabic": [
+        "arabic",
+        "arabe",
+        "العربية"
+    ],
+
+    "french": [
+        "french",
+        "francais",
+        "français",
+        "الفرنسية"
+    ],
+
+    "english": [
+        "english",
+        "anglais",
+        "الانجليزية"
+    ],
+
+    "physics": [
+        "physics",
+        "physique",
+        "sciences physiques",
+        "فيزياء"
+    ],
+
+    "svt": [
+        "svt",
+        "biology",
+        "biologie",
+        "sciences de la vie",
+        "sciences de la terre"
+    ],
+
+    "history": [
+        "history",
+        "histoire",
+        "تاريخ"
+    ],
+
+    "geography": [
+        "geography",
+        "geographie",
+        "géographie",
+        "جغرافيا"
+    ],
+
+    "philosophy": [
+        "philosophy",
+        "philo",
+        "philosophie",
+        "فلسفة"
+    ],
+
+    "islamic studies": [
+        "islamic",
+        "islam",
+        "islamic studies",
+        "education islamique",
+        "التربية الاسلامية"
+    ],
+
+    "computer science": [
+        "computer science",
+        "informatique",
+        "info",
+        "programming",
+        "programmation",
+        "اعلامية"
+    ],
+
+    "technology": [
+        "technology",
+        "technologie",
+        "تكنولوجيا"
+    ],
+
+
+    /* ---------------- OPTIONAL SUBJECTS ---------------- */
+
+    "allemand": [
+        "allemand",
+        "german",
+        "deutsch"
+    ],
+
+    "espagnol": [
+        "espagnol",
+        "spanish",
+        "espanol"
+    ],
+
+    "italien": [
+        "italien",
+        "italian"
+    ],
+
+    "russe": [
+        "russe",
+        "russian"
+    ],
+
+    "chinois": [
+        "chinois",
+        "chinese"
+    ],
+
+    "turc": [
+        "turc",
+        "turkish"
+    ],
+
+    "portugais": [
+        "portugais",
+        "portuguese"
+    ]
+
+};
+
+
+/* =========================================================
+   UPDATE SECTION FILTER
+========================================================= */
+
+function updateSectionFilter() {
+
+    const sectionFilter =
+        document.getElementById(
+            "sectionFilter"
+        );
+
+    if (!sectionFilter) return;
+
+
+    /* Reset */
+
+    sectionFilter.innerHTML = `
+        <option value="all">
+            🏫 All Sections
+        </option>
+    `;
+
+
+    /* No class selected */
+
+    if (
+        !selectedClass ||
+        selectedClass === "all"
+    ) {
+
+        return;
+    }
+
+
+    /* Get sections for selected class */
+
+    const classSections =
+        sections[selectedClass];
+
+
+    if (
+        !classSections ||
+        !Array.isArray(classSections)
+    ) {
+
+        return;
+    }
+
+
+    /* Add sections */
+
+    classSections.forEach(section => {
+
+        const option =
+            document.createElement("option");
+
+        option.value =
+            section.value;
+
+        option.textContent =
+            section.label;
+
+        sectionFilter.appendChild(
+            option
+        );
+
+    });
+
+}
+
+
+/* =========================================================
+   SEARCH MATCH
+========================================================= */
+
+function userMatchesSearch(
+    user,
+    query
+) {
+
+    const q =
+        normalize(query);
+
+
+    if (!q) {
+        return true;
+    }
+
+
+    /* =====================================================
+       DIRECT SEARCH
+    ===================================================== */
+
+    const searchableText = [
+
+        user.username,
+
+        user.email,
+
+        user.id,
+
+        user.class,
+
+        user.section,
+
+        user.optional_subject
+
+    ]
+        .map(normalize)
+        .join(" ");
+
+
+    if (
+        searchableText.includes(q)
+    ) {
+
+        return true;
+    }
+
+
+    /* =====================================================
+       ALIAS SEARCH
+    ===================================================== */
+
+    const userValues = [
+
+        user.class,
+
+        user.section,
+
+        user.optional_subject
+
+    ].map(normalize);
+
+
+    for (
+        const key in aliases
+    ) {
+
+        const words =
+            aliases[key];
+
+
+        /*
+         * Does the typed text match
+         * the beginning/part of an alias?
+         *
+         * m
+         * ma
+         * mat
+         * math
+         */
+
+        const aliasMatches =
+            words.some(word => {
+
+                const normalizedWord =
+                    normalize(word);
+
+                return (
+                    normalizedWord.startsWith(q)
+                    ||
+                    q.startsWith(normalizedWord)
+                );
+
+            });
+
+
+        if (!aliasMatches) {
+            continue;
+        }
+
+
+        /*
+         * Check if this alias
+         * actually belongs to this user.
+         */
+
+        const userHasAlias =
+            userValues.some(value => {
+
+                return words.some(word => {
+
+                    const normalizedWord =
+                        normalize(word);
+
+                    return (
+
+                        value === normalizedWord
+
+                        ||
+
+                        value.includes(
+                            normalizedWord
+                        )
+
+                        ||
+
+                        normalizedWord.includes(
+                            value
+                        )
+
+                    );
+
+                });
+
+            });
+
+
+        if (userHasAlias) {
+
+            return true;
+        }
+
+    }
+
+
+    return false;
+}
+
+
+/* =========================================================
+   RENDER USERS
+========================================================= */
+
+function renderUsers() {
+
+    const grid =
+        document.getElementById(
+            "usersGrid"
+        );
+
+
+    if (!grid) {
+        return;
+    }
+
+
+    let filtered =
+        [...allUsers];
+
+
+    /* =====================================================
+       ROLE / STATUS FILTER
+    ===================================================== */
+
+    if (
+        currentFilter !== "all"
+    ) {
+
+        if (
+
+            currentFilter === "user"
+
+            ||
+
+            currentFilter === "moderator"
+
+        ) {
+
+            filtered =
+                filtered.filter(
+                    user =>
+                        user.role ===
+                        currentFilter
+                );
+
+        }
+
+        else {
+
+            filtered =
+                filtered.filter(
+                    user =>
+                        user.status ===
+                        currentFilter
+                );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       CLASS FILTER
+    ===================================================== */
+
+    if (
+        selectedClass !== "all"
+    ) {
+
+        filtered =
+            filtered.filter(user => {
+
+                return (
+                    normalize(user.class)
+                    ===
+                    normalize(selectedClass)
+                );
+
+            });
+
+    }
+
+
+    /* =====================================================
+       SECTION FILTER
+    ===================================================== */
+
+    if (
+        selectedSection !== "all"
+    ) {
+
+        filtered =
+            filtered.filter(user => {
+
+                return (
+                    normalize(user.section)
+                    ===
+                    normalize(selectedSection)
+                );
+
+            });
+
+    }
+
+
+    /* =====================================================
+       OPTIONAL SUBJECT FILTER
+    ===================================================== */
+
+    if (
+        selectedOptional !== "all"
+    ) {
+
+        filtered =
+            filtered.filter(user => {
+
+                return (
+                    normalize(
+                        user.optional_subject
+                    )
+                    ===
+                    normalize(
+                        selectedOptional
+                    )
+                );
+
+            });
+
+    }
+
+
+    /* =====================================================
+       SEARCH
+    ===================================================== */
+
+    if (
+        searchQuery.trim()
+    ) {
+
+        filtered =
+            filtered.filter(user => {
+
+                return userMatchesSearch(
+                    user,
+                    searchQuery
+                );
+
+            });
+
+    }
+
+
+    /* =====================================================
+       EMPTY STATE
+    ===================================================== */
+
+    if (
+        !filtered.length
+    ) {
+
+        grid.innerHTML = `
+
+            <div class="empty-state">
+
+                <div
+                    style="
+                        font-size:2rem;
+                        margin-bottom:10px;
+                    "
+                >
+                    🔍
+                </div>
+
+                <div>
+                    No users found
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    /* =====================================================
+       USER CARDS
+    ===================================================== */
+
+    grid.innerHTML =
+        filtered.map(user => `
+
+            <div class="user-card">
+
+                <!-- HEADER -->
+
+                <div class="user-header">
+
+                    <div class="avatar">
+
+                        ${escapeHtml(
+                            (
+                                user.username ||
+                                "U"
+                            )
+                                .charAt(0)
+                                .toUpperCase()
+                        )}
+
+                    </div>
+
+
+                    <div class="user-info">
+
+                        <div class="user-name">
+
+                            ${escapeHtml(
+                                user.username ||
+                                "Unknown"
+                            )}
+
+
+                            <span
+                                class="
+                                    badge
+                                    ${escapeHtml(
+                                        user.status ||
+                                        ""
+                                    )}
+                                "
+                            >
+                                ${escapeHtml(
+                                    user.status ||
+                                    ""
+                                )}
+                            </span>
+
+
+                            <span
+                                class="
+                                    badge
+                                    role-${escapeHtml(
+                                        user.role ||
+                                        ""
+                                    )}
+                                "
+                            >
+                                ${escapeHtml(
+                                    user.role ||
+                                    ""
+                                )}
+                            </span>
+
+                        </div>
+
+
+                        <div class="user-email">
+
+                            ${escapeHtml(
+                                user.email ||
+                                ""
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SCHOOL INFORMATION -->
+
+                <div class="user-details">
+
+                    <span
+                        class="
+                            badge
+                            user-id
+                        "
+                    >
+                        ${escapeHtml(
+                            user.id ||
+                            "—"
+                        )}
+                    </span>
+
+
+                    <span
+                        class="
+                            badge
+                            user-class
+                        "
+                    >
+                        ${escapeHtml(
+                            user.class ||
+                            "—"
+                        )}
+                    </span>
+
+
+                    <span
+                        class="
+                            badge
+                            user-section
+                        "
+                    >
+                        ${escapeHtml(
+                            user.section ||
+                            "—"
+                        )}
+                    </span>
+
+
+                    <span
+                        class="
+                            badge
+                            user-optional
+                        "
+                    >
+                        ${escapeHtml(
+                            user.optional_subject ||
+                            "—"
+                        )}
+                    </span>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="card-actions">
+
+
+                    ${
+                        user.status ===
+                        "pending"
+
+                        ? `
+
+                            <button
+                                class="
+                                    btn
+                                    btn-success
+                                "
+                                onclick="
+                                    updateUserStatus(
+                                        '${escapeHtml(
+                                            user.id
+                                        )}',
+                                        'approved'
+                                    )
+                                "
+                            >
+                                Approve
+                            </button>
+
+
+                            <button
+                                class="
+                                    btn
+                                    btn-danger
+                                "
+                                onclick="
+                                    updateUserStatus(
+                                        '${escapeHtml(
+                                            user.id
+                                        )}',
+                                        'blocked'
+                                    )
+                                "
+                            >
+                                Reject
+                            </button>
+
+                        `
+
+                        : ""
+                    }
+
+
+                    ${
+                        user.status ===
+                        "approved"
+
+                        ? `
+
+                            <button
+                                class="
+                                    btn
+                                    btn-warning
+                                "
+                                onclick="
+                                    updateUserStatus(
+                                        '${escapeHtml(
+                                            user.id
+                                        )}',
+                                        'blocked'
+                                    )
+                                "
+                            >
+                                Block
+                            </button>
+
+                        `
+
+                        : ""
+                    }
+
+
+                    ${
+                        user.status ===
+                        "blocked"
+
+                        ? `
+
+                            <button
+                                class="
+                                    btn
+                                    btn-success
+                                "
+                                onclick="
+                                    updateUserStatus(
+                                        '${escapeHtml(
+                                            user.id
+                                        )}',
+                                        'approved'
+                                    )
+                                "
+                            >
+                                Unblock
+                            </button>
+
+                        `
+
+                        : ""
+                    }
+
+
+                    <button
+                        class="
+                            btn
+                            btn-danger
+                        "
+                        onclick="
+                            deleteUser(
+                                '${escapeHtml(
+                                    user.id
+                                )}'
+                            )
+                        "
+                    >
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        `).join("");
+
+}
+
+
+/* =========================================================
+   DELETE USER
+========================================================= */
+
+window.deleteUser =
+    async function(userId) {
+
+        try {
+
+            if (
+                !confirm(
+                    "Delete this user?"
+                )
+            ) {
+
+                return;
+            }
+
+
+            const {
+                error
+            } =
+                await window.supabaseClient
+
+                    .from("users")
+
+                    .delete()
+
+                    .eq(
+                        "id",
+                        userId
+                    );
+
+
+            if (error) {
+
+                console.error(
+                    error
+                );
+
+                showToast(
+                    "Delete failed",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            /* Remove from UI */
+
+            allUsers =
+                allUsers.filter(
+                    user =>
+                        user.id !==
+                        userId
+                );
+
+
+            renderUsers();
+
+            updateStats();
+
+
+            showToast(
+                "User deleted",
+                "success"
+            );
+
+        }
+
+        catch (err) {
+
+            console.error(
+                err
+            );
+
+            showToast(
+                "Error deleting user",
+                "error"
+            );
+
+        }
+
+    };
+
+
+/* =========================================================
+   UPDATE DASHBOARD STATS
+========================================================= */
+
+function updateStats() {
+
+    const totalUsersEl =
+        document.getElementById(
+            "totalUsers"
+        );
+
+    const usersCountEl =
+        document.getElementById(
+            "usersCount"
+        );
+
+    const moderatorsCountEl =
+        document.getElementById(
+            "moderatorsCount"
+        );
+
+    const approvedCountEl =
+        document.getElementById(
+            "approvedCount"
+        );
+
+    const blockedCountEl =
+        document.getElementById(
+            "blockedCount"
+        );
+
+
+    if (totalUsersEl) {
+
+        totalUsersEl.innerText =
+            allUsers.length;
+
+    }
+
+
+    if (usersCountEl) {
+
+        usersCountEl.innerText =
+            allUsers.filter(
+                user =>
+                    user.role ===
+                    "user"
+            ).length;
+
+    }
+
+
+    if (moderatorsCountEl) {
+
+        moderatorsCountEl.innerText =
+            allUsers.filter(
+                user =>
+                    user.role ===
+                    "moderator"
+            ).length;
+
+    }
+
+
+    if (approvedCountEl) {
+
+        approvedCountEl.innerText =
+            allUsers.filter(
+                user =>
+                    user.status ===
+                    "approved"
+            ).length;
+
+    }
+
+
+    if (blockedCountEl) {
+
+        blockedCountEl.innerText =
+            allUsers.filter(
+                user =>
+                    user.status ===
+                    "blocked"
+            ).length;
+
+    }
+
+}
+
+
+/* =========================================================
+   FETCH USERS
+========================================================= */
+
+async function fetchUsers() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await window.supabaseClient
+
+                .from("users")
+
+                .select(`
+                    id,
+                    username,
+                    email,
+                    password,
+                    status,
+                    role,
+                    class,
+                    section,
+                    optional_subject
+                `)
+
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+        console.log(
+            "SUPABASE USERS:",
+            data,
+            error
+        );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        allUsers =
+            (data || []).map(user => ({
+
+                id:
+                    user.id || "",
+
+                username:
+                    user.username ||
+                    "User",
+
+                email:
+                    user.email || "",
+
+                password:
+                    user.password || "",
+
+                status:
+                    user.status ||
+                    "pending",
+
+                role:
+                    user.role ||
+                    "user",
+
+                class:
+                    user.class || "",
+
+                section:
+                    user.section || "",
+
+                optional_subject:
+                    user.optional_subject ||
+                    ""
+
+            }));
+
+
+        console.log(
+            "USERS LOADED:",
+            allUsers
+        );
+
+
+        renderUsers();
+
+        updateStats();
+
+    }
+
+    catch (err) {
+
+        console.error(
+            "FETCH USERS ERROR:",
+            err
+        );
+
+        showToast(
+            "Failed to load users",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SEND APPROVAL EMAIL
+========================================================= */
+
+async function sendApprovalEmail(
+    user
+) {
+
+    if (
+        !user ||
+        !user.email ||
+        user.email === "No Email" ||
+        user.email === "NO MAIL"
+    ) {
+
+        console.log(
+            "No valid email:",
+            user
+        );
+
+        return;
+    }
+
+
+    try {
+
+        if (
+            typeof emailjs ===
+            "undefined"
+        ) {
+
+            console.error(
+                "EmailJS is not loaded!"
+            );
+
+            return;
+        }
+
+
+        let freshUser =
+            user;
+
+
+        if (user.id) {
+
+            const {
+                data,
+                error
+            } =
+                await window.supabaseClient
+
+                    .from("users")
+
+                    .select(
+                        "id, username, email, password, status, role"
+                    )
+
+                    .eq(
+                        "id",
+                        user.id
+                    )
+
+                    .maybeSingle();
+
+
+            if (error) {
+
+                console.error(
+                    "Failed to fetch fresh user:",
+                    error
+                );
+
+            }
+
+            else if (data) {
+
+                freshUser = {
+
+                    ...user,
+
+                    ...data
+
+                };
+
+            }
+
+        }
+
+
+        const templateParams = {
+
+            username:
+                freshUser.username ||
+                "User",
+
+            user_id:
+                freshUser.id ||
+                "Unknown ID",
+
+            email:
+                freshUser.email ||
+                "",
+
+            password:
+                freshUser.password ||
+                "",
+
+            role:
+                freshUser.role ||
+                "user",
+
+            status:
+                "approved",
+
+            login_url:
+                window.location.origin +
+                "/login.html",
+
+            support_email:
+                "support@yourdomain.com"
+
+        };
+
+
+        console.log(
+            "EMAILJS PARAMS:",
+            templateParams
+        );
+
+
+        const response =
+            await emailjs.send(
+
+                "service_j0x86fp",
+
+                "template_hmvsxxn",
+
+                templateParams
+
+            );
+
+
+        console.log(
+            "Approval email sent:",
+            response
+        );
+
+
+        showToast(
+            "Approval email sent successfully ✅",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Approval email failed:",
+            error
+        );
+
+        showToast(
+            "User approved, but email failed ❌",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   UPDATE USER STATUS
+========================================================= */
+
+window.updateUserStatus =
+    async function(
+        userId,
+        newStatus
+    ) {
+
+        try {
+
+            const user =
+                allUsers.find(
+                    user =>
+                        user.id ===
+                        userId
+                );
+
+
+            if (!user) {
+
+                showToast(
+                    "User not found",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const {
+                error
+            } =
+                await window.supabaseClient
+
+                    .from("users")
+
+                    .update({
+
+                        status:
+                            newStatus
+
+                    })
+
+                    .eq(
+                        "id",
+                        userId
+                    );
+
+
+            if (error) {
+                throw error;
+            }
+
+
+            /* Update local array */
+
+            allUsers =
+                allUsers.map(
+                    user =>
+
+                        user.id ===
+                        userId
+
+                        ? {
+                            ...user,
+                            status:
+                                newStatus
+                        }
+
+                        : user
+                );
+
+
+            renderUsers();
+
+            updateStats();
+
+
+            /* Approval email */
+
+            if (
+                newStatus ===
+                "approved"
+            ) {
+
+                await sendApprovalEmail({
+
+                    ...user,
+
+                    status:
+                        "approved"
+
+                });
+
+            }
+
+            else {
+
+                showToast(
+
+                    "User updated: " +
+                    newStatus,
+
+                    newStatus ===
+                    "blocked"
+
+                        ? "error"
+
+                        : "success"
+
+                );
+
+            }
+
+        }
+
+        catch (err) {
+
+            console.error(
+                "Update status error:",
+                err
+            );
+
+            showToast(
+                "Update failed",
+                "error"
+            );
+
+        }
+
+    };
+
+
+/* =========================================================
+   STATUS / ROLE FILTER BUTTONS
+========================================================= */
+
+document
+    .querySelectorAll(
+        ".filter-btn"
+    )
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                document
+                    .querySelectorAll(
+                        ".filter-btn"
+                    )
+                    .forEach(btn => {
+
+                        btn.classList.remove(
+                            "active"
+                        );
+
+                    });
+
+
+                button.classList.add(
+                    "active"
+                );
+
+
+                currentFilter =
+                    button.dataset.filter ||
+                    "all";
+
+
+                renderUsers();
+
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   CLASS FILTER
+========================================================= */
+
+const classFilter =
+    document.getElementById(
+        "classFilter"
+    );
+
+
+if (classFilter) {
+
+    classFilter.addEventListener(
+        "change",
+        () => {
+
+            selectedClass =
+                classFilter.value ||
+                "all";
+
+
+            /* Reset section */
+
+            selectedSection =
+                "all";
+
+
+            updateSectionFilter();
+
+
+            renderUsers();
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SECTION FILTER
+========================================================= */
+
+const sectionFilter =
+    document.getElementById(
+        "sectionFilter"
+    );
+
+
+if (sectionFilter) {
+
+    sectionFilter.addEventListener(
+        "change",
+        () => {
+
+            selectedSection =
+                sectionFilter.value ||
+                "all";
+
+
+            renderUsers();
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   OPTIONAL SUBJECT FILTER
+========================================================= */
+
+const optionalFilter =
+    document.getElementById(
+        "optionalFilter"
+    );
+
+
+if (optionalFilter) {
+
+    optionalFilter.addEventListener(
+        "change",
+        () => {
+
+            selectedOptional =
+                optionalFilter.value ||
+                "all";
+
+
+            renderUsers();
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SEARCH
+   Updates immediately on EVERY character
+========================================================= */
+
+const searchInput =
+    document.getElementById(
+        "searchInput"
+    );
+
+
+if (searchInput) {
+
+    searchInput.addEventListener(
+        "input",
+        event => {
+
+            /*
+             * This fires immediately:
+             *
+             * m
+             * ma
+             * mat
+             * math
+             *
+             * No Enter key required.
+             */
+
+            searchQuery =
+                event.target.value;
+
+
+            renderUsers();
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+updateSectionFilter();
+
+fetchUsers();
+
+</script>
+</body>
+</html>
