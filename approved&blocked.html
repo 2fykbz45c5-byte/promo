@@ -1673,9 +1673,190 @@ select:focus-visible {
         animation-iteration-count: 1 !important;
     }
 }
+.security-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: #f8fafc;
+}
+
+.security-box {
+    width: 100%;
+    max-width: 390px;
+
+    padding: 32px;
+
+    text-align: center;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 22px;
+
+    box-shadow:
+        0 25px 60px rgba(15, 23, 42, 0.12);
+}
+
+.security-lock {
+    width: 58px;
+    height: 58px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 17px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ecfeff,
+            #f5f3ff
+        );
+
+    border: 1px solid #cffafe;
+
+    font-size: 1.5rem;
+}
+
+.security-box h2 {
+    margin-bottom: 7px;
+
+    color: #0f172a;
+
+    font-size: 1.35rem;
+    font-weight: 800;
+}
+
+.security-box p {
+    margin-bottom: 20px;
+
+    color: #64748b;
+
+    font-size: 0.75rem;
+}
+
+.security-input input {
+    width: 100%;
+
+    height: 44px;
+
+    padding: 0 14px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 11px;
+
+    outline: none;
+
+    background: #f8fafc;
+
+    color: #0f172a;
+
+    font-family: inherit;
+    font-size: 0.8rem;
+
+    text-align: center;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.security-input input:focus {
+    border-color: #06b6d4;
+
+    box-shadow:
+        0 0 0 3px rgba(6, 182, 212, 0.10);
+}
+
+.security-box button {
+    width: 100%;
+
+    height: 44px;
+
+    margin-top: 12px;
+
+    border: none;
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #06b6d4,
+            #8b5cf6
+        );
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 0.78rem;
+    font-weight: 750;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.security-box button:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 20px rgba(6, 182, 212, 0.20);
+}
+
+.security-error {
+    min-height: 18px;
+
+    margin-top: 10px;
+
+    color: #dc2626;
+
+    font-size: 0.68rem;
+}
 </style>
 
     <body>
+      <!-- SECURITY ACCESS SCREEN -->
+<div id="securityGate" class="security-gate">
+
+    <div class="security-box">
+
+        <div class="security-lock">🔐</div>
+
+        <h2>Security Access</h2>
+
+        <p>Enter the administrator password to continue.</p>
+
+        <div class="security-input">
+            <input
+                type="password"
+                id="securityPassword"
+                placeholder="Enter password"
+                autocomplete="off"
+            >
+        </div>
+
+        <button onclick="unlockSecurityPage()">
+            Unlock
+        </button>
+
+        <div id="securityError" class="security-error"></div>
+
+    </div>
+
+</div>
       <!-- =====================================================
            STUDYPULSE BRAND / LOGO HEADER
       ====================================================== -->
@@ -2407,7 +2588,54 @@ const aliases = {
 
 };
 
+function unlockSecurityPage() {
 
+    const password =
+        document.getElementById("securityPassword").value;
+
+    const error =
+        document.getElementById("securityError");
+
+    const gate =
+        document.getElementById("securityGate");
+
+    /*
+     * Replace this with your actual authentication system.
+     * Do NOT rely on a hard-coded password for real security.
+     */
+    const ADMIN_PASSWORD = "627936";
+
+    if (password === ADMIN_PASSWORD) {
+
+        gate.style.display = "none";
+
+        sessionStorage.setItem(
+            "securityPageUnlocked",
+            "true"
+        );
+
+    } else {
+
+        error.textContent =
+            "Incorrect password.";
+
+        document.getElementById(
+            "securityPassword"
+        ).value = "";
+    }
+}
+
+
+/* Allow Enter key */
+document
+    .getElementById("securityPassword")
+    .addEventListener("keydown", function (event) {
+
+        if (event.key === "Enter") {
+            unlockSecurityPage();
+        }
+
+    });
 /* =========================================================
    UPDATE SECTION FILTER
 ========================================================= */
