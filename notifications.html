@@ -3056,6 +3056,2142 @@ updateRecipientCount();
 loadStudents();
 
 </script>
+<script>
+"use strict";
 
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL = "https://rrcdstkptxddphcgxnaz.supabase.co";
+
+/*
+  IMPORTANT:
+  Replace this with the EXACT valid publishable/anon key
+  from Supabase > Project Settings > API.
+*/
+const SUPABASE_ANON_KEY =
+  "PASTE_YOUR_VALID_SUPABASE_PUBLISHABLE_KEY_HERE";
+
+if (!window.supabase) {
+  console.error("Supabase JS library is not loaded.");
+}
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let allStudents = [];
+let selectedStudent = null;
+let recipientMode = "group";
+let sending = false;
+
+let savedTemplates = [];
+let selectedSavedTemplateId = null;
+
+
+/* =========================================================
+   DOM HELPER
+========================================================= */
+
+const $ = (id) => document.getElementById(id);
+
+function getValue(id) {
+  const el = $(id);
+  return el ? el.value : "";
+}
+
+function setValue(id, value) {
+  const el = $(id);
+  if (el) el.value = value ?? "";
+}
+
+
+/* =========================================================
+   HTML ESCAPE
+========================================================= */
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(message, type = "info") {
+
+  let toast = document.getElementById("spNotificationToast");
+
+  if (!toast) {
+
+    toast = document.createElement("div");
+
+    toast.id = "spNotificationToast";
+
+    toast.style.cssText = `
+      position:fixed;
+      right:24px;
+      bottom:24px;
+      z-index:99999;
+
+      max-width:420px;
+
+      padding:14px 18px;
+
+      border-radius:14px;
+
+      background:#ffffff;
+      color:#0f172a;
+
+      border:1px solid #e2e8f0;
+
+      box-shadow:
+        0 20px 50px rgba(15,23,42,.15);
+
+      font-family:Inter,system-ui,sans-serif;
+      font-size:14px;
+      font-weight:600;
+
+      transition:.25s ease;
+
+      opacity:0;
+      transform:translateY(10px);
+    `;
+
+    document.body.appendChild(toast);
+  }
+
+  if (type === "success") {
+    toast.style.borderColor = "#86efac";
+  } else if (type === "error") {
+    toast.style.borderColor = "#fca5a5";
+  } else {
+    toast.style.borderColor = "#bae6fd";
+  }
+
+  toast.textContent = message;
+
+  requestAnimationFrame(() => {
+    toast.style.opacity = "1";
+    toast.style.transform = "translateY(0)";
+  });
+
+  clearTimeout(toast._timer);
+
+  toast._timer = setTimeout(() => {
+
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(10px)";
+
+  }, 3000);
+}
+
+
+/* =========================================================
+   GET CURRENT TEMPLATE DATA
+========================================================= */
+
+function getCurrentTemplateData() {
+
+  return {
+
+    title: getValue("notificationTitle"),
+
+    message: getValue("notificationMessage"),
+
+    type:
+      getValue("notificationType") ||
+      "info",
+
+    html_content:
+      getValue("notificationHtml"),
+
+    css_content:
+      getValue("notificationCss"),
+
+    js_content:
+      getValue("notificationJs")
+  };
+}
+
+
+/* =========================================================
+   APPLY TEMPLATE TO EDITOR
+========================================================= */
+
+function applyTemplate(template) {
+
+  if (!template) return;
+
+  setValue(
+    "notificationTitle",
+    template.title || ""
+  );
+
+  setValue(
+    "notificationMessage",
+    template.message || ""
+  );
+
+  setValue(
+    "notificationType",
+    template.type || "info"
+  );
+
+  setValue(
+    "notificationHtml",
+    template.html_content || ""
+  );
+
+  setValue(
+    "notificationCss",
+    template.css_content || ""
+  );
+
+  setValue(
+    "notificationJs",
+    template.js_content || ""
+  );
+
+  selectedSavedTemplateId =
+    template.id || null;
+
+  updatePreview();
+
+  showToast(
+    `Template "${template.name || "Template"}" loaded.`,
+    "success"
+  );
+}
+
+
+/* =========================================================
+   SAVE TEMPLATE TO SUPABASE
+========================================================= */
+
+async function saveNotificationTemplate() {
+
+  const nameInput =
+    document.getElementById("templateName");
+
+  const name =
+    nameInput?.value.trim();
+
+  if (!name) {
+
+    showToast(
+      "Enter a template name first.",
+      "error"
+    );
+
+    nameInput?.focus();
+
+    return;
+  }
+
+  const data =
+    getCurrentTemplateData();
+
+  const payload = {
+
+    name,
+
+    title:
+      data.title || null,
+
+    message:
+      data.message || null,
+
+    type:
+      data.type || "info",
+
+    html_content:
+      data.html_content || null,
+
+    css_content:
+      data.css_content || null,
+
+    js_content:
+      data.js_content || null,
+
+    updated_at:
+      new Date().toISOString()
+  };
+
+
+  try {
+
+    let result;
+
+    /*
+      If an existing saved template is selected,
+      update it.
+    */
+
+    if (selectedSavedTemplateId) {
+
+      result = await supabaseClient
+        .from("notification_templates")
+        .update(payload)
+        .eq("id", selectedSavedTemplateId)
+        .select()
+        .single();
+
+    } else {
+
+      /*
+        Otherwise create a new template.
+      */
+
+      result = await supabaseClient
+        .from("notification_templates")
+        .insert(payload)
+        .select()
+        .single();
+    }
+
+
+    if (result.error) {
+
+      /*
+        If a template with the same name already exists,
+        try updating it.
+      */
+
+      if (
+        result.error.code === "23505"
+      ) {
+
+        const updateResult =
+          await supabaseClient
+            .from("notification_templates")
+            .update(payload)
+            .eq("name", name)
+            .select()
+            .single();
+
+        if (updateResult.error) {
+          throw updateResult.error;
+        }
+
+        selectedSavedTemplateId =
+          updateResult.data.id;
+
+      } else {
+
+        throw result.error;
+      }
+
+    } else {
+
+      selectedSavedTemplateId =
+        result.data.id;
+    }
+
+
+    showToast(
+      `Template "${name}" saved successfully.`,
+      "success"
+    );
+
+
+    await loadSavedTemplates();
+
+  } catch (error) {
+
+    console.error(
+      "Save template error:",
+      error
+    );
+
+    showToast(
+      error.message ||
+      "Could not save template.",
+      "error"
+    );
+  }
+}
+
+
+/* =========================================================
+   LOAD TEMPLATES FROM SUPABASE
+========================================================= */
+
+async function loadSavedTemplates() {
+
+  const container =
+    document.getElementById(
+      "savedTemplates"
+    );
+
+  if (!container) return;
+
+
+  container.innerHTML = `
+    <div style="
+      padding:15px;
+      color:#64748b;
+      font-size:13px;
+    ">
+      Loading templates...
+    </div>
+  `;
+
+
+  try {
+
+    const {
+      data,
+      error
+    } = await supabaseClient
+      .from("notification_templates")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    savedTemplates =
+      data || [];
+
+
+    renderSavedTemplates();
+
+  } catch (error) {
+
+    console.error(
+      "Load templates error:",
+      error
+    );
+
+    container.innerHTML = `
+      <div style="
+        padding:15px;
+        color:#dc2626;
+        font-size:13px;
+      ">
+        Could not load saved templates.
+      </div>
+    `;
+  }
+}
+
+
+/* =========================================================
+   RENDER SAVED TEMPLATES
+========================================================= */
+
+function renderSavedTemplates() {
+
+  const container =
+    document.getElementById(
+      "savedTemplates"
+    );
+
+  if (!container) return;
+
+
+  if (!savedTemplates.length) {
+
+    container.innerHTML = `
+      <div style="
+        padding:18px;
+        text-align:center;
+
+        color:#64748b;
+
+        background:#f8fafc;
+
+        border:1px dashed #cbd5e1;
+
+        border-radius:14px;
+
+        font-size:13px;
+      ">
+        No saved templates yet.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    savedTemplates.map(template => {
+
+      const active =
+        selectedSavedTemplateId ===
+        template.id;
+
+
+      return `
+        <div
+          class="sp-template-item"
+          data-template-id="${escapeHtml(template.id)}"
+
+          style="
+            display:flex;
+            align-items:center;
+            gap:12px;
+
+            padding:12px;
+
+            margin-bottom:8px;
+
+            border-radius:14px;
+
+            background:${active
+              ? "#eff6ff"
+              : "#ffffff"};
+
+            border:1px solid ${active
+              ? "#93c5fd"
+              : "#e2e8f0"};
+
+            transition:.2s ease;
+          "
+        >
+
+          <div
+            style="
+              width:38px;
+              height:38px;
+
+              flex-shrink:0;
+
+              display:flex;
+              align-items:center;
+              justify-content:center;
+
+              border-radius:11px;
+
+              background:#f1f5f9;
+
+              font-size:18px;
+            "
+          >
+            📝
+          </div>
+
+
+          <div
+            style="
+              flex:1;
+              min-width:0;
+            "
+          >
+
+            <div
+              style="
+                font-weight:700;
+                color:#0f172a;
+
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis;
+              "
+            >
+              ${escapeHtml(template.name)}
+            </div>
+
+            <div
+              style="
+                margin-top:3px;
+
+                font-size:12px;
+
+                color:#64748b;
+              "
+            >
+              ${escapeHtml(template.type || "info")}
+            </div>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="sp-load-template"
+            data-id="${escapeHtml(template.id)}"
+
+            style="
+              border:0;
+
+              padding:8px 12px;
+
+              border-radius:9px;
+
+              background:#e0f2fe;
+
+              color:#0369a1;
+
+              font-weight:700;
+
+              cursor:pointer;
+            "
+          >
+            Load
+          </button>
+
+
+          <button
+            type="button"
+            class="sp-delete-template"
+            data-id="${escapeHtml(template.id)}"
+
+            style="
+              border:0;
+
+              width:36px;
+              height:36px;
+
+              border-radius:9px;
+
+              background:#fef2f2;
+
+              color:#dc2626;
+
+              font-size:15px;
+
+              cursor:pointer;
+            "
+            title="Delete template"
+          >
+            🗑
+          </button>
+
+        </div>
+      `;
+
+    }).join("");
+}
+
+
+/* =========================================================
+   LOAD ONE TEMPLATE
+========================================================= */
+
+async function loadNotificationTemplate(id) {
+
+  const template =
+    savedTemplates.find(
+      item => item.id === id
+    );
+
+  if (!template) return;
+
+  applyTemplate(template);
+
+  const nameInput =
+    document.getElementById(
+      "templateName"
+    );
+
+  if (nameInput) {
+    nameInput.value =
+      template.name || "";
+  }
+
+  renderSavedTemplates();
+}
+
+
+/* =========================================================
+   DELETE TEMPLATE
+========================================================= */
+
+async function deleteNotificationTemplate(id) {
+
+  const template =
+    savedTemplates.find(
+      item => item.id === id
+    );
+
+  if (!template) return;
+
+
+  const confirmed =
+    window.confirm(
+      `Delete template "${template.name}"?`
+    );
+
+  if (!confirmed) return;
+
+
+  try {
+
+    const {
+      error
+    } = await supabaseClient
+      .from("notification_templates")
+      .delete()
+      .eq("id", id);
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    if (
+      selectedSavedTemplateId === id
+    ) {
+
+      selectedSavedTemplateId =
+        null;
+
+      const nameInput =
+        document.getElementById(
+          "templateName"
+        );
+
+      if (nameInput) {
+        nameInput.value = "";
+      }
+    }
+
+
+    showToast(
+      "Template deleted.",
+      "success"
+    );
+
+
+    await loadSavedTemplates();
+
+  } catch (error) {
+
+    console.error(
+      "Delete template error:",
+      error
+    );
+
+    showToast(
+      error.message ||
+      "Could not delete template.",
+      "error"
+    );
+  }
+}
+
+
+/* =========================================================
+   NEW TEMPLATE
+========================================================= */
+
+function createNewTemplate() {
+
+  selectedSavedTemplateId =
+    null;
+
+  setValue(
+    "templateName",
+    ""
+  );
+
+  showToast(
+    "New template ready.",
+    "success"
+  );
+
+  renderSavedTemplates();
+}
+
+
+/* =========================================================
+   CREATE TEMPLATE UI AUTOMATICALLY
+========================================================= */
+
+function createTemplateManager() {
+
+  /*
+    If your HTML already has:
+    #templateName
+    #saveTemplateBtn
+    #newTemplateBtn
+    #savedTemplates
+
+    this function will reuse them.
+  */
+
+
+  let existingManager =
+    document.getElementById(
+      "spTemplateManager"
+    );
+
+  if (existingManager) {
+
+    attachTemplateEvents();
+
+    loadSavedTemplates();
+
+    return;
+  }
+
+
+  /*
+    Find the existing template buttons
+    or notification editor.
+  */
+
+  const templateButtons =
+    document.querySelector(
+      "[data-template]"
+    );
+
+  const editor =
+    document.querySelector(
+      ".notification-editor"
+    ) ||
+    document.querySelector(
+      "textarea"
+    )?.parentElement;
+
+
+  existingManager =
+    document.createElement("section");
+
+  existingManager.id =
+    "spTemplateManager";
+
+
+  existingManager.style.cssText = `
+    margin-top:24px;
+
+    padding:20px;
+
+    background:#ffffff;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:18px;
+
+    box-shadow:
+      0 10px 30px rgba(15,23,42,.06);
+
+    font-family:Inter,system-ui,sans-serif;
+  `;
+
+
+  existingManager.innerHTML = `
+
+    <div
+      style="
+        display:flex;
+        align-items:flex-start;
+        justify-content:space-between;
+        gap:16px;
+
+        margin-bottom:18px;
+      "
+    >
+
+      <div>
+
+        <div
+          style="
+            font-size:11px;
+            font-weight:800;
+
+            letter-spacing:.12em;
+
+            color:#0284c7;
+
+            margin-bottom:5px;
+          "
+        >
+          NOTIFICATION TEMPLATES
+        </div>
+
+        <h3
+          style="
+            margin:0;
+
+            color:#0f172a;
+
+            font-size:20px;
+          "
+        >
+          Save & reuse templates
+        </h3>
+
+        <p
+          style="
+            margin:6px 0 0;
+
+            color:#64748b;
+
+            font-size:13px;
+          "
+        >
+          Save your current notification design
+          and reuse it later.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div
+      style="
+        display:flex;
+        gap:10px;
+        margin-bottom:18px;
+      "
+    >
+
+      <input
+        id="templateName"
+        type="text"
+        placeholder="Template name..."
+        style="
+          flex:1;
+
+          min-width:0;
+
+          height:44px;
+
+          padding:0 14px;
+
+          border:1px solid #cbd5e1;
+
+          border-radius:11px;
+
+          outline:none;
+
+          background:#ffffff;
+
+          color:#0f172a;
+
+          font-size:14px;
+        "
+      />
+
+
+      <button
+        type="button"
+        id="saveTemplateBtn"
+
+        style="
+          height:44px;
+
+          padding:0 18px;
+
+          border:0;
+
+          border-radius:11px;
+
+          background:#0284c7;
+
+          color:#ffffff;
+
+          font-weight:800;
+
+          cursor:pointer;
+
+          white-space:nowrap;
+        "
+      >
+        💾 Save Template
+      </button>
+
+
+      <button
+        type="button"
+        id="newTemplateBtn"
+
+        style="
+          height:44px;
+
+          padding:0 16px;
+
+          border:1px solid #cbd5e1;
+
+          border-radius:11px;
+
+          background:#f8fafc;
+
+          color:#334155;
+
+          font-weight:700;
+
+          cursor:pointer;
+
+          white-space:nowrap;
+        "
+      >
+        + New
+      </button>
+
+    </div>
+
+
+    <div
+      style="
+        display:flex;
+        align-items:center;
+        gap:8px;
+
+        margin-bottom:10px;
+      "
+    >
+
+      <span
+        style="
+          font-size:13px;
+          font-weight:800;
+          color:#334155;
+        "
+      >
+        Saved templates
+      </span>
+
+      <span
+        style="
+          font-size:11px;
+          padding:3px 8px;
+
+          border-radius:999px;
+
+          background:#f1f5f9;
+          color:#64748b;
+        "
+      >
+        Supabase
+      </span>
+
+    </div>
+
+
+    <div id="savedTemplates"></div>
+
+  `;
+
+
+  /*
+    Put the template manager after the
+    existing template area when possible.
+  */
+
+  if (templateButtons) {
+
+    const parent =
+      templateButtons.closest(
+        ".template-section"
+      ) ||
+      templateButtons.parentElement;
+
+    if (parent) {
+
+      parent.insertAdjacentElement(
+        "afterend",
+        existingManager
+      );
+
+    } else {
+
+      document.body.appendChild(
+        existingManager
+      );
+    }
+
+  } else if (editor) {
+
+    editor.insertAdjacentElement(
+      "afterend",
+      existingManager
+    );
+
+  } else {
+
+    document.body.appendChild(
+      existingManager
+    );
+  }
+
+
+  attachTemplateEvents();
+
+  loadSavedTemplates();
+}
+
+
+/* =========================================================
+   TEMPLATE EVENTS
+========================================================= */
+
+function attachTemplateEvents() {
+
+  const saveBtn =
+    document.getElementById(
+      "saveTemplateBtn"
+    );
+
+  const newBtn =
+    document.getElementById(
+      "newTemplateBtn"
+    );
+
+  const savedContainer =
+    document.getElementById(
+      "savedTemplates"
+    );
+
+
+  if (saveBtn && !saveBtn.dataset.bound) {
+
+    saveBtn.dataset.bound = "true";
+
+    saveBtn.addEventListener(
+      "click",
+      saveNotificationTemplate
+    );
+  }
+
+
+  if (newBtn && !newBtn.dataset.bound) {
+
+    newBtn.dataset.bound = "true";
+
+    newBtn.addEventListener(
+      "click",
+      createNewTemplate
+    );
+  }
+
+
+  if (
+    savedContainer &&
+    !savedContainer.dataset.bound
+  ) {
+
+    savedContainer.dataset.bound =
+      "true";
+
+
+    savedContainer.addEventListener(
+      "click",
+      event => {
+
+        const loadButton =
+          event.target.closest(
+            ".sp-load-template"
+          );
+
+        const deleteButton =
+          event.target.closest(
+            ".sp-delete-template"
+          );
+
+
+        if (loadButton) {
+
+          loadNotificationTemplate(
+            loadButton.dataset.id
+          );
+
+          return;
+        }
+
+
+        if (deleteButton) {
+
+          deleteNotificationTemplate(
+            deleteButton.dataset.id
+          );
+
+        }
+
+      }
+    );
+  }
+}
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+function updatePreview() {
+
+  const iframe =
+    document.getElementById(
+      "notificationPreview"
+    );
+
+  if (!iframe) return;
+
+
+  const title =
+    getValue("notificationTitle");
+
+  const message =
+    getValue("notificationMessage");
+
+  const html =
+    getValue("notificationHtml");
+
+  const css =
+    getValue("notificationCss");
+
+  const js =
+    getValue("notificationJs");
+
+
+  let content = html;
+
+
+  /*
+    If no custom HTML is entered,
+    show a basic notification preview.
+  */
+
+  if (!content.trim()) {
+
+    content = `
+
+      <div class="notification-card">
+
+        <div class="notification-icon">
+          🔔
+        </div>
+
+        <div>
+
+          <div class="notification-title">
+            ${escapeHtml(title || "Notification")}
+          </div>
+
+          <div class="notification-message">
+            ${escapeHtml(message || "Your notification message")}
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+  }
+
+
+  iframe.srcdoc = `
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1.0"
+/>
+
+<style>
+
+  * {
+    box-sizing:border-box;
+  }
+
+  html,
+  body {
+    margin:0;
+    padding:0;
+
+    width:100%;
+    min-height:100%;
+
+    background:#f8fafc;
+
+    font-family:
+      Inter,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+
+    color:#0f172a;
+  }
+
+  body {
+    padding:24px;
+  }
+
+  .notification-card {
+
+    width:100%;
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:16px;
+
+    padding:22px;
+
+    border-radius:18px;
+
+    background:#ffffff;
+
+    border:1px solid #e2e8f0;
+
+    box-shadow:
+      0 15px 40px rgba(15,23,42,.08);
+  }
+
+  .notification-icon {
+
+    width:46px;
+    height:46px;
+
+    flex-shrink:0;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:14px;
+
+    background:#e0f2fe;
+
+    font-size:22px;
+  }
+
+  .notification-title {
+
+    font-size:18px;
+
+    font-weight:800;
+
+    margin-bottom:5px;
+  }
+
+  .notification-message {
+
+    color:#64748b;
+
+    line-height:1.6;
+
+    font-size:14px;
+  }
+
+  ${css}
+
+</style>
+
+</head>
+
+<body>
+
+${content}
+
+<script>
+
+try {
+
+${js}
+
+} catch(error) {
+
+  console.error(
+    "Template JS error:",
+    error
+  );
+
+}
+
+<\/script>
+
+</body>
+
+</html>
+
+  `;
+}
+
+
+/* =========================================================
+   BUILT-IN TEMPLATES
+========================================================= */
+
+const templates = {
+
+  welcome: {
+
+    name: "Welcome",
+
+    title: "Welcome to StudyPulse",
+
+    message:
+      "Your StudyPulse space is ready. Check your plan and start studying!",
+
+    type: "success",
+
+    html_content: `
+
+<div class="sp-card">
+
+  <div class="sp-icon">
+    👋
+  </div>
+
+  <div class="sp-content">
+
+    <div class="sp-eyebrow">
+      WELCOME
+    </div>
+
+    <h2>
+      Welcome to StudyPulse!
+    </h2>
+
+    <p>
+      Your StudyPulse space is ready.
+      Check your plan and start studying!
+    </p>
+
+    <div class="sp-meta">
+      {{class}} • {{section}}
+    </div>
+
+  </div>
+
+</div>
+
+    `,
+
+    css_content: `
+
+.sp-card {
+
+  width:100%;
+
+  display:flex;
+
+  gap:18px;
+
+  padding:24px;
+
+  border-radius:20px;
+
+  background:#ffffff;
+
+  border:1px solid #e2e8f0;
+
+  box-shadow:
+    0 15px 40px rgba(15,23,42,.08);
+}
+
+.sp-icon {
+
+  width:52px;
+  height:52px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:16px;
+
+  background:#e0f2fe;
+
+  font-size:26px;
+}
+
+.sp-eyebrow {
+
+  color:#0284c7;
+
+  font-size:11px;
+
+  font-weight:800;
+
+  letter-spacing:.12em;
+}
+
+.sp-content h2 {
+
+  margin:5px 0 7px;
+
+  color:#0f172a;
+
+  font-size:22px;
+}
+
+.sp-content p {
+
+  margin:0;
+
+  color:#64748b;
+
+  line-height:1.6;
+}
+
+.sp-meta {
+
+  margin-top:12px;
+
+  color:#94a3b8;
+
+  font-size:12px;
+}
+
+    `,
+
+    js_content: ""
+  },
+
+
+  reminder: {
+
+    name: "Study Reminder",
+
+    title: "Study Reminder",
+
+    message:
+      "You have a study session planned.",
+
+    type: "info",
+
+    html_content: `
+
+<div class="sp-card">
+
+  <div class="sp-icon">
+    📚
+  </div>
+
+  <div>
+
+    <div class="sp-eyebrow">
+      STUDY REMINDER
+    </div>
+
+    <h2>
+      Time to study
+    </h2>
+
+    <p>
+      You have a study session planned.
+      Stay focused and make progress!
+    </p>
+
+  </div>
+
+</div>
+
+    `,
+
+    css_content: `
+
+.sp-card {
+
+  width:100%;
+
+  padding:24px;
+
+  border-radius:20px;
+
+  background:#ffffff;
+
+  border:1px solid #e2e8f0;
+
+  box-shadow:
+    0 15px 40px rgba(15,23,42,.08);
+}
+
+.sp-icon {
+
+  font-size:30px;
+
+  margin-bottom:12px;
+}
+
+.sp-eyebrow {
+
+  color:#0284c7;
+
+  font-size:11px;
+
+  font-weight:800;
+
+  letter-spacing:.12em;
+}
+
+.sp-card h2 {
+
+  margin:6px 0;
+
+  color:#0f172a;
+}
+
+.sp-card p {
+
+  color:#64748b;
+
+  line-height:1.6;
+}
+
+    `,
+
+    js_content: ""
+  },
+
+
+  update: {
+
+    name: "Update",
+
+    title: "StudyPulse Update",
+
+    message:
+      "There is a new update available.",
+
+    type: "info",
+
+    html_content: `
+
+<div class="sp-update">
+
+  <div class="sp-icon">
+    ✨
+  </div>
+
+  <div>
+
+    <div class="sp-eyebrow">
+      UPDATE
+    </div>
+
+    <h2>
+      Something new is here
+    </h2>
+
+    <p>
+      Check out the latest improvements
+      in StudyPulse.
+    </p>
+
+  </div>
+
+</div>
+
+    `,
+
+    css_content: `
+
+.sp-update {
+
+  width:100%;
+
+  display:flex;
+
+  gap:18px;
+
+  padding:24px;
+
+  border-radius:20px;
+
+  background:#ffffff;
+
+  border:1px solid #e2e8f0;
+
+  box-shadow:
+    0 15px 40px rgba(15,23,42,.08);
+}
+
+.sp-icon {
+
+  font-size:30px;
+}
+
+.sp-eyebrow {
+
+  color:#7c3aed;
+
+  font-size:11px;
+
+  font-weight:800;
+
+  letter-spacing:.12em;
+}
+
+.sp-update h2 {
+
+  margin:6px 0;
+
+  color:#0f172a;
+}
+
+.sp-update p {
+
+  color:#64748b;
+
+  line-height:1.6;
+}
+
+    `,
+
+    js_content: ""
+  },
+
+
+  exam: {
+
+    name: "Exam",
+
+    title: "Exam Reminder",
+
+    message:
+      "You have an upcoming exam.",
+
+    type: "warning",
+
+    html_content: `
+
+<div class="sp-exam">
+
+  <div class="sp-icon">
+    📝
+  </div>
+
+  <div>
+
+    <div class="sp-eyebrow">
+      EXAM REMINDER
+    </div>
+
+    <h2>
+      Upcoming exam
+    </h2>
+
+    <p>
+      Make sure you are prepared
+      and review your lessons.
+    </p>
+
+  </div>
+
+</div>
+
+    `,
+
+    css_content: `
+
+.sp-exam {
+
+  width:100%;
+
+  display:flex;
+
+  gap:18px;
+
+  padding:24px;
+
+  border-radius:20px;
+
+  background:#ffffff;
+
+  border:1px solid #fed7aa;
+
+  box-shadow:
+    0 15px 40px rgba(15,23,42,.08);
+}
+
+.sp-icon {
+
+  font-size:30px;
+}
+
+.sp-eyebrow {
+
+  color:#ea580c;
+
+  font-size:11px;
+
+  font-weight:800;
+
+  letter-spacing:.12em;
+}
+
+.sp-exam h2 {
+
+  margin:6px 0;
+
+  color:#0f172a;
+}
+
+.sp-exam p {
+
+  color:#64748b;
+
+  line-height:1.6;
+}
+
+    `,
+
+    js_content: ""
+  }
+
+};
+
+
+/* =========================================================
+   BUILT-IN TEMPLATE BUTTONS
+========================================================= */
+
+function initializeBuiltInTemplates() {
+
+  document
+    .querySelectorAll("[data-template]")
+    .forEach(button => {
+
+      if (button.dataset.bound === "true") {
+        return;
+      }
+
+      button.dataset.bound = "true";
+
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          const key =
+            button.dataset.template;
+
+          const template =
+            templates[key];
+
+          if (!template) return;
+
+
+          applyTemplate({
+            ...template,
+            id:null
+          });
+
+
+          setValue(
+            "templateName",
+            template.name || ""
+          );
+
+          selectedSavedTemplateId =
+            null;
+
+        }
+      );
+
+    });
+}
+
+
+/* =========================================================
+   CLEAR EDITOR
+========================================================= */
+
+function clearNotificationEditor() {
+
+  setValue(
+    "notificationTitle",
+    ""
+  );
+
+  setValue(
+    "notificationMessage",
+    ""
+  );
+
+  setValue(
+    "notificationHtml",
+    ""
+  );
+
+  setValue(
+    "notificationCss",
+    ""
+  );
+
+  setValue(
+    "notificationJs",
+    ""
+  );
+
+
+  selectedSavedTemplateId =
+    null;
+
+
+  setValue(
+    "templateName",
+    ""
+  );
+
+
+  updatePreview();
+}
+
+
+/* =========================================================
+   SEND NOTIFICATION
+========================================================= */
+
+async function sendNotification() {
+
+  if (sending) return;
+
+  const title =
+    getValue("notificationTitle").trim();
+
+  const message =
+    getValue("notificationMessage").trim();
+
+  const type =
+    getValue("notificationType") ||
+    "info";
+
+
+  if (!title && !message) {
+
+    showToast(
+      "Enter a notification title or message.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  sending = true;
+
+
+  try {
+
+    /*
+      Keep your existing recipient logic here.
+
+      Example:
+      const recipients = getFilteredRecipients();
+    */
+
+    const recipients =
+      typeof getFilteredRecipients === "function"
+        ? getFilteredRecipients()
+        : [];
+
+
+    if (!recipients.length) {
+
+      showToast(
+        "No recipients selected.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const rows =
+      recipients.map(student => ({
+
+        user_id:
+          String(
+            student.id ||
+            student.user_id ||
+            ""
+          ),
+
+        title:
+          title || null,
+
+        message:
+          message || "",
+
+        type,
+
+        read:false,
+
+        html_content:
+          getValue("notificationHtml") ||
+          null,
+
+        css_content:
+          getValue("notificationCss") ||
+          null,
+
+        js_content:
+          getValue("notificationJs") ||
+          null
+
+      }));
+
+
+    const {
+      error
+    } = await supabaseClient
+      .from("notifications")
+      .insert(rows);
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    showToast(
+      `Notification sent to ${rows.length} recipient(s).`,
+      "success"
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Send notification error:",
+      error
+    );
+
+    showToast(
+      error.message ||
+      "Could not send notification.",
+      "error"
+    );
+
+  } finally {
+
+    sending = false;
+
+  }
+}
+
+
+/* =========================================================
+   PREVIEW LISTENERS
+========================================================= */
+
+function initializePreviewListeners() {
+
+  const fields = [
+
+    "notificationTitle",
+    "notificationMessage",
+    "notificationType",
+    "notificationHtml",
+    "notificationCss",
+    "notificationJs"
+
+  ];
+
+
+  fields.forEach(id => {
+
+    const element =
+      document.getElementById(id);
+
+    if (!element) return;
+
+
+    element.addEventListener(
+      "input",
+      updatePreview
+    );
+
+    element.addEventListener(
+      "change",
+      updatePreview
+    );
+
+  });
+}
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+async function initNotifications() {
+
+  console.log(
+    "🔔 Initializing StudyPulse notifications..."
+  );
+
+
+  /*
+    IMPORTANT:
+    Your previous console showed:
+
+    401 Unauthorized
+    Invalid API key
+
+    If that still appears, replace
+    SUPABASE_ANON_KEY above with the
+    correct key from your Supabase project.
+  */
+
+
+  initializeBuiltInTemplates();
+
+  initializePreviewListeners();
+
+  createTemplateManager();
+
+  updatePreview();
+
+
+  console.log(
+    "✅ Notification template system initialized."
+  );
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+if (
+  document.readyState ===
+  "loading"
+) {
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    initNotifications
+  );
+
+} else {
+
+  initNotifications();
+
+}
+
+</script>
 </body>
 </html>
