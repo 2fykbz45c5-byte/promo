@@ -525,6 +525,12 @@ textarea{min-height:105px;resize:vertical;line-height:1.5}
 "use strict";
 
 /* ============================================================
+   STUDYPULSE NOTIFICATION STUDIO
+   SINGLE JAVASCRIPT SYSTEM
+============================================================ */
+
+
+/* ============================================================
    SUPABASE
 ============================================================ */
 
@@ -550,53 +556,113 @@ let selectedStudent = null;
 let recipientMode = "group";
 let sending = false;
 
+/*
+   Supabase saved notification templates
+*/
+let savedTemplates = [];
+
+/*
+   Currently loaded custom template.
+   null = creating a new template.
+*/
+let selectedSavedTemplateId = null;
+
 
 /* ============================================================
    DOM HELPER
 ============================================================ */
 
-const $ = id => document.getElementById(id);
+const $ = id =>
+  document.getElementById(id);
 
 
 /* ============================================================
    DOM ELEMENTS
 ============================================================ */
 
-const groupModeBtn = $("groupModeBtn");
-const studentModeBtn = $("studentModeBtn");
+const groupModeBtn =
+  $("groupModeBtn");
 
-const groupFilters = $("groupFilters");
-const studentFilter = $("studentFilter");
+const studentModeBtn =
+  $("studentModeBtn");
 
-const classFilter = $("classFilter");
-const sectionFilter = $("sectionFilter");
-const optionalFilter = $("optionalFilter");
+const groupFilters =
+  $("groupFilters");
 
-const studentSearch = $("studentSearch");
-const studentResults = $("studentResults");
-const selectedStudentBox = $("selectedStudent");
+const studentFilter =
+  $("studentFilter");
 
-const titleInput = $("title");
-const typeInput = $("type");
-const messageInput = $("message");
+const classFilter =
+  $("classFilter");
 
-const htmlCode = $("htmlCode");
-const cssCode = $("cssCode");
-const jsCode = $("jsCode");
+const sectionFilter =
+  $("sectionFilter");
 
-const preview = $("preview");
+const optionalFilter =
+  $("optionalFilter");
 
-const recipientCount = $("recipientCount");
-const htmlSize = $("htmlSize");
-const cssSize = $("cssSize");
-const previewType = $("previewType");
+const studentSearch =
+  $("studentSearch");
 
-const sendBtn = $("sendBtn");
-const clearBtn = $("clearBtn");
-const toast = $("toast");
+const studentResults =
+  $("studentResults");
 
-const editorCard = $("editorCard");
-const connectionText = $("connectionText");
+const selectedStudentBox =
+  $("selectedStudent");
+
+const titleInput =
+  $("title");
+
+const typeInput =
+  $("type");
+
+const messageInput =
+  $("message");
+
+const htmlCode =
+  $("htmlCode");
+
+const cssCode =
+  $("cssCode");
+
+const jsCode =
+  $("jsCode");
+
+const preview =
+  $("preview");
+
+const recipientCount =
+  $("recipientCount");
+
+const htmlSize =
+  $("htmlSize");
+
+const cssSize =
+  $("cssSize");
+
+const previewType =
+  $("previewType");
+
+const sendBtn =
+  $("sendBtn");
+
+const clearBtn =
+  $("clearBtn");
+
+const toast =
+  $("toast");
+
+const editorCard =
+  $("editorCard");
+
+const connectionText =
+  $("connectionText");
+
+const saveTemplateBtn =
+  $("saveTemplateBtn");
+
+const savedTemplatesContainer =
+  $("savedTemplates");
 
 
 /* ============================================================
@@ -604,6 +670,7 @@ const connectionText = $("connectionText");
 ============================================================ */
 
 const sectionMap = {
+
   "7ème": [
     "A",
     "B",
@@ -654,16 +721,21 @@ const sectionMap = {
     "Lettres",
     "Sport"
   ]
+
 };
 
 
 function updateSections() {
 
-  if (!classFilter || !sectionFilter) {
+  if (
+    !classFilter ||
+    !sectionFilter
+  ) {
     return;
   }
 
-  const cls = classFilter.value;
+  const cls =
+    classFilter.value;
 
   const values =
     sectionMap[cls] || [];
@@ -687,15 +759,33 @@ function updateSections() {
 function escapeHtml(value) {
 
   return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 }
 
 
-function interpolate(value, user) {
+function interpolate(
+  value,
+  user
+) {
 
   if (value == null) {
     return "";
@@ -722,6 +812,7 @@ function interpolate(value, user) {
 
     optional_subject:
       user?.optional_subject || ""
+
   };
 
   return String(value).replace(
@@ -729,7 +820,9 @@ function interpolate(value, user) {
 
     (_, key) =>
       String(
-        replacements[key.toLowerCase()] ?? ""
+        replacements[
+          key.toLowerCase()
+        ] ?? ""
       )
   );
 }
@@ -745,11 +838,17 @@ function showToast(
 ) {
 
   if (!toast) {
-    console.log(message);
+
+    console.log(
+      `[${kind || "info"}]`,
+      message
+    );
+
     return;
   }
 
-  toast.textContent = message;
+  toast.textContent =
+    message;
 
   toast.className =
     "toast " + kind;
@@ -764,8 +863,10 @@ function showToast(
   showToast.timer =
     setTimeout(
       () => {
+
         toast.style.display =
           "none";
+
       },
       4200
     );
@@ -776,11 +877,15 @@ function showToast(
    LOADING
 ============================================================ */
 
-function setLoading(state) {
+function setLoading(
+  state
+) {
 
-  sending = state;
+  sending =
+    state;
 
   if (editorCard) {
+
     editorCard.classList.toggle(
       "loading",
       state
@@ -859,7 +964,7 @@ function getFilteredRecipients() {
           user.optional_subject ||
           ""
         ).toLowerCase() !==
-          optional.toLowerCase()
+        optional.toLowerCase()
       ) {
         return false;
       }
@@ -885,7 +990,9 @@ function updateRecipientCount() {
    MODE
 ============================================================ */
 
-function setMode(mode) {
+function setMode(
+  mode
+) {
 
   recipientMode =
     mode;
@@ -912,13 +1019,17 @@ function setMode(mode) {
   if (groupFilters) {
 
     groupFilters.style.display =
-      group ? "" : "none";
+      group
+        ? ""
+        : "none";
   }
 
   if (studentFilter) {
 
     studentFilter.style.display =
-      group ? "none" : "";
+      group
+        ? "none"
+        : "";
   }
 
   updateRecipientCount();
@@ -929,7 +1040,8 @@ if (groupModeBtn) {
 
   groupModeBtn.addEventListener(
     "click",
-    () => setMode("group")
+    () =>
+      setMode("group")
   );
 }
 
@@ -938,7 +1050,8 @@ if (studentModeBtn) {
 
   studentModeBtn.addEventListener(
     "click",
-    () => setMode("student")
+    () =>
+      setMode("student")
   );
 }
 
@@ -960,33 +1073,34 @@ async function loadStudents() {
     const {
       data,
       error
-    } = await supabaseClient
+    } =
+      await supabaseClient
 
-      .from("users")
+        .from("users")
 
-      .select(`
-        id,
-        username,
-        display_name,
-        email,
-        role,
-        status,
-        class,
-        section,
-        optional_subject
-      `)
+        .select(`
+          id,
+          username,
+          display_name,
+          email,
+          role,
+          status,
+          class,
+          section,
+          optional_subject
+        `)
 
-      .eq(
-        "role",
-        "user"
-      )
+        .eq(
+          "role",
+          "user"
+        )
 
-      .order(
-        "username",
-        {
-          ascending: true
-        }
-      );
+        .order(
+          "username",
+          {
+            ascending: true
+          }
+        );
 
 
     if (error) {
@@ -1121,17 +1235,19 @@ function renderStudentResults() {
 
     studentResults.innerHTML =
 
-      '<div class="student-result">' +
+      `
+      <div class="student-result">
 
-      '<div class="student-name">' +
-      'No student found' +
-      '</div>' +
+        <div class="student-name">
+          No student found
+        </div>
 
-      '<div class="student-meta">' +
-      'Try another username, name, class or section.' +
-      '</div>' +
+        <div class="student-meta">
+          Try another username, name, class or section.
+        </div>
 
-      '</div>';
+      </div>
+      `;
 
   } else {
 
@@ -1148,11 +1264,13 @@ function renderStudentResults() {
             >
 
               <div class="student-name">
+
                 ${escapeHtml(
                   user.display_name ||
                   user.username ||
                   user.id
                 )}
+
               </div>
 
               <div class="student-meta">
@@ -1339,7 +1457,6 @@ function renderSelectedStudent() {
 
       </div>
 
-
       <button
         type="button"
         class="btn btn-danger"
@@ -1350,6 +1467,7 @@ function renderSelectedStudent() {
       </button>
 
     </div>
+
   `;
 
 
@@ -1426,6 +1544,9 @@ function updatePreview() {
   const css =
     cssCode.value.trim();
 
+  const js =
+    jsCode?.value.trim() || "";
+
 
   if (htmlSize) {
 
@@ -1470,6 +1591,7 @@ function updatePreview() {
         </div>
 
       </div>
+
     `;
 
     return;
@@ -1486,16 +1608,27 @@ function updatePreview() {
 
 <meta charset="UTF-8">
 
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
 <style>
 
 html,
-body{
+body {
+
   margin:0;
   padding:0;
+
+  width:100%;
+  min-height:100%;
+
   background:transparent;
+
 }
 
-body{
+body {
 
   font-family:
     Inter,
@@ -1508,12 +1641,15 @@ body{
   color:#0f172a;
 
   -webkit-font-smoothing:antialiased;
+
 }
 
 *,
 *::before,
-*::after{
+*::after {
+
   box-sizing:border-box;
+
 }
 
 ${css}
@@ -1526,9 +1662,27 @@ ${css}
 
 ${html}
 
+<script>
+
+try {
+
+${js}
+
+} catch(error) {
+
+  console.error(
+    "StudyPulse preview JavaScript error:",
+    error
+  );
+
+}
+
+<\/script>
+
 </body>
 
 </html>
+
 `;
 
 
@@ -1538,10 +1692,31 @@ ${html}
     );
 
 
+  /*
+     IMPORTANT:
+     allow JavaScript inside preview.
+  */
+
   iframe.setAttribute(
     "sandbox",
-    ""
+    "allow-scripts"
   );
+
+
+  iframe.style.width =
+    "100%";
+
+  iframe.style.height =
+    "100%";
+
+  iframe.style.minHeight =
+    "300px";
+
+  iframe.style.border =
+    "0";
+
+  iframe.style.display =
+    "block";
 
   iframe.srcdoc =
     previewDocument;
@@ -1568,22 +1743,23 @@ ${html}
   jsCode,
   typeInput
 
-].filter(Boolean)
+]
+  .filter(Boolean)
+  .forEach(
+    element => {
 
-.forEach(
-  element => {
+      element.addEventListener(
+        "input",
+        updatePreview
+      );
 
-    element.addEventListener(
-      "input",
-      updatePreview
-    );
+      element.addEventListener(
+        "change",
+        updatePreview
+      );
 
-    element.addEventListener(
-      "change",
-      updatePreview
-    );
-  }
-);
+    }
+  );
 
 
 /* ============================================================
@@ -1636,11 +1812,12 @@ const templates = {
   </div>
 
 </div>
+
 `,
 
     css: `
 
-.sp-card{
+.sp-card {
 
   display:flex;
 
@@ -1673,9 +1850,10 @@ const templates = {
       42,
       .07
     );
+
 }
 
-.sp-icon{
+.sp-icon {
 
   width:46px;
 
@@ -1693,9 +1871,10 @@ const templates = {
   background:#ffffff;
 
   font-size:24px;
+
 }
 
-.sp-eyebrow{
+.sp-eyebrow {
 
   font-size:10px;
 
@@ -1704,16 +1883,18 @@ const templates = {
   letter-spacing:.12em;
 
   color:#0891b2;
+
 }
 
-.sp-content{
+.sp-content {
 
   min-width:0;
 
   flex:1;
+
 }
 
-.sp-content h2{
+.sp-content h2 {
 
   margin:
     5px 0 7px;
@@ -1721,9 +1902,10 @@ const templates = {
   color:#0f172a;
 
   font-size:19px;
+
 }
 
-.sp-content p{
+.sp-content p {
 
   margin:0;
 
@@ -1732,9 +1914,10 @@ const templates = {
   line-height:1.55;
 
   font-size:13px;
+
 }
 
-.sp-meta{
+.sp-meta {
 
   display:inline-block;
 
@@ -1752,11 +1935,14 @@ const templates = {
   font-size:10px;
 
   font-weight:800;
+
 }
+
 `,
 
     js:
       ""
+
   },
 
 
@@ -1799,11 +1985,12 @@ const templates = {
   </div>
 
 </div>
+
 `,
 
     css: `
 
-.sp-reminder{
+.sp-reminder {
 
   display:flex;
 
@@ -1829,9 +2016,10 @@ const templates = {
       42,
       .06
     );
+
 }
 
-.sp-time{
+.sp-time {
 
   width:44px;
 
@@ -1849,9 +2037,10 @@ const templates = {
 
   flex:
     0 0 44px;
+
 }
 
-.sp-reminder span{
+.sp-reminder span {
 
   font-size:10px;
 
@@ -1860,9 +2049,10 @@ const templates = {
   letter-spacing:.1em;
 
   color:#0891b2;
+
 }
 
-.sp-reminder h2{
+.sp-reminder h2 {
 
   margin:
     5px 0;
@@ -1870,9 +2060,10 @@ const templates = {
   color:#0f172a;
 
   font-size:18px;
+
 }
 
-.sp-reminder p{
+.sp-reminder p {
 
   margin:0;
 
@@ -1881,11 +2072,14 @@ const templates = {
   font-size:13px;
 
   line-height:1.5;
+
 }
+
 `,
 
     js:
       ""
+
   },
 
 
@@ -1927,11 +2121,12 @@ const templates = {
   </p>
 
 </div>
+
 `,
 
     css: `
 
-.sp-update{
+.sp-update {
 
   width:100%;
 
@@ -1949,9 +2144,10 @@ const templates = {
   border:
     1px solid
     #e2e8f0;
+
 }
 
-.sp-top{
+.sp-top {
 
   display:flex;
 
@@ -1961,9 +2157,10 @@ const templates = {
   gap:10px;
 
   align-items:center;
+
 }
 
-.sp-badge{
+.sp-badge {
 
   padding:
     6px 9px;
@@ -1977,18 +2174,20 @@ const templates = {
   font-size:10px;
 
   font-weight:900;
+
 }
 
-.sp-pulse{
+.sp-pulse {
 
   font-size:10px;
 
   color:#94a3b8;
 
   font-weight:800;
+
 }
 
-.sp-update h2{
+.sp-update h2 {
 
   margin:
     14px 0 7px;
@@ -1996,9 +2195,10 @@ const templates = {
   color:#0f172a;
 
   font-size:19px;
+
 }
 
-.sp-update p{
+.sp-update p {
 
   margin:0;
 
@@ -2007,11 +2207,14 @@ const templates = {
   font-size:13px;
 
   line-height:1.55;
+
 }
+
 `,
 
     js:
       ""
+
   },
 
 
@@ -2054,11 +2257,12 @@ const templates = {
   </div>
 
 </div>
+
 `,
 
     css: `
 
-.sp-exam{
+.sp-exam {
 
   display:flex;
 
@@ -2075,9 +2279,10 @@ const templates = {
   border:
     1px solid
     #fde68a;
+
 }
 
-.sp-exam-icon{
+.sp-exam-icon {
 
   width:45px;
 
@@ -2095,9 +2300,10 @@ const templates = {
 
   flex:
     0 0 45px;
+
 }
 
-.sp-label{
+.sp-label {
 
   font-size:10px;
 
@@ -2106,9 +2312,10 @@ const templates = {
   letter-spacing:.1em;
 
   color:#b45309;
+
 }
 
-.sp-exam h2{
+.sp-exam h2 {
 
   margin:
     5px 0 7px;
@@ -2116,9 +2323,10 @@ const templates = {
   color:#0f172a;
 
   font-size:18px;
+
 }
 
-.sp-exam p{
+.sp-exam p {
 
   margin:0;
 
@@ -2127,11 +2335,14 @@ const templates = {
   font-size:13px;
 
   line-height:1.5;
+
 }
+
 `,
 
     js:
       ""
+
   },
 
 
@@ -2154,13 +2365,14 @@ const templates = {
 
     js:
       ""
+
   }
 
 };
 
 
 /* ============================================================
-   LOAD BUILT-IN TEMPLATE BUTTONS
+   LOAD BUILT-IN TEMPLATE
 ============================================================ */
 
 document
@@ -2183,6 +2395,14 @@ document
           if (!template) {
             return;
           }
+
+
+          /*
+             Built-in template = new custom template state.
+          */
+
+          selectedSavedTemplateId =
+            null;
 
 
           if (titleInput) {
@@ -2224,81 +2444,514 @@ document
 
           updatePreview();
 
+          renderSavedTemplates();
+
+
           showToast(
             "Template loaded.",
             "success"
           );
+
         }
       );
+
     }
   );
 
 
 /* ============================================================
-   SAVED CUSTOM TEMPLATES
+   GET CURRENT TEMPLATE DATA
 ============================================================ */
 
-const saveTemplateBtn =
-  $("saveTemplateBtn");
+function getCurrentTemplateData() {
 
-const savedTemplatesContainer =
-  $("savedTemplates");
+  return {
 
+    title:
+      titleInput?.value.trim() ||
+      "",
 
-let savedTemplates = [];
+    message:
+      messageInput?.value.trim() ||
+      "",
 
+    type:
+      typeInput?.value ||
+      "info",
 
-try {
+    html_content:
+      htmlCode?.value ||
+      "",
 
-  savedTemplates =
-    JSON.parse(
-      localStorage.getItem(
-        "studypulse_notification_templates"
-      ) || "[]"
-    );
+    css_content:
+      cssCode?.value ||
+      "",
 
-  if (!Array.isArray(savedTemplates)) {
+    js_content:
+      jsCode?.value ||
+      ""
 
-    savedTemplates = [];
-  }
-
-} catch (error) {
-
-  console.warn(
-    "Could not read saved templates:",
-    error
-  );
-
-  savedTemplates = [];
+  };
 }
 
 
 /* ============================================================
-   SAVE TEMPLATES
+   SAVE TEMPLATE TO SUPABASE
 ============================================================ */
 
-function saveTemplatesToStorage() {
+async function saveNotificationTemplate() {
+
+  if (!saveTemplateBtn) {
+
+    console.error(
+      "saveTemplateBtn was not found."
+    );
+
+    return;
+  }
+
+
+  /*
+     If a template is currently loaded,
+     ask whether to update it or create a new one.
+  */
+
+  let name = "";
+
+
+  if (selectedSavedTemplateId) {
+
+    const currentTemplate =
+      savedTemplates.find(
+        template =>
+          String(template.id) ===
+          String(
+            selectedSavedTemplateId
+          )
+      );
+
+
+    const defaultName =
+      currentTemplate?.name ||
+      "";
+
+
+    name =
+      window.prompt(
+        "Template name:",
+        defaultName
+      );
+
+  } else {
+
+    name =
+      window.prompt(
+        "Enter a name for this template:"
+      );
+  }
+
+
+  if (
+    name === null
+  ) {
+
+    return;
+  }
+
+
+  const cleanName =
+    name.trim();
+
+
+  if (!cleanName) {
+
+    showToast(
+      "Please enter a template name.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const data =
+    getCurrentTemplateData();
+
+
+  const payload = {
+
+    name:
+      cleanName,
+
+    title:
+      data.title ||
+      null,
+
+    message:
+      data.message ||
+      null,
+
+    type:
+      data.type ||
+      "info",
+
+    html_content:
+      data.html_content ||
+      null,
+
+    css_content:
+      data.css_content ||
+      null,
+
+    js_content:
+      data.js_content ||
+      null,
+
+    updated_at:
+      new Date().toISOString()
+
+  };
+
 
   try {
 
-    localStorage.setItem(
-      "studypulse_notification_templates",
-      JSON.stringify(
-        savedTemplates
-      )
-    );
+    let savedTemplate = null;
+
+
+    /* ========================================================
+       UPDATE EXISTING TEMPLATE
+    ======================================================== */
+
+    if (selectedSavedTemplateId) {
+
+      const {
+        data: updated,
+        error
+      } =
+        await supabaseClient
+
+          .from(
+            "notification_templates"
+          )
+
+          .update(
+            payload
+          )
+
+          .eq(
+            "id",
+            selectedSavedTemplateId
+          )
+
+          .select()
+          .single();
+
+
+      if (error) {
+
+        console.error(
+          "Template update error:",
+          error
+        );
+
+        throw error;
+      }
+
+
+      savedTemplate =
+        updated;
+
+
+      showToast(
+        `"${cleanName}" updated successfully.`,
+        "success"
+      );
+
+    }
+
+
+    /* ========================================================
+       INSERT NEW TEMPLATE
+    ======================================================== */
+
+    else {
+
+      const {
+        data: inserted,
+        error
+      } =
+        await supabaseClient
+
+          .from(
+            "notification_templates"
+          )
+
+          .insert(
+            payload
+          )
+
+          .select()
+          .single();
+
+
+      /*
+         Duplicate template name.
+      */
+
+      if (
+        error &&
+        error.code === "23505"
+      ) {
+
+        const overwrite =
+          window.confirm(
+            `A template named "${cleanName}" already exists.\n\nDo you want to replace it?`
+          );
+
+
+        if (!overwrite) {
+
+          return;
+        }
+
+
+        const {
+          data: updated,
+          error: updateError
+        } =
+          await supabaseClient
+
+            .from(
+              "notification_templates"
+            )
+
+            .update(
+              payload
+            )
+
+            .eq(
+              "name",
+              cleanName
+            )
+
+            .select()
+            .single();
+
+
+        if (updateError) {
+
+          console.error(
+            "Duplicate template update error:",
+            updateError
+          );
+
+          throw updateError;
+        }
+
+
+        savedTemplate =
+          updated;
+
+
+        showToast(
+          `"${cleanName}" replaced successfully.`,
+          "success"
+        );
+
+      }
+
+      else if (error) {
+
+        console.error(
+          "Template insert error:",
+          error
+        );
+
+        throw error;
+
+      }
+
+      else {
+
+        savedTemplate =
+          inserted;
+
+
+        showToast(
+          `"${cleanName}" saved to Supabase.`,
+          "success"
+        );
+
+      }
+
+    }
+
+
+    if (savedTemplate) {
+
+      selectedSavedTemplateId =
+        savedTemplate.id;
+    }
+
+
+    await loadNotificationTemplates();
+
 
   } catch (error) {
 
     console.error(
-      "Could not save templates:",
+      "SAVE TEMPLATE FAILED:",
       error
     );
 
+
     showToast(
-      "Could not save the template.",
+      "Could not save template: " +
+      (
+        error.message ||
+        "Unknown Supabase error"
+      ),
       "error"
     );
+  }
+}
+
+
+/* ============================================================
+   LOAD TEMPLATES FROM SUPABASE
+============================================================ */
+
+async function loadNotificationTemplates() {
+
+  if (!savedTemplatesContainer) {
+
+    console.error(
+      "savedTemplates container not found."
+    );
+
+    return;
+  }
+
+
+  savedTemplatesContainer.innerHTML = `
+
+    <div class="no-saved-templates">
+
+      <div
+        style="
+          font-size:22px;
+          margin-bottom:7px;
+        "
+      >
+        ⏳
+      </div>
+
+      Loading templates...
+
+    </div>
+
+  `;
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+
+        .from(
+          "notification_templates"
+        )
+
+        .select(`
+          id,
+          name,
+          title,
+          message,
+          type,
+          html_content,
+          css_content,
+          js_content,
+          created_at,
+          updated_at
+        `)
+
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        );
+
+
+    if (error) {
+
+      console.error(
+        "Template load error:",
+        error
+      );
+
+      throw error;
+    }
+
+
+    savedTemplates =
+      Array.isArray(data)
+        ? data
+        : [];
+
+
+    renderSavedTemplates();
+
+
+  } catch (error) {
+
+    console.error(
+      "LOAD TEMPLATES FAILED:",
+      error
+    );
+
+
+    savedTemplates = [];
+
+
+    savedTemplatesContainer.innerHTML = `
+
+      <div class="no-saved-templates">
+
+        <div
+          style="
+            font-size:26px;
+            margin-bottom:8px;
+          "
+        >
+          ⚠️
+        </div>
+
+        <div>
+          Could not load templates.
+        </div>
+
+        <div
+          style="
+            margin-top:7px;
+            font-size:11px;
+            color:#dc2626;
+          "
+        >
+
+          ${escapeHtml(
+            error.message ||
+            "Supabase error"
+          )}
+
+        </div>
+
+      </div>
+
+    `;
   }
 }
 
@@ -2310,7 +2963,6 @@ function saveTemplatesToStorage() {
 function renderSavedTemplates() {
 
   if (!savedTemplatesContainer) {
-
     return;
   }
 
@@ -2323,8 +2975,8 @@ function renderSavedTemplates() {
 
         <div
           style="
-            font-size:24px;
-            margin-bottom:7px;
+            font-size:26px;
+            margin-bottom:8px;
           "
         >
           📁
@@ -2336,15 +2988,16 @@ function renderSavedTemplates() {
 
         <div
           style="
-            margin-top:4px;
-            font-size:10px;
+            margin-top:5px;
+            font-size:11px;
           "
         >
-          Create a notification and
-          click "Save as Template".
+          Create a notification and click
+          "Save as Template".
         </div>
 
       </div>
+
     `;
 
     return;
@@ -2354,57 +3007,141 @@ function renderSavedTemplates() {
   savedTemplatesContainer.innerHTML =
 
     savedTemplates
-
       .map(
-        (template, index) => `
+        template => {
 
-          <div
-            class="saved-template"
-            data-index="${index}"
-          >
+          const active =
+            String(
+              selectedSavedTemplateId
+            ) ===
+            String(
+              template.id
+            );
+
+
+          return `
 
             <div
-              class="saved-template-info"
+              class="saved-template"
+              data-template-id="${escapeHtml(
+                template.id
+              )}"
+
+              style="
+                display:flex;
+                align-items:center;
+                gap:12px;
+
+                padding:12px;
+
+                margin-bottom:8px;
+
+                border-radius:14px;
+
+                background:${
+                  active
+                    ? "#eff6ff"
+                    : "#ffffff"
+                };
+
+                border:1px solid ${
+                  active
+                    ? "#93c5fd"
+                    : "#e2e8f0"
+                };
+
+                transition:.2s ease;
+              "
             >
 
               <div
-                class="saved-template-icon"
+                style="
+                  width:40px;
+                  height:40px;
+
+                  flex-shrink:0;
+
+                  display:grid;
+                  place-items:center;
+
+                  border-radius:12px;
+
+                  background:#f1f5f9;
+
+                  font-size:19px;
+                "
               >
-                📄
+                📝
               </div>
 
-              <div>
+
+              <div
+                style="
+                  flex:1;
+                  min-width:0;
+                "
+              >
 
                 <div
-                  class="saved-template-title"
+                  style="
+                    font-weight:800;
+                    color:#0f172a;
+
+                    white-space:nowrap;
+                    overflow:hidden;
+                    text-overflow:ellipsis;
+                  "
                 >
+
                   ${escapeHtml(
                     template.name
                   )}
+
                 </div>
 
+
                 <div
-                  class="saved-template-meta"
+                  style="
+                    margin-top:4px;
+
+                    font-size:11px;
+
+                    color:#64748b;
+                  "
                 >
+
                   ${escapeHtml(
                     template.type ||
                     "info"
                   )}
+
                 </div>
 
               </div>
 
-            </div>
-
-
-            <div
-              class="saved-template-actions"
-            >
 
               <button
                 type="button"
-                class="btn btn-small load-template-btn"
-                data-index="${index}"
+                class="sp-load-template"
+                data-id="${escapeHtml(
+                  template.id
+                )}"
+
+                style="
+                  border:0;
+
+                  padding:8px 12px;
+
+                  border-radius:9px;
+
+                  background:#e0f2fe;
+
+                  color:#0369a1;
+
+                  font-weight:800;
+
+                  cursor:pointer;
+                "
               >
                 Load
               </button>
@@ -2412,105 +3149,254 @@ function renderSavedTemplates() {
 
               <button
                 type="button"
-                class="btn btn-small btn-danger delete-template-btn"
-                data-index="${index}"
+                class="sp-delete-template"
+                data-id="${escapeHtml(
+                  template.id
+                )}"
+
+                style="
+                  border:0;
+
+                  width:36px;
+                  height:36px;
+
+                  border-radius:9px;
+
+                  background:#fef2f2;
+
+                  color:#dc2626;
+
+                  cursor:pointer;
+                "
+
+                title="Delete template"
               >
-                Delete
+                🗑
               </button>
 
             </div>
 
-          </div>
-        `
-      )
+          `;
 
+        }
+      )
       .join("");
 }
 
 
 /* ============================================================
-   SAVE CURRENT EDITOR AS TEMPLATE
+   LOAD SAVED TEMPLATE INTO EDITOR
+============================================================ */
+
+function loadNotificationTemplate(
+  id
+) {
+
+  const template =
+    savedTemplates.find(
+      item =>
+        String(item.id) ===
+        String(id)
+    );
+
+
+  if (!template) {
+
+    showToast(
+      "Template not found.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if (titleInput) {
+
+    titleInput.value =
+      template.title ||
+      "";
+  }
+
+
+  if (messageInput) {
+
+    messageInput.value =
+      template.message ||
+      "";
+  }
+
+
+  if (typeInput) {
+
+    typeInput.value =
+      template.type ||
+      "info";
+  }
+
+
+  if (htmlCode) {
+
+    htmlCode.value =
+      template.html_content ||
+      "";
+  }
+
+
+  if (cssCode) {
+
+    cssCode.value =
+      template.css_content ||
+      "";
+  }
+
+
+  if (jsCode) {
+
+    jsCode.value =
+      template.js_content ||
+      "";
+  }
+
+
+  /*
+     Remember which Supabase row is being edited.
+  */
+
+  selectedSavedTemplateId =
+    template.id;
+
+
+  updatePreview();
+
+  renderSavedTemplates();
+
+
+  showToast(
+    `"${template.name}" loaded.`,
+    "success"
+  );
+}
+
+
+/* ============================================================
+   DELETE SAVED TEMPLATE
+============================================================ */
+
+async function deleteNotificationTemplate(
+  id
+) {
+
+  const template =
+    savedTemplates.find(
+      item =>
+        String(item.id) ===
+        String(id)
+    );
+
+
+  if (!template) {
+    return;
+  }
+
+
+  const confirmed =
+    window.confirm(
+      `Delete "${template.name}"?`
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  try {
+
+    const {
+      error
+    } =
+      await supabaseClient
+
+        .from(
+          "notification_templates"
+        )
+
+        .delete()
+
+        .eq(
+          "id",
+          id
+        );
+
+
+    if (error) {
+
+      console.error(
+        "Template delete error:",
+        error
+      );
+
+      throw error;
+    }
+
+
+    if (
+      String(
+        selectedSavedTemplateId
+      ) ===
+      String(id)
+    ) {
+
+      selectedSavedTemplateId =
+        null;
+    }
+
+
+    showToast(
+      `"${template.name}" deleted successfully.`,
+      "success"
+    );
+
+
+    await loadNotificationTemplates();
+
+
+  } catch (error) {
+
+    console.error(
+      "DELETE TEMPLATE FAILED:",
+      error
+    );
+
+
+    showToast(
+      "Could not delete template: " +
+      (
+        error.message ||
+        "Unknown Supabase error"
+      ),
+      "error"
+    );
+  }
+}
+
+
+/* ============================================================
+   SAVE TEMPLATE BUTTON
 ============================================================ */
 
 if (saveTemplateBtn) {
 
   saveTemplateBtn.addEventListener(
     "click",
-    () => {
-
-      const name =
-        prompt(
-          "Enter a name for this template:"
-        );
-
-
-      if (
-        !name ||
-        !name.trim()
-      ) {
-
-        return;
-      }
-
-
-      const template = {
-
-        id:
-          Date.now(),
-
-        name:
-          name.trim(),
-
-        title:
-          titleInput?.value.trim() ||
-          "",
-
-        message:
-          messageInput?.value.trim() ||
-          "",
-
-        type:
-          typeInput?.value ||
-          "info",
-
-        html:
-          htmlCode?.value ||
-          "",
-
-        css:
-          cssCode?.value ||
-          "",
-
-        js:
-          jsCode?.value ||
-          "",
-
-        createdAt:
-          new Date().toISOString()
-      };
-
-
-      savedTemplates.push(
-        template
-      );
-
-
-      saveTemplatesToStorage();
-
-      renderSavedTemplates();
-
-
-      showToast(
-        `"${template.name}" saved successfully.`,
-        "success"
-      );
-    }
+    saveNotificationTemplate
   );
 }
 
 
 /* ============================================================
-   LOAD / DELETE SAVED TEMPLATES
+   SAVED TEMPLATE BUTTON EVENTS
 ============================================================ */
 
 if (savedTemplatesContainer) {
@@ -2519,143 +3405,35 @@ if (savedTemplatesContainer) {
     "click",
     event => {
 
-
-      /* -------------------------
-         LOAD
-      ------------------------- */
-
       const loadButton =
         event.target.closest(
-          ".load-template-btn"
+          ".sp-load-template"
         );
 
 
       if (loadButton) {
 
-        const index =
-          Number(
-            loadButton.dataset.index
-          );
-
-
-        const template =
-          savedTemplates[index];
-
-
-        if (!template) {
-          return;
-        }
-
-
-        if (titleInput) {
-
-          titleInput.value =
-            template.title ||
-            "";
-        }
-
-        if (messageInput) {
-
-          messageInput.value =
-            template.message ||
-            "";
-        }
-
-        if (typeInput) {
-
-          typeInput.value =
-            template.type ||
-            "info";
-        }
-
-        if (htmlCode) {
-
-          htmlCode.value =
-            template.html ||
-            "";
-        }
-
-        if (cssCode) {
-
-          cssCode.value =
-            template.css ||
-            "";
-        }
-
-        if (jsCode) {
-
-          jsCode.value =
-            template.js ||
-            "";
-        }
-
-
-        updatePreview();
-
-
-        showToast(
-          `"${template.name}" loaded.`,
-          "success"
+        loadNotificationTemplate(
+          loadButton.dataset.id
         );
-
 
         return;
       }
 
 
-      /* -------------------------
-         DELETE
-      ------------------------- */
-
       const deleteButton =
         event.target.closest(
-          ".delete-template-btn"
+          ".sp-delete-template"
         );
 
 
       if (deleteButton) {
 
-        const index =
-          Number(
-            deleteButton.dataset.index
-          );
-
-
-        const template =
-          savedTemplates[index];
-
-
-        if (!template) {
-          return;
-        }
-
-
-        const confirmed =
-          confirm(
-            `Delete "${template.name}"?`
-          );
-
-
-        if (!confirmed) {
-          return;
-        }
-
-
-        savedTemplates.splice(
-          index,
-          1
+        deleteNotificationTemplate(
+          deleteButton.dataset.id
         );
 
-
-        saveTemplatesToStorage();
-
-        renderSavedTemplates();
-
-
-        showToast(
-          "Template deleted.",
-          "success"
-        );
+        return;
       }
 
     }
@@ -2664,14 +3442,7 @@ if (savedTemplatesContainer) {
 
 
 /* ============================================================
-   INITIAL SAVED TEMPLATE RENDER
-============================================================ */
-
-renderSavedTemplates();
-
-
-/* ============================================================
-   CLEAR
+   CLEAR EDITOR
 ============================================================ */
 
 if (clearBtn) {
@@ -2696,11 +3467,13 @@ if (clearBtn) {
           "";
       }
 
+
       if (messageInput) {
 
         messageInput.value =
           "";
       }
+
 
       if (typeInput) {
 
@@ -2708,11 +3481,13 @@ if (clearBtn) {
           "info";
       }
 
+
       if (htmlCode) {
 
         htmlCode.value =
           "";
       }
+
 
       if (cssCode) {
 
@@ -2720,11 +3495,21 @@ if (clearBtn) {
           "";
       }
 
+
       if (jsCode) {
 
         jsCode.value =
           "";
       }
+
+
+      /*
+         Clear currently selected
+         Supabase template.
+      */
+
+      selectedSavedTemplateId =
+        null;
 
 
       selectedStudent =
@@ -2744,18 +3529,21 @@ if (clearBtn) {
 
       updateRecipientCount();
 
+      renderSavedTemplates();
+
 
       showToast(
         "Notification editor cleared.",
         "success"
       );
+
     }
   );
 }
 
 
 /* ============================================================
-   SEND
+   SEND BUTTON
 ============================================================ */
 
 if (sendBtn) {
@@ -2766,6 +3554,10 @@ if (sendBtn) {
   );
 }
 
+
+/* ============================================================
+   SEND NOTIFICATION
+============================================================ */
 
 async function sendNotification() {
 
@@ -2808,10 +3600,6 @@ async function sendNotification() {
     "";
 
 
-  /* -------------------------
-     VALIDATION
-  ------------------------- */
-
   if (!recipients.length) {
 
     showToast(
@@ -2830,9 +3618,7 @@ async function sendNotification() {
       "error"
     );
 
-    if (messageInput) {
-      messageInput.focus();
-    }
+    messageInput?.focus();
 
     return;
   }
@@ -2845,9 +3631,7 @@ async function sendNotification() {
       "error"
     );
 
-    if (htmlCode) {
-      htmlCode.focus();
-    }
+    htmlCode?.focus();
 
     return;
   }
@@ -2937,21 +3721,23 @@ async function sendNotification() {
                 js,
                 user
               )
+
           })
         );
 
 
       const {
         error
-      } = await supabaseClient
+      } =
+        await supabaseClient
 
-        .from(
-          "notifications"
-        )
+          .from(
+            "notifications"
+          )
 
-        .insert(
-          payload
-        );
+          .insert(
+            payload
+          );
 
 
       if (error) {
@@ -3018,6 +3804,7 @@ if (classFilter) {
       updateSections();
 
       updateRecipientCount();
+
     }
   );
 }
@@ -3045,2153 +3832,50 @@ if (optionalFilter) {
    INITIALIZATION
 ============================================================ */
 
-updateSections();
-
-setMode("group");
-
-updatePreview();
-
-updateRecipientCount();
-
-loadStudents();
-
-</script>
-<script>
-"use strict";
-
-/* =========================================================
-   SUPABASE
-========================================================= */
-
-const SUPABASE_URL = "https://rrcdstkptxddphcgxnaz.supabase.co";
-
-/*
-  IMPORTANT:
-  Replace this with the EXACT valid publishable/anon key
-  from Supabase > Project Settings > API.
-*/
-const SUPABASE_ANON_KEY =
-  "PASTE_YOUR_VALID_SUPABASE_PUBLISHABLE_KEY_HERE";
-
-if (!window.supabase) {
-  console.error("Supabase JS library is not loaded.");
-}
-
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
-
-/* =========================================================
-   STATE
-========================================================= */
-
-let allStudents = [];
-let selectedStudent = null;
-let recipientMode = "group";
-let sending = false;
-
-let savedTemplates = [];
-let selectedSavedTemplateId = null;
-
-
-/* =========================================================
-   DOM HELPER
-========================================================= */
-
-const $ = (id) => document.getElementById(id);
-
-function getValue(id) {
-  const el = $(id);
-  return el ? el.value : "";
-}
-
-function setValue(id, value) {
-  const el = $(id);
-  if (el) el.value = value ?? "";
-}
-
-
-/* =========================================================
-   HTML ESCAPE
-========================================================= */
-
-function escapeHtml(value) {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-function showToast(message, type = "info") {
-
-  let toast = document.getElementById("spNotificationToast");
-
-  if (!toast) {
-
-    toast = document.createElement("div");
-
-    toast.id = "spNotificationToast";
-
-    toast.style.cssText = `
-      position:fixed;
-      right:24px;
-      bottom:24px;
-      z-index:99999;
-
-      max-width:420px;
-
-      padding:14px 18px;
-
-      border-radius:14px;
-
-      background:#ffffff;
-      color:#0f172a;
-
-      border:1px solid #e2e8f0;
-
-      box-shadow:
-        0 20px 50px rgba(15,23,42,.15);
-
-      font-family:Inter,system-ui,sans-serif;
-      font-size:14px;
-      font-weight:600;
-
-      transition:.25s ease;
-
-      opacity:0;
-      transform:translateY(10px);
-    `;
-
-    document.body.appendChild(toast);
-  }
-
-  if (type === "success") {
-    toast.style.borderColor = "#86efac";
-  } else if (type === "error") {
-    toast.style.borderColor = "#fca5a5";
-  } else {
-    toast.style.borderColor = "#bae6fd";
-  }
-
-  toast.textContent = message;
-
-  requestAnimationFrame(() => {
-    toast.style.opacity = "1";
-    toast.style.transform = "translateY(0)";
-  });
-
-  clearTimeout(toast._timer);
-
-  toast._timer = setTimeout(() => {
-
-    toast.style.opacity = "0";
-    toast.style.transform = "translateY(10px)";
-
-  }, 3000);
-}
-
-
-/* =========================================================
-   GET CURRENT TEMPLATE DATA
-========================================================= */
-
-function getCurrentTemplateData() {
-
-  return {
-
-    title: getValue("notificationTitle"),
-
-    message: getValue("notificationMessage"),
-
-    type:
-      getValue("notificationType") ||
-      "info",
-
-    html_content:
-      getValue("notificationHtml"),
-
-    css_content:
-      getValue("notificationCss"),
-
-    js_content:
-      getValue("notificationJs")
-  };
-}
-
-
-/* =========================================================
-   APPLY TEMPLATE TO EDITOR
-========================================================= */
-
-function applyTemplate(template) {
-
-  if (!template) return;
-
-  setValue(
-    "notificationTitle",
-    template.title || ""
-  );
-
-  setValue(
-    "notificationMessage",
-    template.message || ""
-  );
-
-  setValue(
-    "notificationType",
-    template.type || "info"
-  );
-
-  setValue(
-    "notificationHtml",
-    template.html_content || ""
-  );
-
-  setValue(
-    "notificationCss",
-    template.css_content || ""
-  );
-
-  setValue(
-    "notificationJs",
-    template.js_content || ""
-  );
-
-  selectedSavedTemplateId =
-    template.id || null;
-
-  updatePreview();
-
-  showToast(
-    `Template "${template.name || "Template"}" loaded.`,
-    "success"
-  );
-}
-
-
-/* =========================================================
-   SAVE TEMPLATE TO SUPABASE
-========================================================= */
-
-async function saveNotificationTemplate() {
-
-  const nameInput =
-    document.getElementById("templateName");
-
-  const name =
-    nameInput?.value.trim();
-
-  if (!name) {
-
-    showToast(
-      "Enter a template name first.",
-      "error"
-    );
-
-    nameInput?.focus();
-
-    return;
-  }
-
-  const data =
-    getCurrentTemplateData();
-
-  const payload = {
-
-    name,
-
-    title:
-      data.title || null,
-
-    message:
-      data.message || null,
-
-    type:
-      data.type || "info",
-
-    html_content:
-      data.html_content || null,
-
-    css_content:
-      data.css_content || null,
-
-    js_content:
-      data.js_content || null,
-
-    updated_at:
-      new Date().toISOString()
-  };
-
-
-  try {
-
-    let result;
-
-    /*
-      If an existing saved template is selected,
-      update it.
-    */
-
-    if (selectedSavedTemplateId) {
-
-      result = await supabaseClient
-        .from("notification_templates")
-        .update(payload)
-        .eq("id", selectedSavedTemplateId)
-        .select()
-        .single();
-
-    } else {
-
-      /*
-        Otherwise create a new template.
-      */
-
-      result = await supabaseClient
-        .from("notification_templates")
-        .insert(payload)
-        .select()
-        .single();
-    }
-
-
-    if (result.error) {
-
-      /*
-        If a template with the same name already exists,
-        try updating it.
-      */
-
-      if (
-        result.error.code === "23505"
-      ) {
-
-        const updateResult =
-          await supabaseClient
-            .from("notification_templates")
-            .update(payload)
-            .eq("name", name)
-            .select()
-            .single();
-
-        if (updateResult.error) {
-          throw updateResult.error;
-        }
-
-        selectedSavedTemplateId =
-          updateResult.data.id;
-
-      } else {
-
-        throw result.error;
-      }
-
-    } else {
-
-      selectedSavedTemplateId =
-        result.data.id;
-    }
-
-
-    showToast(
-      `Template "${name}" saved successfully.`,
-      "success"
-    );
-
-
-    await loadSavedTemplates();
-
-  } catch (error) {
-
-    console.error(
-      "Save template error:",
-      error
-    );
-
-    showToast(
-      error.message ||
-      "Could not save template.",
-      "error"
-    );
-  }
-}
-
-
-/* =========================================================
-   LOAD TEMPLATES FROM SUPABASE
-========================================================= */
-
-async function loadSavedTemplates() {
-
-  const container =
-    document.getElementById(
-      "savedTemplates"
-    );
-
-  if (!container) return;
-
-
-  container.innerHTML = `
-    <div style="
-      padding:15px;
-      color:#64748b;
-      font-size:13px;
-    ">
-      Loading templates...
-    </div>
-  `;
-
-
-  try {
-
-    const {
-      data,
-      error
-    } = await supabaseClient
-      .from("notification_templates")
-      .select("*")
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
-
-
-    if (error) {
-      throw error;
-    }
-
-
-    savedTemplates =
-      data || [];
-
-
-    renderSavedTemplates();
-
-  } catch (error) {
-
-    console.error(
-      "Load templates error:",
-      error
-    );
-
-    container.innerHTML = `
-      <div style="
-        padding:15px;
-        color:#dc2626;
-        font-size:13px;
-      ">
-        Could not load saved templates.
-      </div>
-    `;
-  }
-}
-
-
-/* =========================================================
-   RENDER SAVED TEMPLATES
-========================================================= */
-
-function renderSavedTemplates() {
-
-  const container =
-    document.getElementById(
-      "savedTemplates"
-    );
-
-  if (!container) return;
-
-
-  if (!savedTemplates.length) {
-
-    container.innerHTML = `
-      <div style="
-        padding:18px;
-        text-align:center;
-
-        color:#64748b;
-
-        background:#f8fafc;
-
-        border:1px dashed #cbd5e1;
-
-        border-radius:14px;
-
-        font-size:13px;
-      ">
-        No saved templates yet.
-      </div>
-    `;
-
-    return;
-  }
-
-
-  container.innerHTML =
-    savedTemplates.map(template => {
-
-      const active =
-        selectedSavedTemplateId ===
-        template.id;
-
-
-      return `
-        <div
-          class="sp-template-item"
-          data-template-id="${escapeHtml(template.id)}"
-
-          style="
-            display:flex;
-            align-items:center;
-            gap:12px;
-
-            padding:12px;
-
-            margin-bottom:8px;
-
-            border-radius:14px;
-
-            background:${active
-              ? "#eff6ff"
-              : "#ffffff"};
-
-            border:1px solid ${active
-              ? "#93c5fd"
-              : "#e2e8f0"};
-
-            transition:.2s ease;
-          "
-        >
-
-          <div
-            style="
-              width:38px;
-              height:38px;
-
-              flex-shrink:0;
-
-              display:flex;
-              align-items:center;
-              justify-content:center;
-
-              border-radius:11px;
-
-              background:#f1f5f9;
-
-              font-size:18px;
-            "
-          >
-            📝
-          </div>
-
-
-          <div
-            style="
-              flex:1;
-              min-width:0;
-            "
-          >
-
-            <div
-              style="
-                font-weight:700;
-                color:#0f172a;
-
-                white-space:nowrap;
-                overflow:hidden;
-                text-overflow:ellipsis;
-              "
-            >
-              ${escapeHtml(template.name)}
-            </div>
-
-            <div
-              style="
-                margin-top:3px;
-
-                font-size:12px;
-
-                color:#64748b;
-              "
-            >
-              ${escapeHtml(template.type || "info")}
-            </div>
-
-          </div>
-
-
-          <button
-            type="button"
-            class="sp-load-template"
-            data-id="${escapeHtml(template.id)}"
-
-            style="
-              border:0;
-
-              padding:8px 12px;
-
-              border-radius:9px;
-
-              background:#e0f2fe;
-
-              color:#0369a1;
-
-              font-weight:700;
-
-              cursor:pointer;
-            "
-          >
-            Load
-          </button>
-
-
-          <button
-            type="button"
-            class="sp-delete-template"
-            data-id="${escapeHtml(template.id)}"
-
-            style="
-              border:0;
-
-              width:36px;
-              height:36px;
-
-              border-radius:9px;
-
-              background:#fef2f2;
-
-              color:#dc2626;
-
-              font-size:15px;
-
-              cursor:pointer;
-            "
-            title="Delete template"
-          >
-            🗑
-          </button>
-
-        </div>
-      `;
-
-    }).join("");
-}
-
-
-/* =========================================================
-   LOAD ONE TEMPLATE
-========================================================= */
-
-async function loadNotificationTemplate(id) {
-
-  const template =
-    savedTemplates.find(
-      item => item.id === id
-    );
-
-  if (!template) return;
-
-  applyTemplate(template);
-
-  const nameInput =
-    document.getElementById(
-      "templateName"
-    );
-
-  if (nameInput) {
-    nameInput.value =
-      template.name || "";
-  }
-
-  renderSavedTemplates();
-}
-
-
-/* =========================================================
-   DELETE TEMPLATE
-========================================================= */
-
-async function deleteNotificationTemplate(id) {
-
-  const template =
-    savedTemplates.find(
-      item => item.id === id
-    );
-
-  if (!template) return;
-
-
-  const confirmed =
-    window.confirm(
-      `Delete template "${template.name}"?`
-    );
-
-  if (!confirmed) return;
-
-
-  try {
-
-    const {
-      error
-    } = await supabaseClient
-      .from("notification_templates")
-      .delete()
-      .eq("id", id);
-
-
-    if (error) {
-      throw error;
-    }
-
-
-    if (
-      selectedSavedTemplateId === id
-    ) {
-
-      selectedSavedTemplateId =
-        null;
-
-      const nameInput =
-        document.getElementById(
-          "templateName"
-        );
-
-      if (nameInput) {
-        nameInput.value = "";
-      }
-    }
-
-
-    showToast(
-      "Template deleted.",
-      "success"
-    );
-
-
-    await loadSavedTemplates();
-
-  } catch (error) {
-
-    console.error(
-      "Delete template error:",
-      error
-    );
-
-    showToast(
-      error.message ||
-      "Could not delete template.",
-      "error"
-    );
-  }
-}
-
-
-/* =========================================================
-   NEW TEMPLATE
-========================================================= */
-
-function createNewTemplate() {
-
-  selectedSavedTemplateId =
-    null;
-
-  setValue(
-    "templateName",
-    ""
-  );
-
-  showToast(
-    "New template ready.",
-    "success"
-  );
-
-  renderSavedTemplates();
-}
-
-
-/* =========================================================
-   CREATE TEMPLATE UI AUTOMATICALLY
-========================================================= */
-
-function createTemplateManager() {
-
-  /*
-    If your HTML already has:
-    #templateName
-    #saveTemplateBtn
-    #newTemplateBtn
-    #savedTemplates
-
-    this function will reuse them.
-  */
-
-
-  let existingManager =
-    document.getElementById(
-      "spTemplateManager"
-    );
-
-  if (existingManager) {
-
-    attachTemplateEvents();
-
-    loadSavedTemplates();
-
-    return;
-  }
-
-
-  /*
-    Find the existing template buttons
-    or notification editor.
-  */
-
-  const templateButtons =
-    document.querySelector(
-      "[data-template]"
-    );
-
-  const editor =
-    document.querySelector(
-      ".notification-editor"
-    ) ||
-    document.querySelector(
-      "textarea"
-    )?.parentElement;
-
-
-  existingManager =
-    document.createElement("section");
-
-  existingManager.id =
-    "spTemplateManager";
-
-
-  existingManager.style.cssText = `
-    margin-top:24px;
-
-    padding:20px;
-
-    background:#ffffff;
-
-    border:1px solid #e2e8f0;
-
-    border-radius:18px;
-
-    box-shadow:
-      0 10px 30px rgba(15,23,42,.06);
-
-    font-family:Inter,system-ui,sans-serif;
-  `;
-
-
-  existingManager.innerHTML = `
-
-    <div
-      style="
-        display:flex;
-        align-items:flex-start;
-        justify-content:space-between;
-        gap:16px;
-
-        margin-bottom:18px;
-      "
-    >
-
-      <div>
-
-        <div
-          style="
-            font-size:11px;
-            font-weight:800;
-
-            letter-spacing:.12em;
-
-            color:#0284c7;
-
-            margin-bottom:5px;
-          "
-        >
-          NOTIFICATION TEMPLATES
-        </div>
-
-        <h3
-          style="
-            margin:0;
-
-            color:#0f172a;
-
-            font-size:20px;
-          "
-        >
-          Save & reuse templates
-        </h3>
-
-        <p
-          style="
-            margin:6px 0 0;
-
-            color:#64748b;
-
-            font-size:13px;
-          "
-        >
-          Save your current notification design
-          and reuse it later.
-        </p>
-
-      </div>
-
-    </div>
-
-
-    <div
-      style="
-        display:flex;
-        gap:10px;
-        margin-bottom:18px;
-      "
-    >
-
-      <input
-        id="templateName"
-        type="text"
-        placeholder="Template name..."
-        style="
-          flex:1;
-
-          min-width:0;
-
-          height:44px;
-
-          padding:0 14px;
-
-          border:1px solid #cbd5e1;
-
-          border-radius:11px;
-
-          outline:none;
-
-          background:#ffffff;
-
-          color:#0f172a;
-
-          font-size:14px;
-        "
-      />
-
-
-      <button
-        type="button"
-        id="saveTemplateBtn"
-
-        style="
-          height:44px;
-
-          padding:0 18px;
-
-          border:0;
-
-          border-radius:11px;
-
-          background:#0284c7;
-
-          color:#ffffff;
-
-          font-weight:800;
-
-          cursor:pointer;
-
-          white-space:nowrap;
-        "
-      >
-        💾 Save Template
-      </button>
-
-
-      <button
-        type="button"
-        id="newTemplateBtn"
-
-        style="
-          height:44px;
-
-          padding:0 16px;
-
-          border:1px solid #cbd5e1;
-
-          border-radius:11px;
-
-          background:#f8fafc;
-
-          color:#334155;
-
-          font-weight:700;
-
-          cursor:pointer;
-
-          white-space:nowrap;
-        "
-      >
-        + New
-      </button>
-
-    </div>
-
-
-    <div
-      style="
-        display:flex;
-        align-items:center;
-        gap:8px;
-
-        margin-bottom:10px;
-      "
-    >
-
-      <span
-        style="
-          font-size:13px;
-          font-weight:800;
-          color:#334155;
-        "
-      >
-        Saved templates
-      </span>
-
-      <span
-        style="
-          font-size:11px;
-          padding:3px 8px;
-
-          border-radius:999px;
-
-          background:#f1f5f9;
-          color:#64748b;
-        "
-      >
-        Supabase
-      </span>
-
-    </div>
-
-
-    <div id="savedTemplates"></div>
-
-  `;
-
-
-  /*
-    Put the template manager after the
-    existing template area when possible.
-  */
-
-  if (templateButtons) {
-
-    const parent =
-      templateButtons.closest(
-        ".template-section"
-      ) ||
-      templateButtons.parentElement;
-
-    if (parent) {
-
-      parent.insertAdjacentElement(
-        "afterend",
-        existingManager
-      );
-
-    } else {
-
-      document.body.appendChild(
-        existingManager
-      );
-    }
-
-  } else if (editor) {
-
-    editor.insertAdjacentElement(
-      "afterend",
-      existingManager
-    );
-
-  } else {
-
-    document.body.appendChild(
-      existingManager
-    );
-  }
-
-
-  attachTemplateEvents();
-
-  loadSavedTemplates();
-}
-
-
-/* =========================================================
-   TEMPLATE EVENTS
-========================================================= */
-
-function attachTemplateEvents() {
-
-  const saveBtn =
-    document.getElementById(
-      "saveTemplateBtn"
-    );
-
-  const newBtn =
-    document.getElementById(
-      "newTemplateBtn"
-    );
-
-  const savedContainer =
-    document.getElementById(
-      "savedTemplates"
-    );
-
-
-  if (saveBtn && !saveBtn.dataset.bound) {
-
-    saveBtn.dataset.bound = "true";
-
-    saveBtn.addEventListener(
-      "click",
-      saveNotificationTemplate
-    );
-  }
-
-
-  if (newBtn && !newBtn.dataset.bound) {
-
-    newBtn.dataset.bound = "true";
-
-    newBtn.addEventListener(
-      "click",
-      createNewTemplate
-    );
-  }
-
-
-  if (
-    savedContainer &&
-    !savedContainer.dataset.bound
-  ) {
-
-    savedContainer.dataset.bound =
-      "true";
-
-
-    savedContainer.addEventListener(
-      "click",
-      event => {
-
-        const loadButton =
-          event.target.closest(
-            ".sp-load-template"
-          );
-
-        const deleteButton =
-          event.target.closest(
-            ".sp-delete-template"
-          );
-
-
-        if (loadButton) {
-
-          loadNotificationTemplate(
-            loadButton.dataset.id
-          );
-
-          return;
-        }
-
-
-        if (deleteButton) {
-
-          deleteNotificationTemplate(
-            deleteButton.dataset.id
-          );
-
-        }
-
-      }
-    );
-  }
-}
-
-
-/* =========================================================
-   PREVIEW
-========================================================= */
-
-function updatePreview() {
-
-  const iframe =
-    document.getElementById(
-      "notificationPreview"
-    );
-
-  if (!iframe) return;
-
-
-  const title =
-    getValue("notificationTitle");
-
-  const message =
-    getValue("notificationMessage");
-
-  const html =
-    getValue("notificationHtml");
-
-  const css =
-    getValue("notificationCss");
-
-  const js =
-    getValue("notificationJs");
-
-
-  let content = html;
-
-
-  /*
-    If no custom HTML is entered,
-    show a basic notification preview.
-  */
-
-  if (!content.trim()) {
-
-    content = `
-
-      <div class="notification-card">
-
-        <div class="notification-icon">
-          🔔
-        </div>
-
-        <div>
-
-          <div class="notification-title">
-            ${escapeHtml(title || "Notification")}
-          </div>
-
-          <div class="notification-message">
-            ${escapeHtml(message || "Your notification message")}
-          </div>
-
-        </div>
-
-      </div>
-
-    `;
-  }
-
-
-  iframe.srcdoc = `
-
-<!DOCTYPE html>
-
-<html>
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1.0"
-/>
-
-<style>
-
-  * {
-    box-sizing:border-box;
-  }
-
-  html,
-  body {
-    margin:0;
-    padding:0;
-
-    width:100%;
-    min-height:100%;
-
-    background:#f8fafc;
-
-    font-family:
-      Inter,
-      system-ui,
-      -apple-system,
-      BlinkMacSystemFont,
-      "Segoe UI",
-      sans-serif;
-
-    color:#0f172a;
-  }
-
-  body {
-    padding:24px;
-  }
-
-  .notification-card {
-
-    width:100%;
-
-    display:flex;
-
-    align-items:flex-start;
-
-    gap:16px;
-
-    padding:22px;
-
-    border-radius:18px;
-
-    background:#ffffff;
-
-    border:1px solid #e2e8f0;
-
-    box-shadow:
-      0 15px 40px rgba(15,23,42,.08);
-  }
-
-  .notification-icon {
-
-    width:46px;
-    height:46px;
-
-    flex-shrink:0;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    border-radius:14px;
-
-    background:#e0f2fe;
-
-    font-size:22px;
-  }
-
-  .notification-title {
-
-    font-size:18px;
-
-    font-weight:800;
-
-    margin-bottom:5px;
-  }
-
-  .notification-message {
-
-    color:#64748b;
-
-    line-height:1.6;
-
-    font-size:14px;
-  }
-
-  ${css}
-
-</style>
-
-</head>
-
-<body>
-
-${content}
-
-<script>
-
-try {
-
-${js}
-
-} catch(error) {
-
-  console.error(
-    "Template JS error:",
-    error
-  );
-
-}
-
-<\/script>
-
-</body>
-
-</html>
-
-  `;
-}
-
-
-/* =========================================================
-   BUILT-IN TEMPLATES
-========================================================= */
-
-const templates = {
-
-  welcome: {
-
-    name: "Welcome",
-
-    title: "Welcome to StudyPulse",
-
-    message:
-      "Your StudyPulse space is ready. Check your plan and start studying!",
-
-    type: "success",
-
-    html_content: `
-
-<div class="sp-card">
-
-  <div class="sp-icon">
-    👋
-  </div>
-
-  <div class="sp-content">
-
-    <div class="sp-eyebrow">
-      WELCOME
-    </div>
-
-    <h2>
-      Welcome to StudyPulse!
-    </h2>
-
-    <p>
-      Your StudyPulse space is ready.
-      Check your plan and start studying!
-    </p>
-
-    <div class="sp-meta">
-      {{class}} • {{section}}
-    </div>
-
-  </div>
-
-</div>
-
-    `,
-
-    css_content: `
-
-.sp-card {
-
-  width:100%;
-
-  display:flex;
-
-  gap:18px;
-
-  padding:24px;
-
-  border-radius:20px;
-
-  background:#ffffff;
-
-  border:1px solid #e2e8f0;
-
-  box-shadow:
-    0 15px 40px rgba(15,23,42,.08);
-}
-
-.sp-icon {
-
-  width:52px;
-  height:52px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  border-radius:16px;
-
-  background:#e0f2fe;
-
-  font-size:26px;
-}
-
-.sp-eyebrow {
-
-  color:#0284c7;
-
-  font-size:11px;
-
-  font-weight:800;
-
-  letter-spacing:.12em;
-}
-
-.sp-content h2 {
-
-  margin:5px 0 7px;
-
-  color:#0f172a;
-
-  font-size:22px;
-}
-
-.sp-content p {
-
-  margin:0;
-
-  color:#64748b;
-
-  line-height:1.6;
-}
-
-.sp-meta {
-
-  margin-top:12px;
-
-  color:#94a3b8;
-
-  font-size:12px;
-}
-
-    `,
-
-    js_content: ""
-  },
-
-
-  reminder: {
-
-    name: "Study Reminder",
-
-    title: "Study Reminder",
-
-    message:
-      "You have a study session planned.",
-
-    type: "info",
-
-    html_content: `
-
-<div class="sp-card">
-
-  <div class="sp-icon">
-    📚
-  </div>
-
-  <div>
-
-    <div class="sp-eyebrow">
-      STUDY REMINDER
-    </div>
-
-    <h2>
-      Time to study
-    </h2>
-
-    <p>
-      You have a study session planned.
-      Stay focused and make progress!
-    </p>
-
-  </div>
-
-</div>
-
-    `,
-
-    css_content: `
-
-.sp-card {
-
-  width:100%;
-
-  padding:24px;
-
-  border-radius:20px;
-
-  background:#ffffff;
-
-  border:1px solid #e2e8f0;
-
-  box-shadow:
-    0 15px 40px rgba(15,23,42,.08);
-}
-
-.sp-icon {
-
-  font-size:30px;
-
-  margin-bottom:12px;
-}
-
-.sp-eyebrow {
-
-  color:#0284c7;
-
-  font-size:11px;
-
-  font-weight:800;
-
-  letter-spacing:.12em;
-}
-
-.sp-card h2 {
-
-  margin:6px 0;
-
-  color:#0f172a;
-}
-
-.sp-card p {
-
-  color:#64748b;
-
-  line-height:1.6;
-}
-
-    `,
-
-    js_content: ""
-  },
-
-
-  update: {
-
-    name: "Update",
-
-    title: "StudyPulse Update",
-
-    message:
-      "There is a new update available.",
-
-    type: "info",
-
-    html_content: `
-
-<div class="sp-update">
-
-  <div class="sp-icon">
-    ✨
-  </div>
-
-  <div>
-
-    <div class="sp-eyebrow">
-      UPDATE
-    </div>
-
-    <h2>
-      Something new is here
-    </h2>
-
-    <p>
-      Check out the latest improvements
-      in StudyPulse.
-    </p>
-
-  </div>
-
-</div>
-
-    `,
-
-    css_content: `
-
-.sp-update {
-
-  width:100%;
-
-  display:flex;
-
-  gap:18px;
-
-  padding:24px;
-
-  border-radius:20px;
-
-  background:#ffffff;
-
-  border:1px solid #e2e8f0;
-
-  box-shadow:
-    0 15px 40px rgba(15,23,42,.08);
-}
-
-.sp-icon {
-
-  font-size:30px;
-}
-
-.sp-eyebrow {
-
-  color:#7c3aed;
-
-  font-size:11px;
-
-  font-weight:800;
-
-  letter-spacing:.12em;
-}
-
-.sp-update h2 {
-
-  margin:6px 0;
-
-  color:#0f172a;
-}
-
-.sp-update p {
-
-  color:#64748b;
-
-  line-height:1.6;
-}
-
-    `,
-
-    js_content: ""
-  },
-
-
-  exam: {
-
-    name: "Exam",
-
-    title: "Exam Reminder",
-
-    message:
-      "You have an upcoming exam.",
-
-    type: "warning",
-
-    html_content: `
-
-<div class="sp-exam">
-
-  <div class="sp-icon">
-    📝
-  </div>
-
-  <div>
-
-    <div class="sp-eyebrow">
-      EXAM REMINDER
-    </div>
-
-    <h2>
-      Upcoming exam
-    </h2>
-
-    <p>
-      Make sure you are prepared
-      and review your lessons.
-    </p>
-
-  </div>
-
-</div>
-
-    `,
-
-    css_content: `
-
-.sp-exam {
-
-  width:100%;
-
-  display:flex;
-
-  gap:18px;
-
-  padding:24px;
-
-  border-radius:20px;
-
-  background:#ffffff;
-
-  border:1px solid #fed7aa;
-
-  box-shadow:
-    0 15px 40px rgba(15,23,42,.08);
-}
-
-.sp-icon {
-
-  font-size:30px;
-}
-
-.sp-eyebrow {
-
-  color:#ea580c;
-
-  font-size:11px;
-
-  font-weight:800;
-
-  letter-spacing:.12em;
-}
-
-.sp-exam h2 {
-
-  margin:6px 0;
-
-  color:#0f172a;
-}
-
-.sp-exam p {
-
-  color:#64748b;
-
-  line-height:1.6;
-}
-
-    `,
-
-    js_content: ""
-  }
-
-};
-
-
-/* =========================================================
-   BUILT-IN TEMPLATE BUTTONS
-========================================================= */
-
-function initializeBuiltInTemplates() {
-
-  document
-    .querySelectorAll("[data-template]")
-    .forEach(button => {
-
-      if (button.dataset.bound === "true") {
-        return;
-      }
-
-      button.dataset.bound = "true";
-
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          const key =
-            button.dataset.template;
-
-          const template =
-            templates[key];
-
-          if (!template) return;
-
-
-          applyTemplate({
-            ...template,
-            id:null
-          });
-
-
-          setValue(
-            "templateName",
-            template.name || ""
-          );
-
-          selectedSavedTemplateId =
-            null;
-
-        }
-      );
-
-    });
-}
-
-
-/* =========================================================
-   CLEAR EDITOR
-========================================================= */
-
-function clearNotificationEditor() {
-
-  setValue(
-    "notificationTitle",
-    ""
-  );
-
-  setValue(
-    "notificationMessage",
-    ""
-  );
-
-  setValue(
-    "notificationHtml",
-    ""
-  );
-
-  setValue(
-    "notificationCss",
-    ""
-  );
-
-  setValue(
-    "notificationJs",
-    ""
-  );
-
-
-  selectedSavedTemplateId =
-    null;
-
-
-  setValue(
-    "templateName",
-    ""
-  );
-
-
-  updatePreview();
-}
-
-
-/* =========================================================
-   SEND NOTIFICATION
-========================================================= */
-
-async function sendNotification() {
-
-  if (sending) return;
-
-  const title =
-    getValue("notificationTitle").trim();
-
-  const message =
-    getValue("notificationMessage").trim();
-
-  const type =
-    getValue("notificationType") ||
-    "info";
-
-
-  if (!title && !message) {
-
-    showToast(
-      "Enter a notification title or message.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  sending = true;
-
-
-  try {
-
-    /*
-      Keep your existing recipient logic here.
-
-      Example:
-      const recipients = getFilteredRecipients();
-    */
-
-    const recipients =
-      typeof getFilteredRecipients === "function"
-        ? getFilteredRecipients()
-        : [];
-
-
-    if (!recipients.length) {
-
-      showToast(
-        "No recipients selected.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    const rows =
-      recipients.map(student => ({
-
-        user_id:
-          String(
-            student.id ||
-            student.user_id ||
-            ""
-          ),
-
-        title:
-          title || null,
-
-        message:
-          message || "",
-
-        type,
-
-        read:false,
-
-        html_content:
-          getValue("notificationHtml") ||
-          null,
-
-        css_content:
-          getValue("notificationCss") ||
-          null,
-
-        js_content:
-          getValue("notificationJs") ||
-          null
-
-      }));
-
-
-    const {
-      error
-    } = await supabaseClient
-      .from("notifications")
-      .insert(rows);
-
-
-    if (error) {
-      throw error;
-    }
-
-
-    showToast(
-      `Notification sent to ${rows.length} recipient(s).`,
-      "success"
-    );
-
-
-  } catch (error) {
-
-    console.error(
-      "Send notification error:",
-      error
-    );
-
-    showToast(
-      error.message ||
-      "Could not send notification.",
-      "error"
-    );
-
-  } finally {
-
-    sending = false;
-
-  }
-}
-
-
-/* =========================================================
-   PREVIEW LISTENERS
-========================================================= */
-
-function initializePreviewListeners() {
-
-  const fields = [
-
-    "notificationTitle",
-    "notificationMessage",
-    "notificationType",
-    "notificationHtml",
-    "notificationCss",
-    "notificationJs"
-
-  ];
-
-
-  fields.forEach(id => {
-
-    const element =
-      document.getElementById(id);
-
-    if (!element) return;
-
-
-    element.addEventListener(
-      "input",
-      updatePreview
-    );
-
-    element.addEventListener(
-      "change",
-      updatePreview
-    );
-
-  });
-}
-
-
-/* =========================================================
-   INIT
-========================================================= */
-
-async function initNotifications() {
+async function initializeNotificationStudio() {
 
   console.log(
-    "🔔 Initializing StudyPulse notifications..."
+    "========================================"
+  );
+
+  console.log(
+    "StudyPulse Notification Studio starting..."
+  );
+
+  console.log(
+    "========================================"
   );
 
 
-  /*
-    IMPORTANT:
-    Your previous console showed:
+  updateSections();
 
-    401 Unauthorized
-    Invalid API key
-
-    If that still appears, replace
-    SUPABASE_ANON_KEY above with the
-    correct key from your Supabase project.
-  */
-
-
-  initializeBuiltInTemplates();
-
-  initializePreviewListeners();
-
-  createTemplateManager();
+  setMode("group");
 
   updatePreview();
+
+  updateRecipientCount();
+
+
+  /*
+     Load both independently.
+  */
+
+  await Promise.all([
+    loadStudents(),
+    loadNotificationTemplates()
+  ]);
 
 
   console.log(
-    "✅ Notification template system initialized."
+    "StudyPulse Notification Studio ready."
   );
+
 }
 
 
-/* =========================================================
-   START
-========================================================= */
-
-if (
-  document.readyState ===
-  "loading"
-) {
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    initNotifications
-  );
-
-} else {
-
-  initNotifications();
-
-}
+initializeNotificationStudio();
 
 </script>
+
 </body>
 </html>
