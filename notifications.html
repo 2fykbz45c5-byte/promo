@@ -1696,12 +1696,14 @@ ${js}
   html: `
 
   <div class="custom-card welcome-card">
+
     <div class="welcome-icon">
       <span>👋</span>
     </div>
 
     <div class="welcome-content">
       <div class="eyebrow">WELCOME TO STUDYPULSE</div>
+
 
   <h2>Welcome to StudyPulse!</h2>
 
@@ -1714,41 +1716,54 @@ ${js}
     <span class="action-dot"></span>
     <span>Ready to learn</span>
   </div>
-
+  
     </div>
+
   </div>`,
     css: `
   .custom-card{
     width:100%;
-    display:flex;
-    align-items:flex-start;
-    gap:16px;
-    padding:20px;
-    border-radius:20px;
+    max-width:none;
+    min-height:100%;
+
+  display:flex;
+  align-items:center;
+
+  gap:22px;
+
+  padding:30px 34px;
+
+  border-radius:0;
 
   background:
   linear-gradient(
   135deg,
-  rgba(236,254,255,.95),
-  rgba(245,243,255,.95)
+  #ecfeff 0%,
+  #f8fafc 48%,
+  #f5f3ff 100%
   );
 
-  border:1px solid #dbeafe;
+  border:0;
+  border-bottom:1px solid #e2e8f0;
 
-  box-shadow:
-  0 8px 24px rgba(15,23,42,.06);
+  box-shadow:none;
 
   position:relative;
   overflow:hidden;
+
+  box-sizing:border-box;
   }
 
   .custom-card::before{
   content:"";
+
   position:absolute;
-  top:0;
+
   left:0;
-  width:4px;
-  height:100%;
+  top:0;
+  bottom:0;
+
+  width:5px;
 
   background:
   linear-gradient(
@@ -1758,16 +1773,40 @@ ${js}
   );
   }
 
+  .custom-card::after{
+  content:"";
+
+  position:absolute;
+
+  width:260px;
+  height:260px;
+
+  right:-100px;
+  top:-120px;
+
+  border-radius:50%;
+
+  background:
+  radial-gradient(
+  circle,
+  rgba(139,92,246,.10),
+  transparent 70%
+  );
+
+  pointer-events:none;
+  }
+
   .welcome-icon{
-  width:48px;
-  height:48px;
-  flex:0 0 48px;
+  width:64px;
+  height:64px;
+
+  min-width:64px;
 
   display:flex;
   align-items:center;
   justify-content:center;
 
-  border-radius:15px;
+  border-radius:18px;
 
   background:
   linear-gradient(
@@ -1779,34 +1818,42 @@ ${js}
   border:1px solid #bae6fd;
 
   box-shadow:
-  0 6px 16px rgba(6,182,212,.12);
+  0 8px 20px rgba(6,182,212,.10);
+
+  position:relative;
+  z-index:1;
   }
 
   .welcome-icon span{
-  font-size:25px;
+  font-size:32px;
   line-height:1;
   }
 
   .welcome-content{
-  min-width:0;
   flex:1;
+  min-width:0;
+
+  position:relative;
+  z-index:1;
   }
 
   .eyebrow{
-  margin-bottom:5px;
+  margin:0 0 7px;
 
-  font-size:10px;
+  font-size:11px;
   font-weight:800;
-  letter-spacing:.8px;
+
+  letter-spacing:1px;
 
   color:#0891b2;
   }
 
   .welcome-content h2{
-  margin:0 0 7px;
+  margin:0 0 8px;
 
-  font-size:18px;
+  font-size:24px;
   line-height:1.25;
+
   font-weight:800;
 
   color:#0f172a;
@@ -1815,28 +1862,30 @@ ${js}
   .welcome-content p{
   margin:0;
 
-  color:#64748b;
+  max-width:850px;
 
-  font-size:13px;
-  line-height:1.65;
+  font-size:14px;
+  line-height:1.7;
+
+  color:#64748b;
   }
 
   .welcome-actions{
   display:flex;
   align-items:center;
-  gap:7px;
+  gap:8px;
 
-  margin-top:13px;
+  margin-top:15px;
 
-  font-size:11px;
+  font-size:12px;
   font-weight:700;
 
   color:#475569;
   }
 
   .action-dot{
-  width:7px;
-  height:7px;
+  width:8px;
+  height:8px;
 
   border-radius:50%;
 
@@ -1845,9 +1894,39 @@ ${js}
   box-shadow:
   0 0 0 4px rgba(6,182,212,.10);
   }
+
+  @media(max-width:600px){
+
+  .custom-card{
+  padding:22px 20px;
+  gap:15px;
+  align-items:flex-start;
+  }
+
+  .welcome-icon{
+  width:48px;
+  height:48px;
+  min-width:48px;
+  border-radius:14px;
+  }
+
+  .welcome-icon span{
+  font-size:24px;
+  }
+
+  .welcome-content h2{
+  font-size:19px;
+  }
+
+  .welcome-content p{
+  font-size:13px;
+  }
+
+  }
   `,
   js: ""
   },
+
 
         study: {
           title: "Study reminder",
