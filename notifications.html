@@ -1691,33 +1691,164 @@ ${js}
     function applyTemplate(type) {
       const templates = {
         welcome: {
-          title: "Welcome to StudyPulse",
-          message: "Your StudyPulse space is ready. Check your plan and start studying!",
-          html: `
-<div class="custom-card">
-  <div class="icon">👋</div>
-  <div>
-    <div class="eyebrow">WELCOME</div>
-    <h2>Welcome to StudyPulse!</h2>
-    <p>Your study space is ready. Open your plan and start your next session.</p>
+  title: "Welcome to StudyPulse 👋",
+  message: "Your StudyPulse space is ready. Check your study plan and start your next session!",
+  html: `
+
+  <div class="custom-card welcome-card">
+    <div class="welcome-icon">
+      <span>👋</span>
+    </div>
+
+    <div class="welcome-content">
+      <div class="eyebrow">WELCOME TO STUDYPULSE</div>
+
+  <h2>Welcome to StudyPulse!</h2>
+
+  <p>
+    Your study space is ready. Check your plan, stay organized,
+    and start your next study session.
+  </p>
+
+  <div class="welcome-actions">
+    <span class="action-dot"></span>
+    <span>Ready to learn</span>
   </div>
-</div>`,
-          css: `
-.custom-card{
+
+    </div>
+  </div>`,
+    css: `
+  .custom-card{
+    width:100%;
+    display:flex;
+    align-items:flex-start;
+    gap:16px;
+    padding:20px;
+    border-radius:20px;
+
+  background:
+  linear-gradient(
+  135deg,
+  rgba(236,254,255,.95),
+  rgba(245,243,255,.95)
+  );
+
+  border:1px solid #dbeafe;
+
+  box-shadow:
+  0 8px 24px rgba(15,23,42,.06);
+
+  position:relative;
+  overflow:hidden;
+  }
+
+  .custom-card::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  width:4px;
+  height:100%;
+
+  background:
+  linear-gradient(
+  180deg,
+  #06b6d4,
+  #8b5cf6
+  );
+  }
+
+  .welcome-icon{
+  width:48px;
+  height:48px;
+  flex:0 0 48px;
+
   display:flex;
-  gap:14px;
-  align-items:flex-start;
-  padding:22px;
-  border-radius:20px;
-  background:linear-gradient(135deg,#ecfeff,#f5f3ff);
-  border:1px solid #e2e8f0;
-}
-.icon{font-size:30px}
-.eyebrow{font-size:10px;font-weight:800;color:#0891b2;letter-spacing:.6px}
-h2{margin:5px 0;color:#0f172a}
-p{margin:0;color:#64748b;line-height:1.6;font-size:12px}`,
-          js: ""
-        },
+  align-items:center;
+  justify-content:center;
+
+  border-radius:15px;
+
+  background:
+  linear-gradient(
+  135deg,
+  #cffafe,
+  #ede9fe
+  );
+
+  border:1px solid #bae6fd;
+
+  box-shadow:
+  0 6px 16px rgba(6,182,212,.12);
+  }
+
+  .welcome-icon span{
+  font-size:25px;
+  line-height:1;
+  }
+
+  .welcome-content{
+  min-width:0;
+  flex:1;
+  }
+
+  .eyebrow{
+  margin-bottom:5px;
+
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.8px;
+
+  color:#0891b2;
+  }
+
+  .welcome-content h2{
+  margin:0 0 7px;
+
+  font-size:18px;
+  line-height:1.25;
+  font-weight:800;
+
+  color:#0f172a;
+  }
+
+  .welcome-content p{
+  margin:0;
+
+  color:#64748b;
+
+  font-size:13px;
+  line-height:1.65;
+  }
+
+  .welcome-actions{
+  display:flex;
+  align-items:center;
+  gap:7px;
+
+  margin-top:13px;
+
+  font-size:11px;
+  font-weight:700;
+
+  color:#475569;
+  }
+
+  .action-dot{
+  width:7px;
+  height:7px;
+
+  border-radius:50%;
+
+  background:#06b6d4;
+
+  box-shadow:
+  0 0 0 4px rgba(6,182,212,.10);
+  }
+  `,
+  js: ""
+  },
+
         study: {
           title: "Study reminder",
           message: "You have a study session waiting in your StudyPulse plan.",
