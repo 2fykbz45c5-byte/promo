@@ -1,0 +1,5183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>StudyPulse · Moderator</title>
+
+<link rel="icon" type="image/png" href="f54398c0-c051-4cab-91a7-9552d8a71ed9.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<style>
+
+/* ============================================================
+   STUDYPULSE MODERATOR
+   MODERN LIGHT WORKSPACE
+============================================================ */
+
+:root{
+
+    --bg:#f8fafc;
+    --bg-soft:#f1f5f9;
+    --card:#ffffff;
+
+    --text:#0f172a;
+    --muted:#64748b;
+    --border:#e2e8f0;
+
+    --cyan:#06b6d4;
+    --cyan-dark:#0891b2;
+    --cyan-soft:#ecfeff;
+
+    --purple:#8b5cf6;
+    --purple-dark:#7c3aed;
+    --purple-soft:#f5f3ff;
+
+    --green:#16a34a;
+    --green-soft:#f0fdf4;
+
+    --yellow:#d97706;
+    --yellow-soft:#fffbeb;
+
+    --red:#dc2626;
+    --red-soft:#fef2f2;
+
+    --blue:#2563eb;
+    --blue-soft:#eff6ff;
+
+    --shadow:0 10px 30px rgba(15,23,42,.06);
+    --shadow-lg:0 25px 70px rgba(15,23,42,.14);
+
+    --radius:20px;
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Inter,Segoe UI,sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(6,182,212,.08),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at top right,
+            rgba(139,92,246,.08),
+            transparent 28%
+        ),
+        var(--bg);
+
+    color:var(--text);
+    min-height:100vh;
+}
+
+button,
+input,
+select,
+textarea{
+    font:inherit;
+}
+
+button{
+    border:0;
+    cursor:pointer;
+}
+
+button:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+}
+
+input,
+select,
+textarea{
+    outline:none;
+}
+
+/* ============================================================
+   APP
+============================================================ */
+
+.app{
+    min-height:100vh;
+}
+
+/* ============================================================
+   TOPBAR
+============================================================ */
+
+.topbar{
+
+    position:sticky;
+    top:0;
+    z-index:50;
+
+    min-height:72px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:12px 28px;
+
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(18px);
+
+    border-bottom:1px solid var(--border);
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.brand-logo{
+
+    width:42px;
+    height:42px;
+
+    border-radius:13px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:#fff;
+
+    font-size:17px;
+    font-weight:800;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--cyan),
+            var(--purple)
+        );
+
+    box-shadow:
+        0 8px 20px rgba(6,182,212,.20);
+}
+
+.brand-text strong{
+    display:block;
+    font-size:16px;
+}
+
+.brand-text span{
+    display:block;
+    margin-top:2px;
+
+    color:var(--muted);
+    font-size:12px;
+}
+
+.top-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.icon-btn{
+
+    width:42px;
+    height:42px;
+
+    border:1px solid var(--border);
+    background:#fff;
+
+    border-radius:12px;
+
+    color:var(--muted);
+
+    transition:.2s;
+}
+
+.icon-btn:hover{
+    background:var(--bg-soft);
+    color:var(--text);
+}
+
+.logout{
+
+    padding:11px 16px;
+
+    border-radius:11px;
+
+    background:var(--red-soft);
+    color:var(--red);
+
+    font-weight:700;
+
+    transition:.2s;
+}
+
+.logout:hover{
+    background:#fee2e2;
+}
+
+/* ============================================================
+   MAIN
+============================================================ */
+
+.container{
+
+    width:min(1450px,100%);
+    margin:auto;
+
+    padding:30px;
+}
+
+/* ============================================================
+   WELCOME
+============================================================ */
+
+.welcome{
+
+    position:relative;
+    overflow:hidden;
+
+    padding:30px;
+
+    border-radius:24px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ecfeff,
+            #f5f3ff
+        );
+
+    border:1px solid #dbeafe;
+
+    margin-bottom:22px;
+}
+
+.welcome::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:300px;
+    height:300px;
+
+    border-radius:50%;
+
+    background:rgba(139,92,246,.08);
+
+    right:-90px;
+    top:-120px;
+}
+
+.welcome-content{
+    position:relative;
+    z-index:2;
+}
+
+.welcome h1{
+
+    font-size:28px;
+    line-height:1.25;
+
+    margin-bottom:8px;
+}
+
+.welcome p{
+    color:var(--muted);
+    line-height:1.6;
+}
+
+.moderator-meta{
+
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+
+    margin-top:18px;
+}
+
+.badge{
+
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+
+    padding:7px 11px;
+
+    border-radius:999px;
+
+    font-size:12px;
+    font-weight:700;
+}
+
+.badge-purple{
+    background:var(--purple-soft);
+    color:var(--purple-dark);
+}
+
+.badge-cyan{
+    background:var(--cyan-soft);
+    color:var(--cyan-dark);
+}
+
+.badge-green{
+    background:var(--green-soft);
+    color:var(--green);
+}
+
+/* ============================================================
+   SECTION SWITCHER
+============================================================ */
+
+.section-bar{
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:20px;
+
+    padding:18px 20px;
+
+    background:#fff;
+
+    border:1px solid var(--border);
+    border-radius:18px;
+
+    box-shadow:var(--shadow);
+
+    margin-bottom:22px;
+}
+
+.section-info{
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    min-width:0;
+}
+
+.section-icon{
+
+    width:46px;
+    height:46px;
+
+    flex:0 0 46px;
+
+    border-radius:13px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:var(--purple-soft);
+    color:var(--purple-dark);
+
+    font-size:20px;
+}
+
+.section-info small{
+
+    display:block;
+
+    color:var(--muted);
+
+    margin-bottom:4px;
+
+    font-size:12px;
+}
+
+.section-info strong{
+
+    display:block;
+
+    font-size:16px;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.section-selector{
+
+    min-width:280px;
+
+    padding:12px 14px;
+
+    border-radius:12px;
+
+    border:1px solid var(--border);
+
+    background:#fff;
+
+    color:var(--text);
+
+    cursor:pointer;
+}
+
+.section-selector:focus{
+
+    border-color:var(--cyan);
+
+    box-shadow:
+        0 0 0 3px var(--cyan-soft);
+}
+
+/* ============================================================
+   STATS
+============================================================ */
+
+.stats{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,minmax(0,1fr));
+
+    gap:16px;
+
+    margin-bottom:22px;
+}
+
+.stat{
+
+    background:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:20px;
+
+    box-shadow:var(--shadow);
+
+    transition:.2s;
+}
+
+.stat:hover{
+    transform:translateY(-2px);
+}
+
+.stat-top{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stat-label{
+
+    color:var(--muted);
+
+    font-size:13px;
+}
+
+.stat-icon{
+
+    width:42px;
+    height:42px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:12px;
+
+    font-size:19px;
+}
+
+.stat:nth-child(1) .stat-icon{
+    background:var(--cyan-soft);
+}
+
+.stat:nth-child(2) .stat-icon{
+    background:var(--purple-soft);
+}
+
+.stat:nth-child(3) .stat-icon{
+    background:var(--green-soft);
+}
+
+.stat:nth-child(4) .stat-icon{
+    background:var(--yellow-soft);
+}
+
+.stat-number{
+
+    font-size:30px;
+    font-weight:800;
+
+    margin-top:18px;
+}
+
+/* ============================================================
+   GRID
+============================================================ */
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:
+        minmax(0,1.45fr)
+        minmax(320px,.55fr);
+
+    gap:20px;
+
+    margin-bottom:22px;
+}
+
+.card{
+
+    background:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:20px;
+
+    box-shadow:var(--shadow);
+
+    padding:22px;
+}
+
+.card-header{
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:15px;
+
+    margin-bottom:18px;
+}
+
+.card-header h2{
+    font-size:17px;
+}
+
+.card-header p{
+
+    color:var(--muted);
+
+    font-size:12px;
+
+    margin-top:4px;
+}
+
+/* ============================================================
+   ACTIONS
+============================================================ */
+
+.actions{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap:12px;
+}
+
+.action{
+
+    padding:17px;
+
+    border-radius:15px;
+
+    text-align:left;
+
+    border:1px solid var(--border);
+
+    background:#fff;
+
+    transition:.2s;
+}
+
+.action:hover{
+
+    transform:translateY(-2px);
+
+    border-color:#cbd5e1;
+
+    box-shadow:
+        0 8px 20px rgba(15,23,42,.06);
+}
+
+.action-icon{
+
+    width:40px;
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:11px;
+
+    background:var(--bg-soft);
+
+    font-size:20px;
+
+    margin-bottom:10px;
+}
+
+.action strong{
+
+    display:block;
+
+    margin-bottom:4px;
+}
+
+.action span{
+
+    color:var(--muted);
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+/* ============================================================
+   RECENT
+============================================================ */
+
+.recent{
+
+    display:flex;
+    flex-direction:column;
+
+    gap:10px;
+
+    max-height:350px;
+
+    overflow:auto;
+}
+
+.recent-item{
+
+    padding:13px;
+
+    border-radius:13px;
+
+    background:#f8fafc;
+
+    border:1px solid var(--border);
+}
+
+.recent-item strong{
+
+    display:block;
+
+    font-size:13px;
+
+    margin-bottom:4px;
+}
+
+.recent-item span{
+
+    display:block;
+
+    color:var(--muted);
+
+    font-size:11px;
+
+    line-height:1.5;
+}
+
+.recent-status{
+
+    display:inline-flex;
+
+    margin-top:8px;
+
+    padding:4px 8px;
+
+    border-radius:999px;
+
+    font-size:10px;
+
+    font-weight:700;
+}
+
+/* ============================================================
+   STUDENTS
+============================================================ */
+
+.students-card{
+    margin-bottom:22px;
+}
+
+.search-row{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-bottom:16px;
+}
+
+.search{
+
+    flex:1;
+
+    padding:12px 14px;
+
+    border:1px solid var(--border);
+
+    border-radius:12px;
+
+    background:#fff;
+}
+
+.search:focus{
+
+    border-color:var(--cyan);
+
+    box-shadow:
+        0 0 0 3px var(--cyan-soft);
+}
+
+.filter-btn{
+
+    padding:12px 15px;
+
+    border-radius:12px;
+
+    background:var(--bg-soft);
+
+    color:var(--text);
+
+    font-weight:700;
+}
+
+.filter-btn.active{
+
+    background:var(--purple-soft);
+
+    color:var(--purple-dark);
+}
+
+/* ============================================================
+   TABLE
+============================================================ */
+
+.table-wrap{
+
+    overflow:auto;
+
+    border:1px solid var(--border);
+
+    border-radius:15px;
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    min-width:850px;
+}
+
+th,
+td{
+
+    padding:14px 15px;
+
+    text-align:left;
+
+    border-bottom:1px solid var(--border);
+
+    font-size:13px;
+}
+
+th{
+
+    background:#f8fafc;
+
+    color:var(--muted);
+
+    font-size:11px;
+
+    text-transform:uppercase;
+
+    letter-spacing:.04em;
+}
+
+tbody tr:last-child td{
+    border-bottom:0;
+}
+
+tbody tr:hover{
+    background:#f8fafc;
+}
+
+.user-cell{
+
+    display:flex;
+    align-items:center;
+
+    gap:10px;
+}
+
+.avatar{
+
+    width:38px;
+    height:38px;
+
+    flex:0 0 38px;
+
+    border-radius:11px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--cyan-soft),
+            var(--purple-soft)
+        );
+
+    color:var(--purple-dark);
+
+    font-weight:800;
+
+    overflow:hidden;
+}
+
+.avatar img{
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+}
+
+.user-name strong{
+
+    display:block;
+
+    max-width:190px;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+}
+
+.user-name span{
+
+    color:var(--muted);
+
+    font-size:11px;
+}
+
+.status{
+
+    display:inline-flex;
+
+    padding:5px 9px;
+
+    border-radius:999px;
+
+    font-size:11px;
+
+    font-weight:700;
+}
+
+.status-approved{
+
+    background:var(--green-soft);
+    color:var(--green);
+}
+
+.status-pending{
+
+    background:var(--yellow-soft);
+    color:var(--yellow);
+}
+
+.status-blocked{
+
+    background:var(--red-soft);
+    color:var(--red);
+}
+
+.status-default{
+
+    background:var(--bg-soft);
+    color:var(--muted);
+}
+
+.view-btn{
+
+    padding:8px 11px;
+
+    border-radius:9px;
+
+    background:var(--purple-soft);
+
+    color:var(--purple-dark);
+
+    font-weight:700;
+}
+
+.view-btn:hover{
+    background:#ede9fe;
+}
+
+/* ============================================================
+   EMPTY
+============================================================ */
+
+.empty{
+
+    padding:35px 20px;
+
+    text-align:center;
+
+    color:var(--muted);
+}
+
+.empty-icon{
+
+    font-size:32px;
+
+    margin-bottom:8px;
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+
+.modal{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(15,23,42,.45);
+
+    backdrop-filter:blur(7px);
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    z-index:100;
+
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+
+    width:min(720px,100%);
+
+    max-height:92vh;
+
+    overflow:auto;
+
+    background:#fff;
+
+    border-radius:22px;
+
+    box-shadow:var(--shadow-lg);
+
+    padding:24px;
+}
+
+.modal-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+}
+
+.modal-header h2{
+    font-size:20px;
+}
+
+.close{
+
+    width:38px;
+    height:38px;
+
+    border-radius:10px;
+
+    background:var(--bg-soft);
+
+    color:var(--muted);
+
+    font-size:18px;
+}
+
+.close:hover{
+    background:#e2e8f0;
+}
+
+.detail-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:12px;
+}
+
+.detail{
+
+    padding:14px;
+
+    border-radius:13px;
+
+    background:#f8fafc;
+
+    border:1px solid var(--border);
+}
+
+.detail small{
+
+    color:var(--muted);
+
+    display:block;
+
+    margin-bottom:4px;
+
+    font-size:11px;
+}
+
+.detail strong{
+
+    word-break:break-word;
+
+    font-size:13px;
+}
+
+.modal-actions{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:20px;
+}
+
+.primary{
+
+    flex:1;
+
+    padding:12px 16px;
+
+    border-radius:11px;
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--cyan),
+            var(--purple)
+        );
+
+    font-weight:700;
+}
+
+.secondary{
+
+    padding:12px 16px;
+
+    border-radius:11px;
+
+    background:var(--bg-soft);
+
+    color:var(--text);
+
+    font-weight:700;
+}
+
+/* ============================================================
+   ASSIGN MODAL
+============================================================ */
+
+.form-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:14px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.form-group.full{
+    grid-column:1 / -1;
+}
+
+.form-group label{
+
+    color:var(--muted);
+
+    font-size:12px;
+
+    font-weight:700;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+
+    width:100%;
+
+    padding:12px 13px;
+
+    border:1px solid var(--border);
+
+    border-radius:11px;
+
+    background:#fff;
+
+    color:var(--text);
+}
+
+.form-group textarea{
+
+    min-height:100px;
+
+    resize:vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+
+    border-color:var(--cyan);
+
+    box-shadow:
+        0 0 0 3px var(--cyan-soft);
+}
+
+.assign-footer{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:10px;
+
+    margin-top:20px;
+}
+
+/* ============================================================
+   TOAST
+============================================================ */
+
+.toast-container{
+
+    position:fixed;
+
+    right:20px;
+    bottom:20px;
+
+    z-index:300;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+}
+
+.toast{
+
+    width:min(380px,calc(100vw - 40px));
+
+    padding:14px 16px;
+
+    background:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:14px;
+
+    box-shadow:var(--shadow-lg);
+
+    animation:toastIn .25s ease;
+}
+
+.toast strong{
+
+    display:block;
+
+    margin-bottom:4px;
+
+    font-size:13px;
+}
+
+.toast span{
+
+    color:var(--muted);
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+.toast.success{
+    border-left:4px solid var(--green);
+}
+
+.toast.error{
+    border-left:4px solid var(--red);
+}
+
+.toast.info{
+    border-left:4px solid var(--cyan);
+}
+
+@keyframes toastIn{
+
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* ============================================================
+   LOADING
+============================================================ */
+
+.loading-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:500;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    background:rgba(248,250,252,.78);
+
+    backdrop-filter:blur(5px);
+}
+
+.loading-overlay.show{
+    display:flex;
+}
+
+.loader-box{
+
+    background:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:24px 30px;
+
+    box-shadow:var(--shadow-lg);
+
+    text-align:center;
+}
+
+.spinner{
+
+    width:34px;
+    height:34px;
+
+    margin:0 auto 12px;
+
+    border-radius:50%;
+
+    border:3px solid #e2e8f0;
+
+    border-top-color:var(--cyan);
+
+    animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media(max-width:1100px){
+
+    .stats{
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:700px){
+
+    .topbar{
+        padding:10px 15px;
+    }
+
+    .brand-text{
+        display:none;
+    }
+
+    .container{
+        padding:16px;
+    }
+
+    .welcome{
+        padding:22px;
+    }
+
+    .welcome h1{
+        font-size:23px;
+    }
+
+    .section-bar{
+
+        align-items:stretch;
+
+        flex-direction:column;
+    }
+
+    .section-selector{
+        width:100%;
+        min-width:0;
+    }
+
+    .stats{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+        gap:10px;
+    }
+
+    .stat{
+        padding:16px;
+    }
+
+    .stat-number{
+        font-size:25px;
+    }
+
+    .actions{
+        grid-template-columns:1fr;
+    }
+
+    .search-row{
+        flex-direction:column;
+    }
+
+    .detail-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full{
+        grid-column:auto;
+    }
+
+    .modal-actions,
+    .assign-footer{
+        flex-direction:column;
+    }
+
+    .logout{
+        padding:9px 12px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- =========================================================
+     TOPBAR
+========================================================= -->
+
+<header class="topbar">
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            SP
+        </div>
+
+        <div class="brand-text">
+            <strong>StudyPulse</strong>
+            <span>Moderator Workspace</span>
+        </div>
+
+    </div>
+
+    <div class="top-actions">
+
+        <button
+            class="icon-btn"
+            id="refreshBtn"
+            onclick="loadDashboard()"
+            title="Refresh">
+            ↻
+        </button>
+
+        <button
+            class="logout"
+            onclick="logout()">
+            Logout
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="container">
+
+    <!-- WELCOME -->
+
+    <section class="welcome">
+
+        <div class="welcome-content">
+
+            <h1>
+                Welcome,
+                <span id="moderatorName">
+                    Moderator
+                </span>
+                👋
+            </h1>
+
+            <p>
+                Manage your assigned sections, students,
+                assignments and academic activity from one
+                workspace.
+            </p>
+
+            <div class="moderator-meta">
+
+                <span class="badge badge-purple">
+                    🛡️ Moderator
+                </span>
+
+                <span
+                    class="badge badge-cyan"
+                    id="moderatorStatusBadge">
+                    ● Approved
+                </span>
+
+                <span
+                    class="badge badge-green"
+                    id="sectionCountBadge">
+                    0 Sections
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SECTION SWITCHER -->
+
+    <section class="section-bar">
+
+        <div class="section-info">
+
+            <div class="section-icon">
+                🎓
+            </div>
+
+            <div>
+
+                <small>
+                    Currently managing
+                </small>
+
+                <strong id="currentSectionLabel">
+                    All Assigned Sections
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <select
+            id="sectionSelector"
+            class="section-selector"
+            onchange="changeSection()">
+
+            <option value="__all__">
+                All Assigned Sections
+            </option>
+
+        </select>
+
+    </section>
+
+
+    <!-- STATS -->
+
+    <section class="stats">
+
+        <div class="stat">
+
+            <div class="stat-top">
+
+                <div>
+                    <div class="stat-label">
+                        Students
+                    </div>
+                </div>
+
+                <div class="stat-icon">
+                    👥
+                </div>
+
+            </div>
+
+            <div
+                class="stat-number"
+                id="totalUsers">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-top">
+
+                <div>
+                    <div class="stat-label">
+                        Tasks
+                    </div>
+                </div>
+
+                <div class="stat-icon">
+                    📚
+                </div>
+
+            </div>
+
+            <div
+                class="stat-number"
+                id="totalTasks">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-top">
+
+                <div>
+                    <div class="stat-label">
+                        Completed
+                    </div>
+                </div>
+
+                <div class="stat-icon">
+                    ✅
+                </div>
+
+            </div>
+
+            <div
+                class="stat-number"
+                id="completedTasks">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-top">
+
+                <div>
+                    <div class="stat-label">
+                        Completion Rate
+                    </div>
+                </div>
+
+                <div class="stat-icon">
+                    📈
+                </div>
+
+            </div>
+
+            <div
+                class="stat-number"
+                id="completionRate">
+                0%
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- MAIN GRID -->
+
+    <section class="grid">
+
+        <!-- TOOLS -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Moderator Tools
+                    </h2>
+
+                    <p>
+                        Quickly manage your assigned students.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    class="action"
+                    onclick="openAssignModal('student')">
+
+                    <div class="action-icon">
+                        📌
+                    </div>
+
+                    <strong>
+                        Assign Task
+                    </strong>
+
+                    <span>
+                        Give a task to one student.
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="action"
+                    onclick="openAssignModal('section')">
+
+                    <div class="action-icon">
+                        ⚡
+                    </div>
+
+                    <strong>
+                        Assign to Section
+                    </strong>
+
+                    <span>
+                        Give the same task to every student
+                        in the selected section.
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="action"
+                    onclick="showPendingStudents()">
+
+                    <div class="action-icon">
+                        ⏳
+                    </div>
+
+                    <strong>
+                        Pending Students
+                    </strong>
+
+                    <span>
+                        Quickly find pending student accounts.
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="action"
+                    onclick="loadDashboard()">
+
+                    <div class="action-icon">
+                        🔄
+                    </div>
+
+                    <strong>
+                        Refresh Data
+                    </strong>
+
+                    <span>
+                        Reload the latest Supabase information.
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- RECENT TASKS -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Recent Activity
+                    </h2>
+
+                    <p>
+                        Latest tasks in your assigned area.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div
+                class="recent"
+                id="recentTasks">
+
+                <div class="empty">
+                    Loading...
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- STUDENTS -->
+
+    <section class="card students-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Students
+                </h2>
+
+                <p id="studentsDescription">
+                    Students belonging to your assigned sections.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="search-row">
+
+            <input
+                id="studentSearch"
+                class="search"
+                placeholder="Search username, name, email, ID, class or section..."
+                oninput="renderStudents()">
+
+            <button
+                id="pendingFilterBtn"
+                class="filter-btn"
+                onclick="togglePendingFilter()">
+
+                ⏳ Pending Only
+
+            </button>
+
+        </div>
+
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Student
+                        </th>
+
+                        <th>
+                            Class
+                        </th>
+
+                        <th>
+                            Section
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Tasks
+                        </th>
+
+                        <th>
+                            Completed
+                        </th>
+
+                        <th>
+                            Progress
+                        </th>
+
+                        <th>
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="studentsList">
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+</div>
+
+
+<!-- =========================================================
+     STUDENT MODAL
+========================================================= -->
+
+<div
+    class="modal"
+    id="studentModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>
+                    Student Profile
+                </h2>
+            </div>
+
+            <button
+                class="close"
+                onclick="closeModal()">
+                ✕
+            </button>
+
+        </div>
+
+        <div id="studentDetails"></div>
+
+        <div class="modal-actions">
+
+            <button
+                class="primary"
+                onclick="assignSelectedStudent()">
+                📌 Assign Task
+            </button>
+
+            <button
+                class="secondary"
+                onclick="closeModal()">
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     ASSIGN MODAL
+========================================================= -->
+
+<div
+    class="modal"
+    id="assignModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="assignModalTitle">
+                    Assign Task
+                </h2>
+
+                <p style="color:var(--muted);font-size:12px;margin-top:4px;">
+                    Create a StudyPulse task directly in Supabase.
+                </p>
+
+            </div>
+
+            <button
+                class="close"
+                onclick="closeAssignModal()">
+                ✕
+            </button>
+
+        </div>
+
+
+        <div class="form-grid">
+
+            <div
+                class="form-group full"
+                id="assignStudentGroup">
+
+                <label>
+                    Student
+                </label>
+
+                <select id="assignStudent">
+                    <option value="">
+                        Select student
+                    </option>
+                </select>
+
+            </div>
+
+
+            <div
+                class="form-group full"
+                id="assignSectionGroup"
+                style="display:none;">
+
+                <label>
+                    Section
+                </label>
+
+                <select id="assignSection">
+                    <option value="">
+                        Select section
+                    </option>
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Subject
+                </label>
+
+                <input
+                    id="assignSubject"
+                    list="subjectSuggestions"
+                    placeholder="Math">
+
+                <datalist id="subjectSuggestions">
+
+                    <option value="Math">
+                    <option value="Physics">
+                    <option value="SVT">
+                    <option value="Informatique">
+                    <option value="Espagnol">
+                    <option value="Français">
+                    <option value="English">
+                    <option value="Arabic">
+                    <option value="Histoire">
+                    <option value="Géographie">
+                    <option value="Islamique">
+
+                </datalist>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Topic / Type
+                </label>
+
+                <input
+                    id="assignTopic"
+                    list="topicSuggestions"
+                    placeholder="Revision">
+
+                <datalist id="topicSuggestions">
+
+                    <option value="Etude">
+                    <option value="Revision">
+                    <option value="Live Taki">
+                    <option value="Devoir Taki">
+                    <option value="Devoir de Classe">
+                    <option value="serie">
+
+                </datalist>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    id="assignDate">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Duration
+                </label>
+
+                <input
+                    id="assignDuration"
+                    placeholder="90 min">
+
+            </div>
+
+
+            <div class="form-group full">
+
+                <label>
+                    Notes
+                </label>
+
+                <textarea
+                    id="assignNotes"
+                    placeholder="Additional instructions..."></textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="assign-footer">
+
+            <button
+                class="secondary"
+                onclick="closeAssignModal()">
+
+                Cancel
+
+            </button>
+
+            <button
+                class="primary"
+                id="assignSubmitBtn"
+                onclick="submitAssignment()">
+
+                📌 Assign Task
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     LOADING
+========================================================= -->
+
+<div
+    class="loading-overlay"
+    id="loadingOverlay">
+
+    <div class="loader-box">
+
+        <div class="spinner"></div>
+
+        <strong>
+            Loading StudyPulse...
+        </strong>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOASTS
+========================================================= -->
+
+<div
+    class="toast-container"
+    id="toastContainer">
+</div>
+
+
+<script>
+
+/* ============================================================
+   SUPABASE
+============================================================ */
+
+const SUPABASE_URL =
+    "https://rrcdstkptxddphcgxnaz.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "sb_publishable_eVNkpLJIwWp8qAaQp0ry8w__Cm0woCW";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+/* ============================================================
+   EMAILJS
+============================================================ */
+
+const EMAILJS_PUBLIC_KEY =
+    "epSlH1OfAZjTqZy6Y";
+
+const EMAILJS_SERVICE_ID =
+    "service_0vogf6p";
+
+const EMAILJS_TEMPLATE_ID =
+    "template_za0wbqc";
+
+if(
+    window.emailjs &&
+    EMAILJS_PUBLIC_KEY
+){
+    emailjs.init({
+        publicKey:EMAILJS_PUBLIC_KEY
+    });
+}
+
+
+/* ============================================================
+   STATE
+============================================================ */
+
+let session = null;
+
+let moderator = null;
+
+let sections = [];
+
+let sectionMembers = [];
+
+let allStudents = [];
+
+let selectedStudent = null;
+
+let selectedSection = "__all__";
+
+let pendingOnly = false;
+
+let currentAssignmentMode = "student";
+
+let realtimeChannel = null;
+
+
+/* ============================================================
+   HELPERS
+============================================================ */
+
+function escapeHtml(value){
+
+    if(
+        value === null ||
+        value === undefined
+    ){
+        return "";
+    }
+
+    return String(value)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+
+function normalize(value){
+
+    return String(
+        value ?? ""
+    ).trim();
+}
+
+
+function getInitials(user){
+
+    const name =
+        user.display_name ||
+        user.username ||
+        "U";
+
+    return name
+        .split(/\s+/)
+        .slice(0,2)
+        .map(
+            x => x.charAt(0)
+        )
+        .join("")
+        .toUpperCase();
+}
+
+
+function showLoading(show){
+
+    document
+        .getElementById("loadingOverlay")
+        .classList.toggle(
+            "show",
+            show
+        );
+}
+
+
+function toast(
+    title,
+    message,
+    type="info"
+){
+
+    const container =
+        document.getElementById(
+            "toastContainer"
+        );
+
+    const element =
+        document.createElement("div");
+
+    element.className =
+        `toast ${type}`;
+
+    element.innerHTML = `
+        <strong>
+            ${escapeHtml(title)}
+        </strong>
+
+        <span>
+            ${escapeHtml(message)}
+        </span>
+    `;
+
+    container.appendChild(element);
+
+    setTimeout(
+        () => element.remove(),
+        4500
+    );
+}
+
+
+function sectionLabel(section){
+
+    if(!section){
+        return "Unknown Section";
+    }
+
+    return (
+        section.name ||
+        section.title ||
+        section.label ||
+        section.section_name ||
+        section.class_name ||
+        section.class ||
+        `Section ${section.id}`
+    );
+}
+
+
+function sectionClass(section){
+
+    if(!section){
+        return "";
+    }
+
+    return normalize(
+        section.class ||
+        section.class_name ||
+        section.grade ||
+        section.level
+    );
+}
+
+
+function sectionId(section){
+
+    return String(
+        section?.id ?? ""
+    );
+}
+
+
+function formatDate(value){
+
+    if(!value){
+        return "—";
+    }
+
+    const date =
+        new Date(value);
+
+    if(
+        Number.isNaN(
+            date.getTime()
+        )
+    ){
+        return String(value);
+    }
+
+    return date.toLocaleDateString(
+        undefined,
+        {
+            year:"numeric",
+            month:"short",
+            day:"numeric"
+        }
+    );
+}
+
+
+function isCompleted(task){
+
+    const status =
+        String(
+            task?.status || ""
+        ).toLowerCase();
+
+    return (
+        status === "done" ||
+        status === "completed" ||
+        status.includes("done") ||
+        status.includes("complete")
+    );
+}
+
+
+/* ============================================================
+   AUTHENTICATION
+============================================================ */
+
+async function getCurrentModerator(){
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+    if(error){
+        throw error;
+    }
+
+    session =
+        data.session;
+
+    if(!session){
+
+        location.href =
+            "Mederatologin.html";
+
+        return null;
+    }
+
+
+    const {
+        data:user,
+        error:userError
+    } =
+        await supabaseClient
+            .from("users")
+            .select(`
+                id,
+                username,
+                email,
+                role,
+                status,
+                created_at,
+                auth_id,
+                display_name,
+                bio,
+                avatar_url,
+                preferences,
+                notifications,
+                schedule_setup_status,
+                class,
+                section,
+                optional_subject
+            `)
+            .eq(
+                "auth_id",
+                session.user.id
+            )
+            .maybeSingle();
+
+
+    if(userError){
+        throw userError;
+    }
+
+
+    if(
+        !user ||
+        user.role !== "moderator"
+    ){
+
+        await supabaseClient
+            .auth
+            .signOut();
+
+        toast(
+            "Access denied",
+            "This account is not a moderator account.",
+            "error"
+        );
+
+        setTimeout(
+            () =>
+                location.href =
+                    "Mederatologin.html",
+            900
+        );
+
+        return null;
+    }
+
+
+    if(
+        String(user.status)
+            .toLowerCase()
+        === "blocked"
+    ){
+
+        await supabaseClient
+            .auth
+            .signOut();
+
+        toast(
+            "Account blocked",
+            "Your moderator account is blocked.",
+            "error"
+        );
+
+        setTimeout(
+            () =>
+                location.href =
+                    "Mederatologin.html",
+            900
+        );
+
+        return null;
+    }
+
+
+    if(
+        String(user.status)
+            .toLowerCase()
+        !== "approved"
+    ){
+
+        await supabaseClient
+            .auth
+            .signOut();
+
+        toast(
+            "Account not approved",
+            "Your moderator account must be approved first.",
+            "error"
+        );
+
+        setTimeout(
+            () =>
+                location.href =
+                    "Mederatologin.html",
+            900
+        );
+
+        return null;
+    }
+
+
+    moderator =
+        user;
+
+    return user;
+}
+
+
+/* ============================================================
+   LOAD MODERATOR SECTIONS
+============================================================ */
+
+async function loadSections(){
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("sections")
+            .select("*")
+            .eq(
+                "moderator_id",
+                moderator.id
+            );
+
+
+    if(error){
+        throw error;
+    }
+
+
+    sections =
+        data || [];
+
+
+    buildSectionSelector();
+
+
+    document.getElementById(
+        "sectionCountBadge"
+    ).textContent =
+        `${sections.length} ${
+            sections.length === 1
+            ? "Section"
+            : "Sections"
+        }`;
+}
+
+
+/* ============================================================
+   SECTION SELECTOR
+============================================================ */
+
+function buildSectionSelector(){
+
+    const selector =
+        document.getElementById(
+            "sectionSelector"
+        );
+
+
+    selector.innerHTML = `
+        <option value="__all__">
+            All Assigned Sections
+        </option>
+    `;
+
+
+    sections.forEach(section => {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+        option.value =
+            sectionId(section);
+
+        option.textContent =
+            sectionLabel(section);
+
+        selector.appendChild(
+            option
+        );
+
+    });
+
+
+    if(
+        selectedSection !== "__all__" &&
+        !sections.some(
+            section =>
+                sectionId(section)
+                === selectedSection
+        )
+    ){
+
+        selectedSection =
+            "__all__";
+    }
+
+
+    selector.value =
+        selectedSection;
+
+    updateSectionLabel();
+}
+
+
+function changeSection(){
+
+    selectedSection =
+        document
+            .getElementById(
+                "sectionSelector"
+            )
+            .value;
+
+    updateSectionLabel();
+
+    renderStudents();
+
+    refreshTaskData();
+}
+
+
+function updateSectionLabel(){
+
+    const label =
+        document.getElementById(
+            "currentSectionLabel"
+        );
+
+
+    if(
+        selectedSection === "__all__"
+    ){
+
+        label.textContent =
+            "All Assigned Sections";
+
+        return;
+    }
+
+
+    const section =
+        sections.find(
+            item =>
+                sectionId(item)
+                === selectedSection
+        );
+
+
+    label.textContent =
+        section
+        ? sectionLabel(section)
+        : "Unknown Section";
+}
+
+
+/* ============================================================
+   LOAD SECTION MEMBERS
+============================================================ */
+
+async function loadSectionMembers(){
+
+    if(!sections.length){
+
+        sectionMembers = [];
+
+        allStudents = [];
+
+        renderStudents();
+
+        return;
+    }
+
+
+    const sectionIds =
+        sections.map(
+            section =>
+                section.id
+        );
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("section_members")
+            .select(`
+                section_id,
+                user_id
+            `)
+            .in(
+                "section_id",
+                sectionIds
+            );
+
+
+    if(error){
+        throw error;
+    }
+
+
+    sectionMembers =
+        data || [];
+
+
+    const userIds =
+        [
+            ...new Set(
+                sectionMembers
+                    .map(
+                        member =>
+                            member.user_id
+                    )
+                    .filter(Boolean)
+            )
+        ];
+
+
+    if(!userIds.length){
+
+        allStudents = [];
+
+        renderStudents();
+
+        return;
+    }
+
+
+    const {
+        data:users,
+        error:userError
+    } =
+        await supabaseClient
+            .from("users")
+            .select(`
+                id,
+                username,
+                email,
+                role,
+                status,
+                created_at,
+                display_name,
+                bio,
+                avatar_url,
+                preferences,
+                notifications,
+                schedule_setup_status,
+                class,
+                section,
+                optional_subject
+            `)
+            .in(
+                "id",
+                userIds
+            )
+            .eq(
+                "role",
+                "user"
+            )
+            .order(
+                "created_at",
+                {
+                    ascending:false
+                }
+            );
+
+
+    if(userError){
+        throw userError;
+    }
+
+
+    const students =
+        users || [];
+
+
+    /*
+       Attach the section IDs that each student belongs to.
+       This allows the moderator to have multiple sections.
+    */
+
+    allStudents =
+        students.map(student => {
+
+            const memberships =
+                sectionMembers
+                    .filter(
+                        member =>
+                            String(
+                                member.user_id
+                            )
+                            ===
+                            String(
+                                student.id
+                            )
+                    );
+
+
+            return {
+                ...student,
+
+                moderator_section_ids:
+                    memberships.map(
+                        member =>
+                            String(
+                                member.section_id
+                            )
+                    )
+            };
+
+        });
+
+
+    renderStudents();
+}
+
+
+/* ============================================================
+   GET VISIBLE STUDENTS
+============================================================ */
+
+function getVisibleStudents(){
+
+    let students;
+
+
+    if(
+        selectedSection === "__all__"
+    ){
+
+        students =
+            [...allStudents];
+
+    }else{
+
+        students =
+            allStudents.filter(
+                student =>
+                    student
+                        .moderator_section_ids
+                        ?.includes(
+                            selectedSection
+                        )
+            );
+    }
+
+
+    if(pendingOnly){
+
+        students =
+            students.filter(
+                student =>
+                    String(
+                        student.status || ""
+                    ).toLowerCase()
+                    === "pending"
+            );
+    }
+
+
+    return students;
+}
+
+
+/* ============================================================
+   RENDER STUDENTS
+============================================================ */
+
+function renderStudents(){
+
+    const tbody =
+        document.getElementById(
+            "studentsList"
+        );
+
+
+    const search =
+        document
+            .getElementById(
+                "studentSearch"
+            )
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    let students =
+        getVisibleStudents();
+
+
+    if(search){
+
+        students =
+            students.filter(
+                student => {
+
+                    const text =
+                        [
+
+                            student.username,
+                            student.display_name,
+                            student.email,
+                            student.id,
+                            student.class,
+                            student.section,
+                            student.optional_subject
+
+                        ]
+                        .filter(Boolean)
+                        .join(" ")
+                        .toLowerCase();
+
+
+                    return text.includes(
+                        search
+                    );
+
+                }
+            );
+    }
+
+
+    if(!students.length){
+
+        tbody.innerHTML = `
+
+            <tr>
+
+                <td colspan="8">
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            👥
+                        </div>
+
+                        <div>
+                            No students found.
+                        </div>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        `;
+
+        updateStudentDescription(0);
+
+        return;
+    }
+
+
+    updateStudentDescription(
+        students.length
+    );
+
+
+    tbody.innerHTML =
+        students
+            .map(student => {
+
+                const status =
+                    String(
+                        student.status ||
+                        "pending"
+                    ).toLowerCase();
+
+
+                const statusClass =
+                    [
+                        "approved",
+                        "pending",
+                        "blocked"
+                    ].includes(status)
+                    ? status
+                    : "default";
+
+
+                const studentSections =
+                    student
+                        .moderator_section_ids
+                        ?.map(
+                            id =>
+                                sections.find(
+                                    section =>
+                                        sectionId(section)
+                                        === id
+                                )
+                        )
+                        .filter(Boolean)
+                        .map(
+                            section =>
+                                sectionLabel(section)
+                        )
+                        .join(", ");
+
+
+                return `
+
+                    <tr>
+
+                        <td>
+
+                            <div class="user-cell">
+
+                                <div class="avatar">
+
+                                    ${
+                                        student.avatar_url
+                                        ?
+                                        `
+                                        <img
+                                            src="${escapeHtml(
+                                                student.avatar_url
+                                            )}"
+                                            alt="">
+                                        `
+                                        :
+                                        escapeHtml(
+                                            getInitials(
+                                                student
+                                            )
+                                        )
+                                    }
+
+                                </div>
+
+
+                                <div class="user-name">
+
+                                    <strong>
+                                        ${escapeHtml(
+                                            student.display_name ||
+                                            student.username ||
+                                            "Student"
+                                        )}
+                                    </strong>
+
+                                    <span>
+                                        @${escapeHtml(
+                                            student.username ||
+                                            ""
+                                        )}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            ${escapeHtml(
+                                student.class ||
+                                "—"
+                            )}
+                        </td>
+
+
+                        <td>
+                            ${escapeHtml(
+                                studentSections ||
+                                student.section ||
+                                "—"
+                            )}
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="status status-${statusClass}">
+
+                                ${escapeHtml(
+                                    status
+                                        .charAt(0)
+                                        .toUpperCase()
+                                    +
+                                    status.slice(1)
+                                )}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                data-task-count="${escapeHtml(
+                                    String(student.id)
+                                )}">
+
+                                —
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                data-completed-count="${escapeHtml(
+                                    String(student.id)
+                                )}">
+
+                                —
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                data-progress="${escapeHtml(
+                                    String(student.id)
+                                )}">
+
+                                —
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <button
+                                class="view-btn"
+                                onclick="openStudent(
+                                    '${escapeHtml(
+                                        String(student.id)
+                                    )}'
+                                )">
+
+                                View
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            })
+            .join("");
+
+
+    loadStudentTaskCounts(
+        students
+    );
+}
+
+
+function updateStudentDescription(
+    count
+){
+
+    document.getElementById(
+        "studentsDescription"
+    ).textContent =
+        `${count} student${
+            count === 1 ? "" : "s"
+        } visible in the current selection.`;
+}
+
+
+/* ============================================================
+   LOAD TASK COUNTS
+============================================================ */
+
+async function loadStudentTaskCounts(
+    students
+){
+
+    if(!students.length){
+        return;
+    }
+
+
+    const ids =
+        students.map(
+            student =>
+                student.id
+        );
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("tasks")
+            .select(`
+                id,
+                user_id,
+                status
+            `)
+            .in(
+                "user_id",
+                ids
+            );
+
+
+    if(error){
+
+        console.warn(
+            "Task counts unavailable:",
+            error
+        );
+
+        return;
+    }
+
+
+    const tasks =
+        data || [];
+
+
+    students.forEach(student => {
+
+        const userTasks =
+            tasks.filter(
+                task =>
+                    String(
+                        task.user_id
+                    )
+                    ===
+                    String(
+                        student.id
+                    )
+            );
+
+
+        const completed =
+            userTasks.filter(
+                isCompleted
+            ).length;
+
+
+        const total =
+            userTasks.length;
+
+
+        const percentage =
+            total
+            ?
+            Math.round(
+                completed /
+                total *
+                100
+            )
+            :
+            0;
+
+
+        const safeId =
+            CSS.escape(
+                String(
+                    student.id
+                )
+            );
+
+
+        const taskCell =
+            document.querySelector(
+                `[data-task-count="${safeId}"]`
+            );
+
+
+        const completedCell =
+            document.querySelector(
+                `[data-completed-count="${safeId}"]`
+            );
+
+
+        const progressCell =
+            document.querySelector(
+                `[data-progress="${safeId}"]`
+            );
+
+
+        if(taskCell){
+            taskCell.textContent =
+                total;
+        }
+
+
+        if(completedCell){
+            completedCell.textContent =
+                completed;
+        }
+
+
+        if(progressCell){
+            progressCell.textContent =
+                `${percentage}%`;
+        }
+
+    });
+
+}
+
+
+/* ============================================================
+   STATISTICS
+============================================================ */
+
+async function loadStatistics(){
+
+    const students =
+        getVisibleStudents();
+
+
+    const studentIds =
+        students.map(
+            student =>
+                student.id
+        );
+
+
+    document.getElementById(
+        "totalUsers"
+    ).textContent =
+        students.length;
+
+
+    if(!studentIds.length){
+
+        document.getElementById(
+            "totalTasks"
+        ).textContent =
+            "0";
+
+        document.getElementById(
+            "completedTasks"
+        ).textContent =
+            "0";
+
+        document.getElementById(
+            "completionRate"
+        ).textContent =
+            "0%";
+
+        return;
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("tasks")
+            .select(`
+                id,
+                user_id,
+                status,
+                created_at,
+                subject,
+                topic,
+                date
+            `)
+            .in(
+                "user_id",
+                studentIds
+            );
+
+
+    if(error){
+
+        console.error(
+            "Statistics error:",
+            error
+        );
+
+        return;
+    }
+
+
+    const tasks =
+        data || [];
+
+
+    const completed =
+        tasks.filter(
+            isCompleted
+        ).length;
+
+
+    document.getElementById(
+        "totalTasks"
+    ).textContent =
+        tasks.length;
+
+
+    document.getElementById(
+        "completedTasks"
+    ).textContent =
+        completed;
+
+
+    document.getElementById(
+        "completionRate"
+    ).textContent =
+        tasks.length
+        ?
+        Math.round(
+            completed /
+            tasks.length *
+            100
+        ) + "%"
+        :
+        "0%";
+}
+
+
+/* ============================================================
+   RECENT TASKS
+============================================================ */
+
+async function loadRecentTasks(){
+
+    const container =
+        document.getElementById(
+            "recentTasks"
+        );
+
+
+    const students =
+        getVisibleStudents();
+
+
+    const ids =
+        students.map(
+            student =>
+                student.id
+        );
+
+
+    if(!ids.length){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📚
+                </div>
+
+                No students in this selection.
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("tasks")
+            .select(`
+                id,
+                user_id,
+                subject,
+                topic,
+                date,
+                status,
+                created_at
+            `)
+            .in(
+                "user_id",
+                ids
+            )
+            .order(
+                "created_at",
+                {
+                    ascending:false
+                }
+            )
+            .limit(10);
+
+
+    if(error){
+
+        console.error(
+            error
+        );
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                Could not load recent tasks.
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    if(!data || !data.length){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📚
+                </div>
+
+                No recent tasks.
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML =
+        data
+            .map(task => {
+
+                const student =
+                    students.find(
+                        user =>
+                            String(
+                                user.id
+                            )
+                            ===
+                            String(
+                                task.user_id
+                            )
+                    );
+
+
+                return `
+
+                    <div class="recent-item">
+
+                        <strong>
+
+                            ${escapeHtml(
+                                task.subject ||
+                                "Task"
+                            )}
+
+                            ${
+                                task.topic
+                                ?
+                                " · " +
+                                escapeHtml(
+                                    task.topic
+                                )
+                                :
+                                ""
+                            }
+
+                        </strong>
+
+
+                        <span>
+
+                            ${escapeHtml(
+                                student
+                                ?
+                                (
+                                    student.display_name ||
+                                    student.username
+                                )
+                                :
+                                "Student"
+                            )}
+
+                            ${
+                                task.date
+                                ?
+                                " · " +
+                                escapeHtml(
+                                    task.date
+                                )
+                                :
+                                ""
+                            }
+
+                            ${
+                                task.status
+                                ?
+                                " · " +
+                                escapeHtml(
+                                    task.status
+                                )
+                                :
+                                ""
+                            }
+
+                        </span>
+
+
+                        <span
+                            class="recent-status"
+                            style="
+                                background:
+                                ${
+                                    isCompleted(task)
+                                    ? "#f0fdf4"
+                                    : "#ecfeff"
+                                };
+
+                                color:
+                                ${
+                                    isCompleted(task)
+                                    ? "#16a34a"
+                                    : "#0891b2"
+                                };
+                            ">
+
+                            ${
+                                isCompleted(task)
+                                ?
+                                "Completed"
+                                :
+                                "Planned"
+                            }
+
+                        </span>
+
+                    </div>
+
+                `;
+
+            })
+            .join("");
+}
+
+
+/* ============================================================
+   STUDENT PROFILE
+============================================================ */
+
+function openStudent(id){
+
+    const student =
+        allStudents.find(
+            user =>
+                String(
+                    user.id
+                )
+                ===
+                String(id)
+        );
+
+
+    if(!student){
+        return;
+    }
+
+
+    selectedStudent =
+        student;
+
+
+    const studentSections =
+        student
+            .moderator_section_ids
+            ?.map(
+                sectionIdValue =>
+                    sections.find(
+                        section =>
+                            sectionId(section)
+                            ===
+                            sectionIdValue
+                    )
+            )
+            .filter(Boolean)
+            .map(
+                section =>
+                    sectionLabel(section)
+            )
+            .join(", ");
+
+
+    document.getElementById(
+        "studentDetails"
+    ).innerHTML = `
+
+        <div class="detail-grid">
+
+            <div class="detail">
+
+                <small>
+                    Name
+                </small>
+
+                <strong>
+                    ${escapeHtml(
+                        student.display_name ||
+                        student.username ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                <small>
+                    Username
+                </small>
+
+                <strong>
+                    @${escapeHtml(
+                        student.username ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                <small>
+                    User ID
+                </small>
+
+                <strong>
+                    ${escapeHtml(
+                        student.id
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                <small>
+                    Email
+                </small>
+
+                <strong>
+                    ${escapeHtml(
+                        student.email ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                <small>
+                    Class
+                </small>
+
+                <strong>
+                    ${escapeHtml(
+                        student.class ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                <small>
+                    Section
+                </small>
+
+                <strong>
+                    ${escapeHtml(
+                        studentSections ||
+                        student.section ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                <small>
+                    Optional Subject
+                </small>
+
+                <strong>
+                    ${escapeHtml(
+                        student.optional_subject ||
+                        "—"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                <small>
+                    Status
+                </small>
+
+                <strong>
+                    ${escapeHtml(
+                        student.status ||
+                        "pending"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                <small>
+                    Schedule
+                </small>
+
+                <strong>
+                    ${escapeHtml(
+                        student.schedule_setup_status ||
+                        "not_started"
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                <small>
+                    Joined
+                </small>
+
+                <strong>
+                    ${escapeHtml(
+                        formatDate(
+                            student.created_at
+                        )
+                    )}
+                </strong>
+
+            </div>
+
+        </div>
+    `;
+
+
+    document
+        .getElementById(
+            "studentModal"
+        )
+        .classList.add(
+            "show"
+        );
+}
+
+
+function closeModal(){
+
+    document
+        .getElementById(
+            "studentModal"
+        )
+        .classList.remove(
+            "show"
+        );
+}
+
+
+/* ============================================================
+   ASSIGN MODAL
+============================================================ */
+
+function openAssignModal(
+    mode="student"
+){
+
+    currentAssignmentMode =
+        mode;
+
+
+    populateAssignmentSelectors();
+
+
+    const studentGroup =
+        document.getElementById(
+            "assignStudentGroup"
+        );
+
+    const sectionGroup =
+        document.getElementById(
+            "assignSectionGroup"
+        );
+
+
+    if(mode === "student"){
+
+        document.getElementById(
+            "assignModalTitle"
+        ).textContent =
+            "Assign Task to Student";
+
+        studentGroup.style.display =
+            "";
+
+        sectionGroup.style.display =
+            "none";
+
+    }else{
+
+        document.getElementById(
+            "assignModalTitle"
+        ).textContent =
+            "Assign Task to Section";
+
+        studentGroup.style.display =
+            "none";
+
+        sectionGroup.style.display =
+            "";
+    }
+
+
+    const today =
+        new Date()
+            .toISOString()
+            .slice(
+                0,
+                10
+            );
+
+
+    document.getElementById(
+        "assignDate"
+    ).value =
+        today;
+
+
+    if(
+        selectedStudent &&
+        mode === "student"
+    ){
+
+        document.getElementById(
+            "assignStudent"
+        ).value =
+            String(
+                selectedStudent.id
+            );
+    }
+
+
+    if(
+        selectedSection !== "__all__" &&
+        mode === "section"
+    ){
+
+        document.getElementById(
+            "assignSection"
+        ).value =
+            selectedSection;
+    }
+
+
+    document
+        .getElementById(
+            "assignModal"
+        )
+        .classList.add(
+            "show"
+        );
+}
+
+
+function closeAssignModal(){
+
+    document
+        .getElementById(
+            "assignModal"
+        )
+        .classList.remove(
+            "show"
+        );
+}
+
+
+function populateAssignmentSelectors(){
+
+    const studentSelect =
+        document.getElementById(
+            "assignStudent"
+        );
+
+
+    const sectionSelect =
+        document.getElementById(
+            "assignSection"
+        );
+
+
+    const visibleStudents =
+        getVisibleStudents();
+
+
+    studentSelect.innerHTML = `
+
+        <option value="">
+            Select student
+        </option>
+
+        ${
+            visibleStudents
+                .map(
+                    student =>
+                        `
+                        <option
+                            value="${escapeHtml(
+                                String(
+                                    student.id
+                                )
+                            )}">
+
+                            ${escapeHtml(
+                                student.display_name ||
+                                student.username
+                            )}
+
+                            ${
+                                student.username
+                                ?
+                                " · @" +
+                                escapeHtml(
+                                    student.username
+                                )
+                                :
+                                ""
+                            }
+
+                        </option>
+                        `
+                )
+                .join("")
+        }
+
+    `;
+
+
+    sectionSelect.innerHTML = `
+
+        <option value="">
+            Select section
+        </option>
+
+        ${
+            sections
+                .map(
+                    section =>
+                        `
+                        <option
+                            value="${escapeHtml(
+                                String(
+                                    section.id
+                                )
+                            )}">
+
+                            ${escapeHtml(
+                                sectionLabel(
+                                    section
+                                )
+                            )}
+
+                        </option>
+                        `
+                )
+                .join("")
+        }
+
+    `;
+}
+
+
+/* ============================================================
+   SUBMIT ASSIGNMENT
+============================================================ */
+
+async function submitAssignment(){
+
+    const subject =
+        document
+            .getElementById(
+                "assignSubject"
+            )
+            .value
+            .trim();
+
+
+    const topic =
+        document
+            .getElementById(
+                "assignTopic"
+            )
+            .value
+            .trim();
+
+
+    const date =
+        document
+            .getElementById(
+                "assignDate"
+            )
+            .value;
+
+
+    const duration =
+        document
+            .getElementById(
+                "assignDuration"
+            )
+            .value
+            .trim();
+
+
+    const notes =
+        document
+            .getElementById(
+                "assignNotes"
+            )
+            .value
+            .trim();
+
+
+    if(!subject){
+
+        toast(
+            "Missing subject",
+            "Please enter a subject.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!topic){
+
+        toast(
+            "Missing topic",
+            "Please enter a topic or task type.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!date){
+
+        toast(
+            "Missing date",
+            "Please choose a task date.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const button =
+        document.getElementById(
+            "assignSubmitBtn"
+        );
+
+
+    button.disabled =
+        true;
+
+    button.textContent =
+        "Assigning...";
+
+
+    try{
+
+        if(
+            currentAssignmentMode
+            ===
+            "student"
+        ){
+
+            await assignToStudent({
+                subject,
+                topic,
+                date,
+                duration,
+                notes
+            });
+
+        }else{
+
+            await assignToSection({
+                subject,
+                topic,
+                date,
+                duration,
+                notes
+            });
+
+        }
+
+
+        closeAssignModal();
+
+
+        await refreshTaskData();
+
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+        toast(
+            "Assignment failed",
+            error.message ||
+            "Could not create the task.",
+            "error"
+        );
+
+    }finally{
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "📌 Assign Task";
+    }
+}
+
+
+/* ============================================================
+   ASSIGN TO STUDENT
+============================================================ */
+
+async function assignToStudent(
+    taskData
+){
+
+    const studentId =
+        document
+            .getElementById(
+                "assignStudent"
+            )
+            .value;
+
+
+    if(!studentId){
+
+        throw new Error(
+            "Please select a student."
+        );
+    }
+
+
+    const student =
+        allStudents.find(
+            user =>
+                String(
+                    user.id
+                )
+                ===
+                String(
+                    studentId
+                )
+        );
+
+
+    if(!student){
+
+        throw new Error(
+            "Student not found."
+        );
+    }
+
+
+    const task = {
+
+        user_id:
+            student.id,
+
+        subject:
+            taskData.subject,
+
+        topic:
+            taskData.topic,
+
+        duration:
+            taskData.duration ||
+            null,
+
+        date:
+            taskData.date,
+
+        notes:
+            taskData.notes,
+
+        status:
+            "Planned",
+
+        created_by:
+            moderator.id,
+
+        added_by:
+            moderator.id,
+
+        username:
+            student.username
+
+    };
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("tasks")
+            .insert(task)
+            .select()
+            .single();
+
+
+    if(error){
+        throw error;
+    }
+
+
+    await sendAssignmentEmail(
+        student,
+        data
+    );
+
+
+    toast(
+        "Task assigned",
+        `Task assigned to ${
+            student.display_name ||
+            student.username
+        }.`,
+        "success"
+    );
+}
+
+
+/* ============================================================
+   ASSIGN TO SECTION
+============================================================ */
+
+async function assignToSection(
+    taskData
+){
+
+    const sectionIdValue =
+        document
+            .getElementById(
+                "assignSection"
+            )
+            .value;
+
+
+    if(!sectionIdValue){
+
+        throw new Error(
+            "Please select a section."
+        );
+    }
+
+
+    const section =
+        sections.find(
+            item =>
+                sectionId(item)
+                ===
+                String(
+                    sectionIdValue
+                )
+        );
+
+
+    if(!section){
+
+        throw new Error(
+            "Section not found."
+        );
+    }
+
+
+    const students =
+        allStudents.filter(
+            student =>
+                student
+                    .moderator_section_ids
+                    ?.includes(
+                        String(
+                            sectionIdValue
+                        )
+                    )
+        );
+
+
+    if(!students.length){
+
+        throw new Error(
+            "This section has no students."
+        );
+    }
+
+
+    const rows =
+        students.map(
+            student => ({
+
+                user_id:
+                    student.id,
+
+                subject:
+                    taskData.subject,
+
+                topic:
+                    taskData.topic,
+
+                duration:
+                    taskData.duration ||
+                    null,
+
+                date:
+                    taskData.date,
+
+                notes:
+                    taskData.notes,
+
+                status:
+                    "Planned",
+
+                created_by:
+                    moderator.id,
+
+                added_by:
+                    moderator.id,
+
+                username:
+                    student.username
+
+            })
+        );
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("tasks")
+            .insert(rows)
+            .select();
+
+
+    if(error){
+        throw error;
+    }
+
+
+    /*
+       Send emails after the database insert.
+       Email failures do not undo the database assignment.
+    */
+
+    for(
+        const student
+        of students
+    ){
+
+        const createdTask =
+            data?.find(
+                task =>
+                    String(
+                        task.user_id
+                    )
+                    ===
+                    String(
+                        student.id
+                    )
+            );
+
+
+        await sendAssignmentEmail(
+            student,
+            createdTask
+        );
+
+    }
+
+
+    toast(
+        "Section assignment complete",
+        `Task assigned to ${students.length} students in ${sectionLabel(section)}.`,
+        "success"
+    );
+}
+
+
+/* ============================================================
+   EMAIL
+============================================================ */
+
+async function sendAssignmentEmail(
+    user,
+    task
+){
+
+    if(
+        !window.emailjs ||
+        !user?.email ||
+        !task
+    ){
+        return;
+    }
+
+
+    try{
+
+        await emailjs.send(
+            EMAILJS_SERVICE_ID,
+            EMAILJS_TEMPLATE_ID,
+            {
+
+                username:
+                    user.username ||
+                    "",
+
+                email:
+                    user.email ||
+                    "",
+
+                subject:
+                    task.subject ||
+                    "",
+
+                topic:
+                    task.topic ||
+                    "",
+
+                date:
+                    task.date ||
+                    "",
+
+                note:
+                    task.notes ||
+                    ""
+
+            }
+        );
+
+    }catch(error){
+
+        console.warn(
+            "EmailJS notification failed:",
+            error
+        );
+
+    }
+}
+
+
+/* ============================================================
+   SELECTED STUDENT
+============================================================ */
+
+function assignSelectedStudent(){
+
+    if(!selectedStudent){
+
+        toast(
+            "No student selected",
+            "Select a student first.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    closeModal();
+
+    openAssignModal(
+        "student"
+    );
+}
+
+
+/* ============================================================
+   PENDING FILTER
+============================================================ */
+
+function togglePendingFilter(){
+
+    pendingOnly =
+        !pendingOnly;
+
+
+    const button =
+        document.getElementById(
+            "pendingFilterBtn"
+        );
+
+
+    button.classList.toggle(
+        "active",
+        pendingOnly
+    );
+
+
+    renderStudents();
+}
+
+
+function showPendingStudents(){
+
+    pendingOnly =
+        true;
+
+
+    document
+        .getElementById(
+            "pendingFilterBtn"
+        )
+        .classList.add(
+            "active"
+        );
+
+
+    renderStudents();
+
+
+    document
+        .querySelector(
+            ".students-card"
+        )
+        ?.scrollIntoView({
+            behavior:"smooth"
+        });
+}
+
+
+/* ============================================================
+   REFRESH TASK DATA
+============================================================ */
+
+async function refreshTaskData(){
+
+    await Promise.all([
+        loadStatistics(),
+        loadRecentTasks(),
+        loadStudentTaskCounts(
+            getVisibleStudents()
+        )
+    ]);
+}
+
+
+/* ============================================================
+   FULL DASHBOARD
+============================================================ */
+
+async function loadDashboard(){
+
+    try{
+
+        showLoading(true);
+
+
+        const current =
+            await getCurrentModerator();
+
+
+        if(!current){
+            return;
+        }
+
+
+        document.getElementById(
+            "moderatorName"
+        ).textContent =
+            current.display_name ||
+            current.username ||
+            "Moderator";
+
+
+        document.getElementById(
+            "moderatorStatusBadge"
+        ).textContent =
+            "● " +
+            (
+                current.status
+                ?
+                current.status
+                    .charAt(0)
+                    .toUpperCase()
+                +
+                current.status.slice(1)
+                :
+                "Approved"
+            );
+
+
+        await loadSections();
+
+        await loadSectionMembers();
+
+        await refreshTaskData();
+
+    }
+    catch(error){
+
+        console.error(
+            "Dashboard error:",
+            error
+        );
+
+        toast(
+            "Dashboard error",
+            error.message ||
+            "Unable to load moderator dashboard.",
+            "error"
+        );
+
+    }
+    finally{
+
+        showLoading(false);
+    }
+}
+
+
+/* ============================================================
+   LOGOUT
+============================================================ */
+
+async function logout(){
+
+    try{
+
+        if(realtimeChannel){
+
+            await supabaseClient
+                .removeChannel(
+                    realtimeChannel
+                );
+
+            realtimeChannel =
+                null;
+        }
+
+
+        await supabaseClient
+            .auth
+            .signOut();
+
+
+    }catch(error){
+
+        console.error(
+            "Logout error:",
+            error
+        );
+
+    }finally{
+
+        location.href =
+            "Mederatologin.html";
+    }
+}
+
+
+/* ============================================================
+   REALTIME
+============================================================ */
+
+function setupRealtime(){
+
+    if(realtimeChannel){
+
+        supabaseClient
+            .removeChannel(
+                realtimeChannel
+            );
+
+    }
+
+
+    realtimeChannel =
+        supabaseClient
+            .channel(
+                "moderator-workspace"
+            )
+
+
+            /*
+               Section assignments change.
+            */
+
+            .on(
+                "postgres_changes",
+                {
+                    event:"*",
+                    schema:"public",
+                    table:"sections"
+                },
+                async () => {
+
+                    try{
+
+                        await loadSections();
+
+                        await loadSectionMembers();
+
+                        await refreshTaskData();
+
+                    }catch(error){
+
+                        console.error(
+                            error
+                        );
+
+                    }
+
+                }
+            )
+
+
+            /*
+               Section membership changes.
+            */
+
+            .on(
+                "postgres_changes",
+                {
+                    event:"*",
+                    schema:"public",
+                    table:"section_members"
+                },
+                async () => {
+
+                    try{
+
+                        await loadSectionMembers();
+
+                        await refreshTaskData();
+
+                    }catch(error){
+
+                        console.error(
+                            error
+                        );
+
+                    }
+
+                }
+            )
+
+
+            /*
+               Student account changes.
+            */
+
+            .on(
+                "postgres_changes",
+                {
+                    event:"*",
+                    schema:"public",
+                    table:"users"
+                },
+                async () => {
+
+                    try{
+
+                        await loadSectionMembers();
+
+                        await refreshTaskData();
+
+                    }catch(error){
+
+                        console.error(
+                            error
+                        );
+
+                    }
+
+                }
+            )
+
+
+            /*
+               Task changes.
+            */
+
+            .on(
+                "postgres_changes",
+                {
+                    event:"*",
+                    schema:"public",
+                    table:"tasks"
+                },
+                async () => {
+
+                    try{
+
+                        await refreshTaskData();
+
+                    }catch(error){
+
+                        console.error(
+                            error
+                        );
+
+                    }
+
+                }
+            )
+
+
+            .subscribe();
+}
+
+
+/* ============================================================
+   MODAL OUTSIDE CLICK
+============================================================ */
+
+document
+    .getElementById(
+        "studentModal"
+    )
+    .addEventListener(
+        "click",
+        event => {
+
+            if(
+                event.target ===
+                event.currentTarget
+            ){
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "assignModal"
+    )
+    .addEventListener(
+        "click",
+        event => {
+
+            if(
+                event.target ===
+                event.currentTarget
+            ){
+
+                closeAssignModal();
+
+            }
+
+        }
+    );
+
+
+/* ============================================================
+   ESCAPE KEY
+============================================================ */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(event.key !== "Escape"){
+            return;
+        }
+
+        closeModal();
+        closeAssignModal();
+
+    }
+);
+
+
+/* ============================================================
+   AUTH STATE
+============================================================ */
+
+supabaseClient
+    .auth
+    .onAuthStateChange(
+        async (
+            event,
+            newSession
+        ) => {
+
+            if(
+                event ===
+                "SIGNED_OUT"
+            ){
+
+                location.href =
+                    "Mederatologin.html";
+
+                return;
+            }
+
+
+            if(
+                event ===
+                "TOKEN_REFRESHED"
+                &&
+                newSession
+            ){
+
+                session =
+                    newSession;
+
+            }
+
+        }
+    );
+
+
+/* ============================================================
+   INIT
+============================================================ */
+
+window.addEventListener(
+    "DOMContentLoaded",
+    async () => {
+
+        await loadDashboard();
+
+        setupRealtime();
+
+    }
+);
+
+</script>
+
+</body>
+</html>
