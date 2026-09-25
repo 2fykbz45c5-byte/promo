@@ -1,0 +1,5199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎓 Class Moderators</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* =========================================================
+           PREMIUM CLASS MODERATORS DASHBOARD
+        ========================================================= */
+        :root {
+            --bg: #020617;
+            --surface: rgba(15, 23, 42, 0.85);
+            --card: rgba(17, 24, 39, 0.92);
+            --card-hover: rgba(30, 41, 59, 0.95);
+            --border: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(56, 189, 248, 0.2);
+
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --primary-glow: rgba(59, 130, 246, 0.3);
+
+            --success: #22c55e;
+            --success-bg: rgba(34, 197, 94, 0.12);
+            --warning: #f59e0b;
+            --warning-bg: rgba(245, 158, 11, 0.12);
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.12);
+
+            --text: #172033;
+            --text-secondary: #64748b;
+            --text-muted: #64748b;
+
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            --shadow-hover: 0 25px 50px rgba(0, 0, 0, 0.5);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            background-image:
+                radial-gradient(ellipse at 10% 20%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 80%, rgba(56, 189, 248, 0.05) 0%, transparent 50%);
+        }
+
+        .app-container {
+            max-width: 1450px;
+            margin: 0 auto;
+            padding: 30px 35px;
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            padding: 20px 25px;
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .header-left h1 {
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #172033, #64748b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-left h1 span {
+            background: linear-gradient(135deg, #60a5fa, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-left p {
+            margin-top: 6px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .header-btn {
+            border: none;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .header-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px var(--primary-glow);
+            border-color: var(--primary);
+        }
+
+        .nav-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            padding: 8px;
+            border-radius: var(--radius-sm);
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            border: none;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            box-shadow: 0 8px 20px var(--primary-glow);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 24px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-number {
+            margin-top: 10px;
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #172033, #64748b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-icon {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            opacity: 0.12;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 18px 14px 48px;
+            border-radius: var(--radius-sm);
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .filter-select {
+            background: var(--card);
+            color: white;
+            border: 1px solid var(--border);
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            min-width: 180px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+        }
+
+        .filter-select option {
+            background: #1e293b;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+        }
+
+        .classModeratorCard {
+            background: var(--card);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+        }
+
+        .classModeratorCard:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
+            background: var(--card-hover);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .card-title-group {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title .section-emoji {
+            font-size: 1.2rem;
+        }
+
+        .card-subtitle {
+            color: var(--text-secondary);
+            margin-top: 4px;
+            font-size: 0.9rem;
+        }
+
+        .card-subtitle strong {
+            color: var(--text);
+        }
+
+        .avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .badge-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .badge.assigned {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .badge.unassigned {
+            background: var(--danger-bg);
+            color: var(--danger);
+        }
+
+        .badge.moderator-count {
+            background: rgba(59, 130, 246, 0.12);
+            color: var(--primary-light);
+        }
+
+        .card-select-wrapper {
+            position: relative;
+        }
+
+        .card-select-wrapper::after {
+            content: '▼';
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+            font-size: 0.7rem;
+        }
+
+        .card-select {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            background: rgba(2, 6, 23, 0.8);
+            color: white;
+            border: 1px solid var(--border);
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        .card-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+        }
+
+        .card-select option {
+            background: #1e293b;
+            padding: 8px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .saveModeratorBtn {
+            flex: 1;
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            font-weight: 700;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .saveModeratorBtn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px var(--primary-glow);
+        }
+
+        .saveModeratorBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .view-members-btn {
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            font-weight: 600;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .view-members-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: var(--border-hover);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 1.3rem;
+        }
+
+        .modal-close {
+            border: none;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-member-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .modal-member-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+
+        .modal-member-item .avatar-small {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .modal-member-item .member-name {
+            font-weight: 500;
+        }
+
+        .modal-member-item .member-email {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .modal-empty {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 80px 30px;
+            color: var(--text-secondary);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            background: var(--card);
+        }
+
+        .no-data .icon {
+            font-size: 60px;
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .no-data h2 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .no-data p {
+            color: var(--text-muted);
+        }
+
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 80px;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            gap: 12px;
+        }
+
+        .loading-spinner::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--primary);
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            right: 30px;
+            top: 30px;
+            min-width: 320px;
+            padding: 16px 22px;
+            border-radius: var(--radius-sm);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            z-index: 99999;
+            animation: slideIn 0.4s ease;
+            box-shadow: var(--shadow);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification.success {
+            background: rgba(34, 197, 94, 0.95);
+        }
+
+        .notification.error {
+            background: rgba(239, 68, 68, 0.95);
+        }
+
+        .notification.info {
+            background: rgba(59, 130, 246, 0.95);
+        }
+
+        .notification .notif-icon {
+            font-size: 1.3rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        @media (max-width: 1024px) {
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 16px;
+            }
+
+            .app-header {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 18px 20px;
+            }
+
+            .header-left h1 {
+                font-size: 28px;
+            }
+
+            .header-right {
+                justify-content: stretch;
+            }
+
+            .header-btn {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .nav-bar {
+                justify-content: center;
+                padding: 6px;
+            }
+
+            .nav-btn {
+                padding: 10px 16px;
+                font-size: 0.8rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .stat-number {
+                font-size: 26px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .classModeratorCard {
+                padding: 18px;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+
+            .card-actions {
+                flex-direction: column;
+            }
+
+            .view-members-btn {
+                justify-content: center;
+            }
+
+            .notification {
+                right: 16px;
+                left: 16px;
+                min-width: unset;
+                top: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-btn {
+                font-size: 0.75rem;
+                padding: 8px 12px;
+            }
+
+            .modal {
+                padding: 20px;
+                margin: 10px;
+            }
+        }
+        .header-left h1 i {
+    font-size: 38px;
+    margin-right: 12px;
+    color: #60a5fa;
+}
+
+/* =====================================================
+   SECTIONS PAGE
+===================================================== */
+
+#sectionsPage {
+    width:100%;
+}
+
+
+/* ================================
+   STATISTICS
+================================ */
+
+#sectionsPage .stats-grid {
+
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    margin-bottom:30px;
+
+}
+
+
+#sectionsPage .stat-card {
+
+    position:relative;
+
+    padding:25px;
+
+    border-radius:25px;
+
+    background:
+    linear-gradient(
+        145deg,
+        rgba(15,23,42,.95),
+        rgba(2,6,23,.85)
+    );
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+    0 20px 40px rgba(0,0,0,.25);
+
+    overflow:hidden;
+
+}
+
+
+
+#sectionsPage .stat-label {
+
+    color:#64748b;
+
+    font-size:14px;
+
+    margin-bottom:12px;
+
+}
+
+
+
+#sectionsPage .stat-number {
+
+    font-size:2.2rem;
+
+    font-weight:900;
+
+    color:white;
+
+}
+
+
+
+#sectionsPage .stat-icon {
+
+    position:absolute;
+
+    right:20px;
+
+    bottom:18px;
+
+    font-size:42px;
+
+    opacity:.35;
+
+}
+
+
+
+
+
+/* ================================
+   MAIN GRID
+================================ */
+
+
+#sectionsPage > .cards-grid {
+
+    display:grid;
+
+    grid-template-columns:
+    350px 1fr;
+
+    gap:25px;
+
+    align-items:start;
+
+}
+
+
+
+
+/* ================================
+   CREATE SECTION CARD
+================================ */
+
+
+#sectionsPage .classModeratorCard {
+
+    background:
+    linear-gradient(
+        145deg,
+        #111827,
+        #020617
+    );
+
+    border-radius:28px;
+
+    padding:25px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+    0 25px 50px rgba(0,0,0,.35);
+
+}
+
+
+
+#sectionsPage .card-title {
+
+    font-size:20px;
+
+    font-weight:800;
+
+    margin-bottom:25px;
+
+    color:white;
+
+}
+
+
+
+#sectionsPage input {
+
+    width:100%;
+
+    padding:15px 18px;
+
+    margin-bottom:15px;
+
+    border-radius:16px;
+
+    border:1px solid #334155;
+
+    background:#020617;
+
+    color:white;
+
+    outline:none;
+
+    font-size:15px;
+
+}
+
+
+
+#sectionsPage input:focus {
+
+    border-color:#38bdf8;
+
+    box-shadow:
+    0 0 0 4px rgba(56,189,248,.15);
+
+}
+
+
+
+
+/* ================================
+   CREATE BUTTON
+================================ */
+
+
+#sectionsPage .saveModeratorBtn {
+
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:18px;
+
+    cursor:pointer;
+
+    font-weight:800;
+
+    color:white;
+
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #38bdf8
+    );
+
+
+    transition:.25s;
+
+}
+
+
+
+#sectionsPage .saveModeratorBtn:hover {
+
+    transform:translateY(-3px);
+
+    box-shadow:
+    0 15px 30px rgba(56,189,248,.25);
+
+}
+
+
+
+
+
+/* ================================
+   SECTIONS LIST
+================================ */
+
+
+#sectionsContainer {
+
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:20px;
+
+}
+
+
+
+#sectionsContainer .classModeratorCard {
+
+
+    padding:22px;
+
+    min-height:180px;
+
+    transition:.25s;
+
+}
+
+
+
+#sectionsContainer .classModeratorCard:hover {
+
+    transform:translateY(-6px);
+
+}
+
+
+
+
+
+#sectionsContainer p {
+
+    color:#64748b;
+
+    margin:12px 0;
+
+}
+
+
+
+
+
+/* ================================
+   DELETE BUTTON
+================================ */
+
+
+#sectionsContainer .delete-btn {
+
+
+    margin-top:15px;
+
+    width:100%;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:15px;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    color:white;
+
+
+    background:
+    linear-gradient(
+        135deg,
+        #ef4444,
+        #991b1b
+    );
+
+
+}
+
+
+
+#sectionsContainer .delete-btn:hover {
+
+    box-shadow:
+    0 15px 30px rgba(239,68,68,.25);
+
+}
+
+
+
+
+
+/* ================================
+   EMPTY / LOADING
+================================ */
+
+
+.loading-spinner {
+
+
+    padding:40px;
+
+    text-align:center;
+
+    color:#64748b;
+
+    border-radius:20px;
+
+    border:1px dashed #334155;
+
+}
+
+
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+
+@media(max-width:1200px){
+
+
+    #sectionsContainer {
+
+        grid-template-columns:
+        repeat(2,1fr);
+
+    }
+
+
+}
+
+
+
+@media(max-width:900px){
+
+
+    #sectionsPage > .cards-grid {
+
+        grid-template-columns:1fr;
+
+    }
+
+
+    #sectionsPage .stats-grid {
+
+        grid-template-columns:
+        repeat(2,1fr);
+
+    }
+
+
+}
+
+
+
+@media(max-width:600px){
+
+
+    #sectionsContainer {
+
+        grid-template-columns:1fr;
+
+    }
+
+
+    #sectionsPage .stats-grid {
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+/* ==========================================
+   MEMBERS MANAGEMENT DASHBOARD
+========================================== */
+
+
+.membersTopBar{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    background:linear-gradient(
+        135deg,
+        #111827,
+        #1e293b
+    );
+
+    padding:28px;
+
+    border-radius:22px;
+
+    margin-bottom:25px;
+
+    color:white;
+
+    box-shadow:
+    0 20px 40px rgba(0,0,0,.15);
+
+}
+
+
+
+.membersTopBar h1{
+
+    margin:0;
+
+    font-size:28px;
+
+    font-weight:800;
+
+}
+
+
+
+.membersTopBar p{
+
+    margin-top:8px;
+
+    color:#64748b;
+
+}
+
+
+
+
+.refreshButton{
+
+    border:none;
+
+    background:#3b82f6;
+
+    color:white;
+
+    padding:13px 22px;
+
+    border-radius:14px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    transition:.3s;
+
+}
+
+
+
+.refreshButton:hover{
+
+    transform:translateY(-3px);
+
+    background:#2563eb;
+
+}
+
+
+
+
+
+/* MAIN AREA */
+
+
+.membersLayout{
+
+
+    display:grid;
+
+    grid-template-columns:
+    320px 1fr;
+
+
+    gap:25px;
+
+    min-height:650px;
+
+
+}
+
+
+
+
+/* LEFT SECTIONS */
+
+
+.sectionsPanel,
+.membersPanel{
+
+
+    background:white;
+
+    border-radius:24px;
+
+    padding:22px;
+
+    box-shadow:
+
+    0 10px 30px rgba(0,0,0,.08);
+
+
+}
+
+
+
+.panelTitle{
+
+    font-size:20px;
+
+    font-weight:800;
+
+    margin-bottom:18px;
+
+    color:#111827;
+
+}
+
+
+
+
+.sectionSearch input{
+
+
+    width:100%;
+
+    padding:13px 16px;
+
+    border-radius:14px;
+
+    border:1px solid #334155;
+
+    outline:none;
+
+    margin-bottom:20px;
+
+    font-size:14px;
+
+}
+
+
+
+.sectionSearch input:focus{
+
+    border-color:#3b82f6;
+
+    box-shadow:
+    0 0 0 3px rgba(59,130,246,.15);
+
+}
+
+
+
+
+
+
+.sectionRow{
+
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:15px;
+
+    border-radius:18px;
+
+    cursor:pointer;
+
+    margin-bottom:10px;
+
+    transition:.25s;
+
+    border:1px solid transparent;
+
+}
+
+
+
+.sectionRow:hover{
+
+    background:#172033;
+
+}
+
+
+
+.sectionRow.active{
+
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+    );
+
+    color:white;
+
+}
+
+
+
+.sectionIcon{
+
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:14px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    font-size:20px;
+
+}
+
+
+
+.sectionRow.active .sectionIcon{
+
+    background:white;
+
+    color:#2563eb;
+
+}
+
+
+
+
+.sectionInfo{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:5px;
+
+}
+
+
+.sectionInfo span{
+
+    font-size:13px;
+
+    opacity:.7;
+
+}
+
+
+
+
+
+
+
+
+/* RIGHT SIDE */
+
+
+.detailsHeader{
+
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    padding-bottom:25px;
+
+    border-bottom:1px solid #334155;
+
+}
+
+
+
+.detailsHeader h2{
+
+
+    margin:0;
+
+    font-size:25px;
+
+    color:#111827;
+
+}
+
+
+
+.detailsHeader p{
+
+
+    margin:5px 0;
+
+    color:#64748b;
+
+}
+
+
+
+
+.detailsHeader select{
+
+
+    padding:13px 16px;
+
+    border-radius:14px;
+
+    border:1px solid #ddd;
+
+    min-width:220px;
+
+}
+
+
+
+
+.detailsHeader button{
+
+
+    background:#16a34a;
+
+    color:white;
+
+    border:none;
+
+    padding:13px 22px;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+}
+
+
+
+.detailsHeader button:hover{
+
+    background:#15803d;
+
+}
+
+
+
+
+
+
+
+/* STUDENTS */
+
+
+
+.membersTable{
+
+    margin-top:25px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+}
+
+
+
+
+.studentRow{
+
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:16px;
+
+    border-radius:18px;
+
+    background:#172033;
+
+    transition:.25s;
+
+    border:1px solid #e2e8f0;
+
+
+}
+
+
+
+.studentRow:hover{
+
+
+    transform:translateX(5px);
+
+    background:white;
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,.08);
+
+
+}
+
+
+
+
+.studentAvatar{
+
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:50%;
+
+    background:
+    linear-gradient(
+    135deg,
+    #2563eb,
+    #60a5fa
+    );
+
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:20px;
+
+    font-weight:800;
+
+}
+
+
+
+.studentInfo{
+
+    flex:1;
+
+    margin-left:15px;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+
+
+.studentInfo b{
+
+    color:#111827;
+
+}
+
+
+
+.studentInfo small{
+
+    color:#64748b;
+
+    margin-top:4px;
+
+}
+
+
+
+
+.deleteMember{
+
+
+    width:38px;
+
+    height:38px;
+
+    border-radius:12px;
+
+    border:none;
+
+    cursor:pointer;
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+    transition:.3s;
+
+}
+
+
+
+.deleteMember:hover{
+
+    background:#dc2626;
+
+    color:white;
+
+}
+
+
+
+
+
+
+.emptyState{
+
+
+    height:400px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:#64748b;
+
+
+}
+
+
+
+.emptyState i{
+
+    font-size:60px;
+
+    margin-bottom:15px;
+
+}
+
+
+
+
+
+
+/* RESPONSIVE */
+
+
+@media(max-width:900px){
+
+
+.membersLayout{
+
+    grid-template-columns:1fr;
+
+}
+
+
+
+.detailsHeader{
+
+    flex-direction:column;
+
+    align-items:stretch;
+
+}
+
+
+}
+
+.multiStudentSelect{
+
+    width:100%;
+
+    min-height:150px;
+
+    padding:12px;
+
+    border-radius:16px;
+
+    border:1px solid #e2e8f0;
+
+    background:#172033;
+
+    font-size:14px;
+
+}
+
+
+.multiStudentSelect option{
+
+    padding:10px;
+
+}
+
+
+
+.multiStudentSelect option:checked{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+
+
+
+.pickerOverlay{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.55);
+
+    z-index:99999;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+
+
+.pickerBox{
+
+    width:500px;
+
+    max-height:80vh;
+
+    background:white;
+
+    border-radius:25px;
+
+    padding:25px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+
+}
+
+
+
+.pickerHeader{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+
+
+.pickerHeader h2{
+
+    margin:0;
+
+}
+
+
+
+.pickerHeader button{
+
+    border:none;
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+    width:35px;
+
+    height:35px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+}
+
+
+
+.studentSearch{
+
+
+    width:100%;
+
+    padding:14px;
+
+    border-radius:15px;
+
+    border:1px solid #ddd;
+
+    margin-bottom:15px;
+
+    outline:none;
+
+}
+
+
+
+
+.studentList{
+
+    overflow-y:auto;
+
+    max-height:400px;
+
+}
+
+
+
+
+.pickerUser{
+
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:12px;
+
+    border-radius:15px;
+
+    cursor:pointer;
+
+}
+
+
+
+.pickerUser:hover{
+
+    background:#f1f5f9;
+
+}
+
+
+
+.pickerUser input{
+
+    width:18px;
+
+    height:18px;
+
+}
+
+
+
+.pickerAvatar{
+
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    background:#2563eb;
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-weight:bold;
+
+}
+
+
+
+.confirmAddBtn{
+
+
+    margin-top:20px;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:#16a34a;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+}
+
+
+.confirmAddBtn:hover{
+
+    background:#15803d;
+
+}
+
+
+/* =====================================
+   MODERATOR SELECT DROPDOWN
+===================================== */
+
+.memberSelect{
+
+    width:100%;
+
+    padding:14px 18px;
+
+    border-radius:16px;
+
+    border:1px solid #e2e8f0;
+
+    background:#ffffff;
+
+    color:#1e293b;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    outline:none;
+
+    transition:.3s;
+
+    appearance:none;
+
+    background-image:
+    linear-gradient(45deg, transparent 50%, #64748b 50%),
+    linear-gradient(135deg, #64748b 50%, transparent 50%);
+
+    background-position:
+    calc(100% - 20px) 50%,
+    calc(100% - 15px) 50%;
+
+    background-size:
+    6px 6px,
+    6px 6px;
+
+    background-repeat:no-repeat;
+
+}
+
+
+
+
+
+.memberSelect:hover{
+
+    border-color:#3b82f6;
+
+    background:#172033;
+
+}
+
+
+
+
+
+.memberSelect:focus{
+
+
+    border-color:#2563eb;
+
+    box-shadow:
+    0 0 0 4px rgba(37,99,235,.15);
+
+}
+
+
+
+
+
+.memberSelect option{
+
+
+    padding:12px;
+
+    background:white;
+
+    color:#1e293b;
+
+    font-weight:500;
+
+}
+
+
+
+
+/* wrapper if you have one */
+
+.card-select-wrapper{
+
+    margin-top:18px;
+
+    width:100%;
+
+}
+
+
+/* ============================================================
+   STUDYPULSE — MODERN CONTROL CENTER OVERRIDE
+   Cleaner UX • unified dark theme • responsive • accessible
+============================================================ */
+
+:root{
+  --bg:#f6f8fc;
+  --bg-2:#ffffff;
+  --panel:#10101d;
+  --panel-2:#141425;
+  --panel-3:#18182b;
+  --line:rgba(255,255,255,.075);
+  --line-strong:rgba(79,70,229,.28);
+  --text:#172033;
+  --muted:#9292a8;
+  --muted-2:#68687e;
+  --primary:#4f46e5;
+  --primary-2:#4f46e5;
+  --cyan:#06b6d4;
+  --green:#22c55e;
+  --yellow:#f59e0b;
+  --red:#ef4444;
+  --gradient:linear-gradient(135deg,#4f46e5 0%,#4f46e5 48%,#06b6d4 100%);
+  --shadow:0 18px 55px rgba(0,0,0,.32);
+  --shadow-soft:0 10px 30px rgba(0,0,0,.22);
+  --radius:18px;
+  --radius-sm:13px;
+  --transition:.22s ease;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 8% 5%,rgba(79,70,229,.13),transparent 28%),
+    radial-gradient(circle at 92% 90%,rgba(6,182,212,.08),transparent 25%),
+    var(--bg);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed; inset:0; pointer-events:none; z-index:-1;
+  background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:42px 42px;
+  mask-image:linear-gradient(to bottom,black,transparent 85%);
+}
+
+/* Main shell: sidebar + workspace */
+.app-container{
+  width:100%;
+  max-width:none;
+  min-height:100vh;
+  margin:0;
+  padding:0;
+  display:grid;
+  grid-template-columns:238px minmax(0,1fr);
+  grid-template-rows:auto 1fr;
+  gap:0;
+}
+
+/* Sidebar navigation */
+.nav-bar{
+  grid-column:1;
+  grid-row:1 / 3;
+  position:sticky;
+  top:0;
+  height:100vh;
+  margin:0;
+  padding:22px 14px;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:7px;
+  border:0;
+  border-right:1px solid var(--line);
+  border-radius:0;
+  background:rgba(9,9,18,.88);
+  backdrop-filter:blur(24px);
+  box-shadow:10px 0 40px rgba(0,0,0,.12);
+  z-index:50;
+}
+.nav-bar::before{
+  content:"STUDYPULSE";
+  display:block;
+  padding:5px 12px 22px;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:.16em;
+  color:#fff;
+}
+.nav-bar::after{
+  content:"ADMIN • CONTROL CENTER";
+  display:block;
+  order:20;
+  margin:auto 8px 0;
+  padding-top:15px;
+  border-top:1px solid var(--line);
+  color:var(--muted-2);
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.12em;
+}
+.nav-btn{
+  width:100%;
+  min-height:46px;
+  justify-content:flex-start;
+  padding:11px 13px;
+  border:1px solid transparent;
+  border-radius:12px;
+  color:var(--muted);
+  background:transparent;
+  font-size:13px;
+  font-weight:700;
+  transition:var(--transition);
+}
+.nav-btn:hover{
+  color:#fff;
+  background:rgba(255,255,255,.045);
+  transform:none;
+}
+.nav-btn.active{
+  color:#fff;
+  background:linear-gradient(135deg,rgba(79,70,229,.23),rgba(79,70,229,.13));
+  border-color:rgba(79,70,229,.25);
+  box-shadow:inset 3px 0 0 var(--primary),0 8px 24px rgba(79,70,229,.10);
+}
+
+/* Top header */
+.app-header{
+  grid-column:2;
+  grid-row:1;
+  position:sticky;
+  top:0;
+  z-index:40;
+  margin:0;
+  padding:18px 30px;
+  border:0;
+  border-bottom:1px solid var(--line);
+  border-radius:0;
+  background:rgba(7,7,17,.78);
+  backdrop-filter:blur(22px);
+}
+.header-left h1{
+  font-size:23px;
+  line-height:1.15;
+  letter-spacing:-.5px;
+}
+.header-left h1 i{
+  margin-right:9px;
+  color:#6366f1;
+  font-size:20px;
+}
+.header-left h1 span{
+  background:var(--gradient);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.header-left p{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:12px;
+}
+.header-right{gap:8px}
+.header-btn{
+  padding:9px 13px;
+  border-radius:11px;
+  color:#d9d9e8;
+  background:rgba(255,255,255,.045);
+  border:1px solid var(--line);
+  font-size:12px;
+}
+.header-btn:hover{
+  color:#fff;
+  background:rgba(79,70,229,.15);
+  border-color:rgba(79,70,229,.3);
+  transform:none;
+  box-shadow:none;
+}
+
+/* Workspace */
+.page{
+  grid-column:2;
+  grid-row:auto;
+  min-width:0;
+  padding:26px 30px 42px;
+  animation:none;
+}
+.page.active{display:block}
+.page:not(.active){display:none}
+
+/* Stats */
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:13px;
+  margin-bottom:20px;
+}
+.stat-card{
+  min-height:105px;
+  padding:17px 18px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:linear-gradient(145deg,rgba(20,20,37,.95),rgba(12,12,23,.9));
+  box-shadow:var(--shadow-soft);
+  backdrop-filter:blur(16px);
+}
+.stat-card::before{display:none}
+.stat-card:hover{
+  transform:translateY(-2px);
+  border-color:var(--line-strong);
+  box-shadow:var(--shadow);
+}
+.stat-label{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+.stat-number{
+  margin-top:8px;
+  font-size:27px;
+  color:#fff;
+  background:none;
+  -webkit-text-fill-color:initial;
+}
+.stat-icon{
+  right:16px;
+  top:16px;
+  font-size:24px;
+  opacity:.14;
+}
+
+/* Toolbar */
+.toolbar{
+  gap:9px;
+  margin-bottom:16px;
+}
+.search-box{min-width:220px}
+.search-box input,.filter-select{
+  min-height:42px;
+  padding:11px 14px;
+  border-radius:11px;
+  background:rgba(16,16,29,.9);
+  border:1px solid var(--line);
+  color:#fff;
+  font-size:12px;
+}
+.search-box input{padding-left:40px}
+.search-box input:focus,.filter-select:focus{
+  border-color:rgba(79,70,229,.5);
+  box-shadow:0 0 0 3px rgba(79,70,229,.10);
+}
+.search-icon{
+  left:14px;
+  font-size:14px;
+  color:var(--muted-2);
+}
+.filter-select{min-width:145px}
+
+/* Cards */
+.cards-grid{
+  grid-template-columns:repeat(auto-fill,minmax(285px,1fr));
+  gap:14px;
+}
+.classModeratorCard{
+  padding:18px;
+  gap:13px;
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:linear-gradient(145deg,rgba(20,20,37,.96),rgba(11,11,21,.92));
+  box-shadow:var(--shadow-soft);
+}
+.classModeratorCard:hover{
+  transform:translateY(-3px);
+  border-color:rgba(79,70,229,.28);
+  background:linear-gradient(145deg,rgba(24,24,44,.98),rgba(12,12,24,.96));
+  box-shadow:var(--shadow);
+}
+.card-title{font-size:16px}
+.card-subtitle{font-size:11px;color:var(--muted)}
+.avatar{
+  width:42px;height:42px;
+  font-size:14px;
+  box-shadow:0 5px 18px rgba(79,70,229,.2);
+}
+.badge{padding:5px 9px;font-size:9px}
+.card-select-wrapper{margin-top:2px}
+.card-select,.memberSelect{
+  min-height:42px;
+  padding:10px 13px;
+  border-radius:11px;
+  background:#0d0d19;
+  border:1px solid var(--line);
+  color:#fff;
+  font-size:12px;
+}
+.card-select:focus,.memberSelect:focus{
+  border-color:rgba(79,70,229,.5);
+  box-shadow:0 0 0 3px rgba(79,70,229,.1);
+}
+.card-actions{gap:8px}
+.saveModeratorBtn,.view-members-btn{
+  min-height:40px;
+  padding:10px 12px;
+  border-radius:11px;
+  font-size:11px;
+}
+.saveModeratorBtn{
+  background:var(--gradient);
+  box-shadow:0 8px 22px rgba(79,70,229,.16);
+}
+.saveModeratorBtn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 12px 26px rgba(79,70,229,.24)}
+.view-members-btn{
+  background:rgba(255,255,255,.045);
+  color:#c9c9d8;
+}
+
+/* Sections page */
+#sectionsPage .stats-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+#sectionsPage .stat-card{
+  padding:17px 18px;
+  border-radius:16px;
+  background:linear-gradient(145deg,rgba(20,20,37,.95),rgba(12,12,23,.9));
+  box-shadow:var(--shadow-soft);
+}
+#sectionsPage > .cards-grid{
+  grid-template-columns:280px minmax(0,1fr);
+  gap:14px;
+}
+#sectionsPage .classModeratorCard{
+  padding:18px;
+  border-radius:17px;
+  background:linear-gradient(145deg,rgba(20,20,37,.96),rgba(11,11,21,.92));
+}
+#sectionsPage .card-title{margin-bottom:14px}
+#sectionsPage input{
+  width:100%;
+  margin-bottom:9px;
+  padding:11px 13px;
+  border-radius:11px;
+  border:1px solid var(--line);
+  background:#0d0d19;
+  color:#fff;
+  font-size:12px;
+}
+#sectionsPage input:focus{
+  border-color:rgba(79,70,229,.5);
+  box-shadow:0 0 0 3px rgba(79,70,229,.1);
+}
+#sectionsPage .saveModeratorBtn{border-radius:11px;padding:11px}
+#sectionsContainer{
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:12px;
+}
+#sectionsContainer .classModeratorCard{min-height:160px;padding:17px}
+#sectionsContainer p{color:var(--muted);margin:8px 0;font-size:11px}
+#sectionsContainer .delete-btn{
+  margin-top:auto;
+  padding:10px;
+  border-radius:10px;
+  background:rgba(239,68,68,.10);
+  color:#f87171;
+  border:1px solid rgba(239,68,68,.18);
+  font-size:11px;
+}
+#sectionsContainer .delete-btn:hover{
+  background:rgba(239,68,68,.18);
+  box-shadow:none;
+}
+
+/* Members management */
+.membersTopBar{
+  margin-bottom:14px;
+  padding:18px 20px;
+  border-radius:17px;
+  border:1px solid var(--line);
+  background:linear-gradient(145deg,rgba(20,20,37,.96),rgba(11,11,21,.92));
+  box-shadow:var(--shadow-soft);
+}
+.membersTopBar h1{font-size:19px}
+.membersTopBar p{margin-top:5px;color:var(--muted);font-size:11px}
+.refreshButton{
+  padding:10px 13px;
+  border-radius:10px;
+  background:rgba(79,70,229,.14);
+  border:1px solid rgba(79,70,229,.25);
+  font-size:11px;
+}
+.refreshButton:hover{background:rgba(79,70,229,.22);transform:none}
+.membersLayout{
+  grid-template-columns:250px minmax(0,1fr);
+  gap:14px;
+  min-height:550px;
+}
+.sectionsPanel,.membersPanel{
+  background:linear-gradient(145deg,rgba(20,20,37,.96),rgba(11,11,21,.92));
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:16px;
+  box-shadow:var(--shadow-soft);
+}
+.panelTitle{font-size:13px;margin-bottom:12px;color:#fff}
+.sectionSearch input{
+  width:100%;
+  padding:10px 12px;
+  margin-bottom:10px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:#0d0d19;
+  color:#fff;
+  font-size:11px;
+}
+.sectionSearch input:focus{
+  border-color:rgba(79,70,229,.5);
+  box-shadow:0 0 0 3px rgba(79,70,229,.1);
+}
+.sectionRow{
+  gap:10px;
+  padding:10px;
+  margin-bottom:5px;
+  border-radius:11px;
+  border:1px solid transparent;
+}
+.sectionRow:hover{background:rgba(255,255,255,.035)}
+.sectionRow.active{
+  background:linear-gradient(135deg,rgba(79,70,229,.22),rgba(79,70,229,.10));
+  border-color:rgba(79,70,229,.22);
+}
+.sectionIcon{
+  width:35px;height:35px;
+  border-radius:10px;
+  background:rgba(79,70,229,.10);
+  color:#6366f1;
+  font-size:14px;
+}
+.sectionRow.active .sectionIcon{background:rgba(255,255,255,.9);color:#7c3aed}
+.sectionInfo strong{font-size:11px}
+.sectionInfo span{font-size:9px;color:var(--muted)}
+.detailsHeader{
+  padding-bottom:15px;
+  border-bottom:1px solid var(--line);
+}
+.detailsHeader h2{font-size:19px;color:#fff}
+.detailsHeader p{font-size:10px;color:var(--muted)}
+.detailsHeader select{
+  padding:9px 11px;
+  min-width:180px;
+  border-radius:10px;
+  background:#0d0d19;
+  color:#fff;
+  border:1px solid var(--line);
+}
+.detailsHeader button,.addStudentsBtn{
+  background:var(--gradient);
+  color:#fff;
+  border:0;
+  padding:10px 13px;
+  border-radius:10px;
+  font-size:11px;
+  font-weight:800;
+}
+.membersTable{margin-top:14px;gap:7px}
+.studentRow{
+  padding:10px 12px;
+  border-radius:12px;
+  background:rgba(255,255,255,.025);
+  border:1px solid var(--line);
+}
+.studentRow:hover{
+  transform:none;
+  background:rgba(255,255,255,.045);
+  box-shadow:none;
+}
+.studentAvatar{
+  width:35px;height:35px;
+  font-size:13px;
+  background:var(--gradient);
+}
+.studentInfo{margin-left:10px}
+.studentInfo b{font-size:11px;color:#fff}
+.studentInfo small{font-size:9px;color:var(--muted)}
+.deleteMember{
+  width:31px;height:31px;
+  border-radius:9px;
+  background:rgba(239,68,68,.09);
+  color:#f87171;
+}
+.deleteMember:hover{background:#ef4444}
+.emptyState{height:330px;color:var(--muted)}
+.emptyState i{font-size:45px;color:var(--muted-2)}
+.emptyState h3{font-size:15px;color:#fff}
+.emptyState p{font-size:11px}
+
+/* Picker/modal */
+.modal-overlay,.pickerOverlay{
+  background:rgba(3,3,9,.72);
+  backdrop-filter:blur(10px);
+}
+.modal,.pickerBox{
+  max-width:480px;
+  padding:20px;
+  border-radius:18px;
+  border:1px solid var(--line-strong);
+  background:linear-gradient(145deg,#17172a,#0c0c18);
+  box-shadow:0 30px 90px rgba(0,0,0,.55);
+}
+.modal-header,.pickerHeader{margin-bottom:15px}
+.modal-header h2,.pickerHeader h2{font-size:16px;color:#fff}
+.modal-close,.pickerHeader button{
+  width:32px;height:32px;
+  border-radius:9px;
+  background:rgba(255,255,255,.05);
+  color:var(--muted);
+  border:1px solid var(--line);
+}
+.modal-member-list{gap:7px}
+.modal-member-item{
+  padding:9px 11px;
+  border-radius:11px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line);
+}
+.avatar-small{width:30px;height:30px}
+.modal-member-item .member-name{font-size:11px}
+.modal-member-item .member-email{font-size:9px}
+.studentSearch{
+  width:100%;
+  padding:10px 12px;
+  margin-bottom:9px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:#0d0d19;
+  color:#fff;
+}
+.studentList{max-height:350px}
+.pickerUser{
+  gap:10px;
+  padding:9px;
+  border-radius:10px;
+}
+.pickerUser:hover{background:rgba(255,255,255,.04)}
+.pickerUser input{width:16px;height:16px;accent-color:#4f46e5}
+.pickerAvatar{width:32px;height:32px;border-radius:9px;background:var(--gradient);font-size:11px}
+.pickerInfo b{font-size:11px}
+.pickerInfo small{font-size:9px;color:var(--muted)}
+.confirmAddBtn{
+  margin-top:12px;
+  padding:11px;
+  border-radius:10px;
+  background:var(--gradient);
+  font-size:11px;
+}
+
+/* Assignment placeholder */
+#assignmentsPage .no-data{
+  min-height:360px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(20,20,37,.96),rgba(11,11,21,.92));
+  box-shadow:var(--shadow-soft);
+}
+#assignmentsPage .no-data .icon{font-size:45px;opacity:.8}
+#assignmentsPage .no-data h2{font-size:18px}
+#assignmentsPage .no-data p{font-size:11px;color:var(--muted)}
+
+/* Loading / empty */
+.loading-spinner{
+  min-height:130px;
+  padding:35px;
+  border:1px dashed var(--line);
+  border-radius:16px;
+  color:var(--muted);
+  background:rgba(255,255,255,.015);
+}
+.loading-spinner::after{
+  width:18px;height:18px;
+  border-width:2px;
+  border-top-color:#4f46e5;
+}
+.no-data{
+  padding:55px 20px;
+  border:1px dashed var(--line);
+  border-radius:17px;
+  background:rgba(255,255,255,.015);
+  color:var(--muted);
+}
+.no-data h2{color:#fff;font-size:16px}
+.no-data p{font-size:11px}
+
+/* Notifications */
+.notification{
+  right:20px;top:20px;
+  min-width:270px;
+  padding:12px 15px;
+  border-radius:11px;
+  font-size:11px;
+  box-shadow:0 20px 50px rgba(0,0,0,.35);
+}
+.notification.success{background:rgba(22,163,74,.94)}
+.notification.error{background:rgba(220,38,38,.94)}
+.notification.info{background:rgba(79,70,229,.94)}
+
+/* Scrollbars */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#2a2a42;border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:#454565}
+
+/* Tablet/mobile */
+@media(max-width:1050px){
+  .app-container{grid-template-columns:190px minmax(0,1fr)}
+  .page{padding:22px 20px 35px}
+  .app-header{padding:16px 20px}
+  .stats-grid,#sectionsPage .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #sectionsPage > .cards-grid{grid-template-columns:1fr}
+  .membersLayout{grid-template-columns:210px minmax(0,1fr)}
+}
+@media(max-width:760px){
+  .app-container{display:block}
+  .nav-bar{
+    position:sticky;
+    top:0;
+    height:auto;
+    min-height:auto;
+    flex-direction:row;
+    overflow-x:auto;
+    padding:8px;
+    border-right:0;
+    border-bottom:1px solid var(--line);
+    z-index:100;
+  }
+  .nav-bar::before,.nav-bar::after{display:none}
+  .nav-btn{
+    flex:0 0 auto;
+    width:auto;
+    min-width:max-content;
+    justify-content:center;
+    padding:9px 12px;
+    font-size:11px;
+  }
+  .app-header{
+    position:relative;
+    padding:16px;
+  }
+  .page{
+    padding:16px 14px 28px;
+  }
+  .stats-grid,#sectionsPage .stats-grid{grid-template-columns:1fr 1fr;gap:9px}
+  .stat-card{min-height:90px;padding:14px}
+  .stat-number{font-size:23px}
+  .toolbar{flex-direction:column;align-items:stretch}
+  .search-box{min-width:100%}
+  .filter-select{width:100%}
+  .cards-grid{grid-template-columns:1fr}
+  .membersLayout{grid-template-columns:1fr}
+  .sectionsPanel{max-height:250px;overflow:auto}
+  .detailsHeader{flex-direction:column;align-items:stretch}
+  .detailsHeader select,.detailsHeader button{width:100%}
+  .card-actions{flex-direction:column}
+  .notification{left:14px;right:14px;top:14px;min-width:0}
+}
+@media(max-width:430px){
+  .stats-grid,#sectionsPage .stats-grid{grid-template-columns:1fr 1fr}
+  .header-left h1{font-size:19px}
+  .header-left p{font-size:10px}
+  .header-right .header-btn{padding:8px 10px}
+}
+
+    </style>
+
+<style id="light-modern-overrides">
+:root{
+  --bg:#f5f7fb;
+  --surface:#ffffff;
+  --surface-2:#f8fafc;
+  --border:#e2e8f0;
+  --text:#172033;
+  --muted:#64748b;
+  --primary:#4f46e5;
+  --primary-2:#6366f1;
+  --cyan:#06b6d4;
+  --success:#16a34a;
+  --danger:#dc2626;
+  --shadow:0 10px 30px rgba(15,23,42,.07);
+}
+html,body{
+  background:var(--bg)!important;
+  color:var(--text)!important;
+}
+body{
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+}
+.app-container{
+  background:var(--bg)!important;
+}
+.app-header,.topbar,.header,.navbar,.nav-bar{
+  background:rgba(255,255,255,.94)!important;
+  color:var(--text)!important;
+  border-color:var(--border)!important;
+  box-shadow:0 1px 0 rgba(15,23,42,.04)!important;
+}
+.app-header h1,.app-header p,.header h1,.header p,
+.panelTitle,.card-title,.sectionDetailsTitle h2,
+.stat-label,.stat-number,.sectionInfo strong{
+  color:var(--text)!important;
+}
+.nav-btn,.header-btn{
+  background:#fff!important;
+  color:#475569!important;
+  border:1px solid var(--border)!important;
+}
+.nav-btn:hover,.header-btn:hover{
+  background:#f1f5f9!important;
+  color:var(--primary)!important;
+}
+.nav-btn.active{
+  background:linear-gradient(135deg,#4f46e5,#6366f1)!important;
+  color:#fff!important;
+  border-color:transparent!important;
+  box-shadow:0 7px 18px rgba(79,70,229,.20)!important;
+}
+.stat-card,.classModeratorCard,.panel,.card,.membersPanel,
+.modal,.pickerBox,.emptyState,.no-data{
+  background:var(--surface)!important;
+  color:var(--text)!important;
+  border:1px solid var(--border)!important;
+  box-shadow:var(--shadow)!important;
+}
+.stat-icon{
+  background:#eef2ff!important;
+}
+.card-subtitle,.stat-label,.sectionInfo span,.muted,
+small{
+  color:var(--muted)!important;
+}
+input,select,textarea,.card-select,.memberSelect,.studentSearch{
+  background:#fff!important;
+  color:var(--text)!important;
+  border:1px solid #dbe3ef!important;
+  box-shadow:0 1px 2px rgba(15,23,42,.02)!important;
+}
+input::placeholder,textarea::placeholder{
+  color:#94a3b8!important;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:#818cf8!important;
+  box-shadow:0 0 0 4px rgba(99,102,241,.10)!important;
+}
+.badge{
+  border:1px solid var(--border)!important;
+}
+.badge.assigned{
+  background:#ecfdf5!important;
+  color:#15803d!important;
+  border-color:#bbf7d0!important;
+}
+.badge.unassigned{
+  background:#fff7ed!important;
+  color:#c2410c!important;
+  border-color:#fed7aa!important;
+}
+.saveModeratorBtn,.confirmAddBtn,.addStudentsBtn{
+  background:linear-gradient(135deg,#4f46e5,#6366f1)!important;
+  color:#fff!important;
+  border:0!important;
+  box-shadow:0 7px 16px rgba(79,70,229,.18)!important;
+}
+.saveModeratorBtn:hover,.confirmAddBtn:hover,.addStudentsBtn:hover{
+  filter:brightness(.97)!important;
+  transform:translateY(-1px);
+}
+.view-members-btn{
+  background:#eef2ff!important;
+  color:#4f46e5!important;
+  border:1px solid #c7d2fe!important;
+}
+.delete-btn{
+  background:#fff1f2!important;
+  color:#dc2626!important;
+  border:1px solid #fecdd3!important;
+}
+.delete-btn:hover{
+  background:#ffe4e6!important;
+}
+.sectionRow{
+  background:#fff!important;
+  border:1px solid var(--border)!important;
+  color:var(--text)!important;
+}
+.sectionRow:hover,.sectionRow.active{
+  background:#eef2ff!important;
+  border-color:#c7d2fe!important;
+}
+.sectionIcon{
+  background:#eef2ff!important;
+  color:#4f46e5!important;
+}
+.modal-overlay,.pickerOverlay{
+  background:rgba(15,23,42,.38)!important;
+  backdrop-filter:blur(6px);
+}
+.modal-header,.pickerHeader{
+  border-color:var(--border)!important;
+}
+.modal-close,.pickerHeader button{
+  background:#f1f5f9!important;
+  color:#475569!important;
+}
+.student-item,.member-row{
+  background:#fff!important;
+  border-color:var(--border)!important;
+}
+.student-item:hover,.member-row:hover{
+  background:#f8fafc!important;
+}
+.loading-spinner{
+  color:#64748b!important;
+}
+.toast,.notification{
+  box-shadow:0 14px 35px rgba(15,23,42,.12)!important;
+}
+::-webkit-scrollbar{
+  width:8px;
+  height:8px;
+}
+::-webkit-scrollbar-track{
+  background:#f1f5f9;
+}
+::-webkit-scrollbar-thumb{
+  background:#cbd5e1;
+  border-radius:99px;
+}
+::-webkit-scrollbar-thumb:hover{
+  background:#94a3b8;
+}
+@media(max-width:900px){
+  .app-header{
+    padding:18px!important;
+  }
+  .nav-bar{
+    overflow-x:auto!important;
+    -webkit-overflow-scrolling:touch;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app-container">
+
+    <header class="app-header">
+        <div class="header-left">
+          <h1>
+<i class="fa-solid fa-book-open"></i>    <span>Section Management</span>
+</h1>
+<p>Create, organize and manage your study groups.</p>
+        </div>
+        <div class="header-right">
+            <button class="header-btn" onclick="loadModeratorPage()">
+                🔄 Refresh
+            </button>
+        </div>
+    </header>
+
+    <nav class="nav-bar">
+        <button class="nav-btn active" data-page="moderatorPage" onclick="showPage('moderatorPage',this)">
+            🎓 Moderators
+        </button>
+        <button class="nav-btn" data-page="sectionsPage" onclick="showPage('sectionsPage',this)">
+            📚 Sections
+        </button>
+        <button
+class="nav-btn"
+data-page="usersPage"
+onclick="showPage('usersPage',this)">
+
+    👥 Manage Members
+
+</button>
+        <button class="nav-btn" data-page="assignmentsPage" onclick="showPage('assignmentsPage',this)">
+            📝 Assignments
+        </button>
+    </nav>
+
+    <section id="moderatorPage" class="page active">
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Sections</div>
+                <div class="stat-number" id="totalSections">0</div>
+                <div class="stat-icon">📚</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Available Moderators</div>
+                <div class="stat-number" id="totalModerators">0</div>
+                <div class="stat-icon">👤</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Assigned</div>
+                <div class="stat-number" id="assignedCount">0</div>
+                <div class="stat-icon">✅</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Unassigned</div>
+                <div class="stat-number" id="unassignedCount">0</div>
+                <div class="stat-icon">⚠️</div>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Search sections by name..." oninput="renderCards()">
+            </div>
+            <select id="filterSelect" class="filter-select" onchange="renderCards()">
+                <option value="all">📋 All Sections</option>
+                <option value="assigned">✅ Assigned</option>
+                <option value="unassigned">❌ Unassigned</option>
+            </select>
+        </div>
+
+        <div id="classesContainer" class="cards-grid">
+            <div class="loading-spinner">Loading sections...</div>
+        </div>
+
+    </section>
+
+    <section id="sectionsPage" class="page">
+
+      <div class="stats-grid">
+
+          <div class="stat-card">
+              <div class="stat-label">Total Sections</div>
+              <div class="stat-number" id="sectionTotal">0</div>
+              <div class="stat-icon">📚</div>
+          </div>
+
+
+          <div class="stat-card">
+              <div class="stat-label">Total Members</div>
+              <div class="stat-number" id="memberTotal">0</div>
+              <div class="stat-icon">👥</div>
+          </div>
+
+
+          <div class="stat-card">
+              <div class="stat-label">Available Places</div>
+              <div class="stat-number" id="availablePlaces">0</div>
+              <div class="stat-icon">🟢</div>
+          </div>
+
+
+          <div class="stat-card">
+              <div class="stat-label">Capacity Usage</div>
+              <div class="stat-number" id="capacityUsage">0%</div>
+              <div class="stat-icon">📊</div>
+          </div>
+
+      </div>
+
+
+
+      <div class="cards-grid">
+
+
+          <!-- CREATE SECTION -->
+
+          <div class="classModeratorCard">
+
+              <div class="card-title">
+                  📚 Create Section
+              </div>
+
+
+              <input
+              class="card-select"
+              id="sectionName"
+              placeholder="Section name">
+
+
+              <input
+              class="card-select"
+              id="sectionCapacity"
+              type="number"
+              placeholder="Maximum members">
+
+
+              <button
+              class="saveModeratorBtn"
+              onclick="createSection()">
+
+                  ➕ Create Section
+
+              </button>
+
+
+          </div>
+
+
+
+          <!-- YOUR SECTIONS -->
+
+          <div id="sectionsContainer" class="cards-grid">
+
+              <div class="loading-spinner">
+                  Loading sections...
+              </div>
+
+          </div>
+
+
+      </div>
+
+
+  </section>
+  <section id="usersPage" class="page">
+
+
+      <div id="membersManagerContainer">
+
+          <div class="loading-spinner">
+              Loading members...
+          </div>
+
+      </div>
+
+
+  </section>
+
+    <section id="assignmentsPage" class="page">
+        <div class="no-data">
+            <span class="icon">📝</span>
+            <h2>Assignments</h2>
+            <p>Track and manage all assignments.</p>
+        </div>
+    </section>
+
+</div>
+
+<div id="membersModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="modalTitle">👥 Section Members</h2>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div id="modalContent" class="modal-member-list">
+            <div class="modal-empty">Loading members...</div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD STUDENTS MODAL -->
+
+<div id="studentPickerModal" class="pickerOverlay">
+
+    <div class="pickerBox">
+
+
+        <div class="pickerHeader">
+
+            <h2>
+                <i class="fa-solid fa-users"></i>
+                Select Students
+            </h2>
+
+
+            <button onclick="closeStudentPicker()">
+                ✖
+            </button>
+
+        </div>
+
+
+
+        <input
+        id="studentSearch"
+        class="studentSearch"
+        placeholder="Search students..."
+        oninput="searchStudents()">
+
+
+
+
+
+        <div id="studentList" class="studentList">
+
+        </div>
+
+
+
+
+
+        <button
+        class="confirmAddBtn"
+        onclick="confirmAddStudents()">
+
+            <i class="fa-solid fa-user-plus"></i>
+            Confirm Add
+
+        </button>
+
+
+    </div>
+
+</div>
+<script>
+    // ======================================================
+    // SUPABASE
+    // ======================================================
+    const supabaseUrl = "https://rrcdstkptxddphcgxnaz.supabase.co";
+    const supabaseKey = "sb_publishable_eVNkpLJIwWp8qAaQp0ry8w__Cm0woCW";
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+    // ======================================================
+    // GLOBAL VARIABLES
+    // ======================================================
+    let allSections = [];
+    let allModerators = [];
+    let allMembers = [];
+    let allUsers = [];
+
+    const container = document.getElementById("sectionsContainer");
+
+    // ======================================================
+    // NOTIFICATIONS
+    // ======================================================
+    function showNotif(message, type = "info") {
+        document.querySelectorAll(".notification").forEach(n => n.remove());
+
+        const notif = document.createElement("div");
+        const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+        notif.className = `notification ${type}`;
+        notif.innerHTML = `<span class="notif-icon">${icons[type] || 'ℹ️'}</span> ${message}`;
+        document.body.appendChild(notif);
+
+        setTimeout(() => {
+            notif.style.opacity = "0";
+            notif.style.transform = "translateX(100px)";
+            setTimeout(() => notif.remove(), 400);
+        }, 3500);
+    }
+
+    // Keep legacy calls working with the unified notification system.
+    const showToast = showNotif;
+
+    // ======================================================
+    // PAGE NAVIGATION
+    // ======================================================
+    function showPage(pageId, button = null) {
+
+      console.log("Opening page:", pageId);
+
+
+      document
+      .querySelectorAll(".page")
+      .forEach(p => p.classList.remove("active"));
+
+
+      document
+      .querySelectorAll(".nav-btn")
+      .forEach(b => b.classList.remove("active"));
+
+
+
+      const page =
+      document.getElementById(pageId);
+
+
+
+      if(page){
+
+          page.classList.add("active");
+
+      }
+      else{
+
+          console.error(
+              "Page not found:",
+              pageId
+          );
+
+      }
+
+
+
+      if(button){
+
+          button.classList.add("active");
+
+      }
+
+
+
+      // ==========================
+      // LOAD SECTIONS PAGE
+      // ==========================
+
+      if(pageId === "sectionsPage"){
+
+          console.log("Loading sections...");
+
+          loadSectionsPage();
+
+          startSectionRealtime();
+
+      }
+
+
+
+
+      // ==========================
+      // LOAD MEMBERS PAGE
+      // ==========================
+
+      if(pageId === "usersPage"){
+
+          console.log("Loading members...");
+
+          openMembersManager();
+
+      }
+
+  }
+
+    // =============================
+    // SECTION PAGE VARIABLES
+    // =============================
+
+    let sections = [];
+    let members = [];
+
+    // =============================
+    // LOAD SECTION PAGE
+    // =============================
+    async function loadSectionsPage(){
+
+        await loadSections();
+        await loadMembers();
+
+        updateSectionStats();
+        renderSections();
+
+    }
+
+
+    // =====================================================
+    // AUTO REFRESH SECTIONS PAGE (LIGHT)
+    // =====================================================
+let sectionChannel = null;
+function startSectionRealtime(){
+
+    if(sectionChannel)
+        return;
+
+
+    sectionChannel = supabaseClient
+    .channel("sections-live")
+
+
+    .on(
+        "postgres_changes",
+        {
+            event:"*",
+            schema:"public",
+            table:"sections"
+        },
+        ()=>{
+            loadSectionsPage();
+        }
+    )
+
+
+    .on(
+        "postgres_changes",
+        {
+            event:"*",
+            schema:"public",
+            table:"section_members"
+        },
+        ()=>{
+            loadSectionsPage();
+        }
+    )
+
+
+    .subscribe();
+
+}
+    // =============================
+    // LOAD SECTIONS
+    // =============================
+
+    async function loadSections(){
+
+        const {data,error} = await supabaseClient
+        .from("sections")
+        .select("*")
+        .order("id",{ascending:false});
+
+
+        if(error){
+
+            console.error(error);
+            sections=[];
+            return;
+
+        }
+
+
+        sections=data || [];
+
+    }
+
+
+
+    // =============================
+    // LOAD MEMBERS
+    // =============================
+
+    async function loadMembers(){
+
+        const {data,error}=await supabaseClient
+        .from("section_members")
+        .select("*");
+
+
+        if(error){
+
+            console.error(error);
+            members=[];
+            return;
+
+        }
+
+
+        members=data || [];
+
+    }
+
+
+
+    // =============================
+    // UPDATE STATS
+    // =============================
+
+    function updateSectionStats(){
+
+
+        let totalPlaces = 0;
+
+
+        sections.forEach(section=>{
+
+            totalPlaces += Number(section.max_members) || 0;
+
+        });
+
+
+
+        let used =
+        members.length;
+
+
+
+        document.getElementById("sectionTotal")
+        .textContent = sections.length;
+
+
+
+        document.getElementById("memberTotal")
+        .textContent = used;
+
+
+
+        document.getElementById("availablePlaces")
+        .textContent =
+        Math.max(totalPlaces-used,0);
+
+
+
+        document.getElementById("capacityUsage")
+        .textContent =
+        totalPlaces
+        ?
+        Math.round((used/totalPlaces)*100)+"%"
+        :
+        "0%";
+
+    }
+
+
+
+    // =============================
+    // CREATE SECTION
+    // =============================
+    async function createSection(){
+
+        const name = document
+            .getElementById("sectionName")
+            .value
+            .trim();
+
+
+        const capacity = Number(
+            document.getElementById("sectionCapacity").value
+        );
+
+
+        if(!name){
+            showToast("Enter section name","error");
+            return;
+        }
+
+
+        if(!capacity || capacity <= 0){
+            showToast("Enter valid capacity","error");
+            return;
+        }
+
+
+        const {error} = await supabaseClient
+            .from("sections")
+            .insert({
+                name:name,
+                max_members:capacity
+            });
+
+
+        if(error){
+            console.error(error);
+            showToast(error.message,"error");
+            return;
+        }
+
+
+        document.getElementById("sectionName").value="";
+        document.getElementById("sectionCapacity").value="";
+
+
+        showToast("✅ Section created","success");
+
+
+        // refresh immediately
+        await loadSectionsPage();
+
+    }
+
+
+    // =============================
+    // RENDER SECTIONS
+    // =============================
+
+    function renderSections(){
+
+
+        const container =
+        document.getElementById("sectionsContainer");
+
+
+        if(!container)
+            return;
+
+
+
+        container.innerHTML="";
+
+
+
+        if(sections.length===0){
+
+            container.innerHTML=`
+
+            <div class="loading-spinner">
+                No sections created
+            </div>
+
+            `;
+
+            return;
+
+        }
+
+
+
+        sections.forEach(section=>{
+
+
+            const count =
+            members.filter(
+                m=>m.section_id==section.id
+            ).length;
+
+
+
+            container.innerHTML +=`
+
+            <div class="classModeratorCard">
+
+
+                <div class="card-title">
+                    📚 ${section.name}
+                </div>
+
+
+                <p>
+                    👥 Members:
+                    ${count}/${section.max_members}
+                </p>
+
+
+                <p>
+                    🟢 Available:
+                    ${section.max_members-count}
+                </p>
+
+
+                <button
+                class="delete-btn"
+                onclick="deleteSection(${section.id})">
+
+                    🗑 Delete
+
+                </button>
+
+
+            </div>
+
+            `;
+
+
+        });
+
+
+    }
+
+
+
+    // =============================
+    // DELETE SECTION
+    // =============================
+
+    async function deleteSection(id){
+
+      if(!confirm("Delete this section?"))
+          return;
+
+
+      await supabaseClient
+      .from("section_members")
+      .delete()
+      .eq("section_id",id);
+
+
+      const {error} = await supabaseClient
+      .from("sections")
+      .delete()
+      .eq("id",id);
+
+
+      if(error){
+          console.error(error);
+          showToast(error.message,"error");
+          return;
+      }
+
+
+      showToast("🗑 Deleted","success");
+
+
+      await loadSectionsPage();
+
+  }
+
+
+    // START
+
+      loadSectionsPage();
+
+
+    // ======================================================
+    // LOAD DATA - FIXED VERSION
+    // ======================================================
+    async function loadModeratorPage() {
+        container.innerHTML = `<div class="loading-spinner">Loading sections...</div>`;
+
+        try {
+            console.log("🔄 Loading data...");
+
+            // 1. Load sections
+            const { data: sections, error: sectionError } = await supabaseClient
+                .from("sections")
+                .select("*")
+                .order("name");
+
+            if (sectionError) {
+                console.error("❌ Sections error:", sectionError);
+                throw new Error(`Sections: ${sectionError.message}`);
+            }
+
+            console.log(`✅ Loaded ${sections?.length || 0} sections`);
+            allSections = sections || [];
+
+            // 2. Load ALL users (not just moderators - we'll filter differently)
+            const { data: users, error: usersError } = await supabaseClient
+                .from("users")
+                .select("id, username, email, role, status")
+                .eq("status", "approved");
+
+            if (usersError) {
+                console.error("❌ Users error:", usersError);
+                // Don't throw here, we can still work with sections
+                allUsers = [];
+                allModerators = [];
+            } else {
+                console.log(`✅ Loaded ${users?.length || 0} users`);
+                allUsers = users || [];
+
+                // Try to filter by role if it exists, otherwise use all users
+                try {
+                    allModerators = allUsers.filter(u =>
+                        String(u.role || "").toLowerCase() === "moderator"
+                    );
+                } catch (e) {
+                    console.log("⚠️ Could not read moderator roles");
+                    allModerators = [];
+                }
+                console.log(`✅ Found ${allModerators.length} potential moderators`);
+            }
+
+            // 3. Load section members
+            try {
+                const { data: members, error: membersError } = await supabaseClient
+                    .from("section_members")
+                    .select("*");
+
+                if (membersError) {
+                    console.error("❌ Members error:", membersError);
+                    allMembers = [];
+                } else {
+                    allMembers = members || [];
+                    console.log(`✅ Loaded ${allMembers.length} member assignments`);
+                }
+            } catch (e) {
+                console.warn("⚠️ Could not load members:", e);
+                allMembers = [];
+            }
+
+            updateStats();
+            renderCards();
+            showNotif(`Loaded ${allSections.length} sections, ${allModerators.length} moderators`, "success");
+
+        } catch (err) {
+            console.error("❌ Fatal error:", err);
+            container.innerHTML = `
+                <div class="no-data" style="grid-column:1/-1;">
+                    <span class="icon">❌</span>
+                    <h2>Failed to load data</h2>
+                    <p>${escapeHTML(err.message || 'Unknown error')}</p>
+                    <br>
+                    <button class="saveModeratorBtn" onclick="loadModeratorPage()" style="margin:0 auto; max-width:200px;">
+                        🔄 Try Again
+                    </button>
+                </div>
+            `;
+            showNotif("Unable to load data. Check console for details.", "error");
+        }
+    }
+
+    // ======================================================
+    // UPDATE STATISTICS
+    // ======================================================
+    function updateStats() {
+        const assigned = allSections.filter(s => s.moderator_id).length || 0;
+
+        document.getElementById("totalSections").textContent = allSections.length || 0;
+        document.getElementById("totalModerators").textContent = allModerators.length || 0;
+        document.getElementById("assignedCount").textContent = assigned;
+        document.getElementById("unassignedCount").textContent = (allSections.length || 0) - assigned;
+    }
+
+    // ======================================================
+    // UTILITY FUNCTIONS
+    // ======================================================
+    function getInitials(name) {
+        if (!name) return "?";
+        return name.split(" ").map(x => x[0]).join("").substring(0, 2).toUpperCase();
+    }
+
+    function escapeHTML(text = "") {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function getRandomColor(name) {
+        const colors = ['#3b82f6', '#4f46e5', '#ec4899', '#f59e0b', '#22c55e', '#06b6d4'];
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) {
+            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        return colors[Math.abs(hash) % colors.length];
+    }
+
+    function getSectionMembers(sectionId) {
+        return allMembers.filter(m => m.section_id === sectionId);
+    }
+
+    function getMemberUsers(sectionId) {
+        const memberIds = getSectionMembers(sectionId).map(m => m.user_id);
+        return allUsers.filter(u => memberIds.includes(u.id));
+    }
+
+    // ======================================================
+    // RENDER CARDS
+    // ======================================================
+    function renderCards() {
+
+      const container = document.getElementById("classesContainer");
+
+      if (!container) return;
+
+      let sections = [...allSections];
+
+      const search = (document.getElementById("searchInput")?.value || "")
+          .trim()
+          .toLowerCase();
+
+      if (search) {
+          sections = sections.filter(s =>
+              (s.name || "").toLowerCase().includes(search)
+          );
+      }
+
+      const filter = document.getElementById("filterSelect")?.value || "all";
+
+      if (filter === "assigned") {
+          sections = sections.filter(s => s.moderator_id);
+      } else if (filter === "unassigned") {
+          sections = sections.filter(s => !s.moderator_id);
+      }
+
+      if (!sections.length) {
+          container.innerHTML = `
+              <div class="no-data" style="grid-column:1/-1;">
+                  <span class="icon">📭</span>
+                  <h2>No Sections Found</h2>
+                  <p>${allSections.length === 0
+                      ? "Create your first section!"
+                      : "Try adjusting your search or filter."}</p>
+              </div>
+          `;
+          return;
+      }
+
+      container.innerHTML = sections.map(section => {
+
+          const moderator = allModerators.find(m => m.id === section.moderator_id);
+          const assigned = !!moderator;
+          const initials = getInitials(moderator?.username || moderator?.email || "NA");
+          const memberCount = getSectionMembers(section.id).length;
+          const color = getRandomColor(section.name || "");
+
+          return `
+              <div class="classModeratorCard">
+
+                  <div class="card-top">
+
+                      <div class="card-title-group">
+
+                          <div class="card-title">
+                              <span class="section-emoji">📚</span>
+                              ${escapeHTML(section.name)}
+                          </div>
+
+                          <div class="card-subtitle">
+                              ${
+                                  assigned
+                                  ? `👤 Moderator: <strong>${escapeHTML(moderator.username || moderator.email)}</strong>`
+                                  : "⚠️ No moderator assigned"
+                              }
+                          </div>
+
+                      </div>
+
+                      <div class="avatar"
+                          style="background:linear-gradient(135deg,${color},${color}cc);">
+                          ${initials}
+                      </div>
+
+                  </div>
+
+                  <div class="badge-group">
+
+                      <span class="badge ${assigned ? "assigned" : "unassigned"}">
+                          ${assigned ? "🟢 Assigned" : "🔴 Unassigned"}
+                      </span>
+
+                      <span class="badge moderator-count">
+                          👥 ${memberCount} member${memberCount !== 1 ? "s" : ""}
+                      </span>
+
+                  </div>
+
+                  <div class="card-select-wrapper">
+
+                      <select class="memberSelect" id="moderator_${section.id}">
+
+                          <option value="">— No moderator —</option>
+
+                          ${allModerators.map(mod => `
+                              <option value="${mod.id}"
+                                  ${section.moderator_id === mod.id ? "selected" : ""}>
+                                  ${escapeHTML(mod.username || mod.email)}
+                              </option>
+                          `).join("")}
+
+                      </select>
+
+                  </div>
+
+                  <div class="card-actions">
+
+                      <button
+                          class="saveModeratorBtn"
+                          onclick="saveSectionModerator(${section.id}, this)">
+                          💾 Save Changes
+                      </button>
+
+                      ${
+                          memberCount > 0
+                          ? `
+                          <button
+                              class="view-members-btn"
+                              onclick="openMembersModal(${section.id})">
+                              👥 ${memberCount}
+                          </button>
+                          `
+                          : ""
+                      }
+
+                  </div>
+
+              </div>
+          `;
+
+      }).join("");
+
+  }
+    // ======================================================
+    // SAVE MODERATOR
+    // ======================================================
+    async function saveSectionModerator(sectionId, button) {
+        const select = document.getElementById(`moderator_${sectionId}`);
+        if (!select) {
+            showNotif("Moderator selector not found.", "error");
+            return;
+        }
+
+        const moderatorId = select.value || null;
+        const selectedModerator = allModerators.find(m => m.id === moderatorId);
+
+        button.disabled = true;
+        button.innerHTML = "⏳ Saving...";
+
+        try {
+            const { error } = await supabaseClient
+                .from("sections")
+                .update({ moderator_id: moderatorId })
+                .eq("id", sectionId);
+
+            if (error) throw error;
+
+            const section = allSections.find(s => s.id === sectionId);
+            if (section) {
+                section.moderator_id = moderatorId;
+            }
+
+            updateStats();
+
+            const name = selectedModerator?.username || selectedModerator?.email || 'No moderator';
+            button.innerHTML = "✅ Saved!";
+            showNotif(`Moderator updated: ${name}`, "success");
+
+            setTimeout(() => {
+                renderCards();
+            }, 500);
+
+        } catch (err) {
+            console.error(err);
+            button.disabled = false;
+            button.innerHTML = "💾 Save Changes";
+            showNotif(err.message || "Unable to save moderator.", "error");
+        }
+    }
+
+
+    async function openMembersManager() {
+
+      const page = document.getElementById("membersManagerContainer");
+
+
+page.innerHTML = `
+
+<div class="loading-spinner">
+
+  Loading members...
+
+</div>
+
+`;
+
+
+        try {
+
+            const [
+                sectionsResult,
+                usersResult,
+                membersResult
+            ] = await Promise.all([
+
+                supabaseClient
+                .from("sections")
+                .select("*")
+                .order("name"),
+
+
+                supabaseClient
+                .from("users")
+                .select("id,username,email")
+                .eq("status","approved"),
+
+
+                supabaseClient
+                .from("section_members")
+                .select("*")
+
+            ]);
+
+
+
+            if(sectionsResult.error)
+                throw sectionsResult.error;
+
+            if(usersResult.error)
+                throw usersResult.error;
+
+            if(membersResult.error)
+                throw membersResult.error;
+
+
+
+            const sections = sectionsResult.data || [];
+            const users = usersResult.data || [];
+            const members = membersResult.data || [];
+
+
+
+
+            page.innerHTML = `
+
+
+            <div class="membersTopBar">
+
+                <div>
+
+                    <h1>
+                        Members Center
+                    </h1>
+
+                    <p>
+                        Manage students and organize sections
+                    </p>
+
+                </div>
+
+
+                <button
+                class="refreshButton"
+                onclick="openMembersManager()">
+
+                    <i class="fa-solid fa-rotate"></i>
+                    Refresh
+
+                </button>
+
+
+            </div>
+
+
+
+
+            <div class="membersLayout">
+
+
+                <!-- SECTIONS -->
+
+                <div class="sectionsPanel">
+
+
+                    <div class="panelTitle">
+
+                        Sections
+
+                    </div>
+
+
+
+                    <div class="sectionSearch">
+
+                        <input
+                        placeholder="Search section..."
+                        oninput="filterSections(this.value)">
+
+                    </div>
+
+
+
+
+                    <div id="sectionsList">
+
+
+                    ${
+                        sections.map((section,index)=>{
+
+
+                            const count =
+                            members.filter(
+                                m=>m.section_id==section.id
+                            ).length;
+
+
+
+                            return `
+
+
+                            <div
+                            class="sectionRow ${index===0?'active':''}"
+                            onclick="showSectionMembers(${section.id},this)">
+
+
+                                <div class="sectionIcon">
+
+                                    <i class="fa-solid fa-layer-group"></i>
+
+                                </div>
+
+
+                                <div class="sectionInfo">
+
+                                    <strong>
+                                        ${section.name}
+                                    </strong>
+
+
+                                    <span>
+
+                                        ${count}
+                                        /
+                                        ${section.max_members}
+                                        Members
+
+                                    </span>
+
+                                </div>
+
+
+
+                            </div>
+
+
+
+                            `;
+
+
+                        }).join("")
+                    }
+
+
+                    </div>
+
+
+                </div>
+
+
+
+
+
+                <!-- DETAILS -->
+
+
+                <div class="membersPanel">
+
+
+                    <div id="sectionDetails">
+
+
+                    ${
+                        sections.length ?
+
+                        renderSectionDetails(
+                            sections[0],
+                            users,
+                            members
+                        )
+
+                        :
+
+                        `
+                        <div class="emptyState">
+
+                            <i class="fa-solid fa-folder-open"></i>
+
+                            <h3>
+                                No Sections
+                            </h3>
+
+                        </div>
+                        `
+
+                    }
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            `;
+
+
+
+
+            window.allSections = sections;
+            window.allUsers = users;
+            window.allMembers = members;
+
+
+        }
+
+
+        catch(err){
+
+            console.error(err);
+
+
+            page.innerHTML = `
+
+            <div class="no-data">
+
+                ❌ ${err.message}
+
+            </div>
+
+            `;
+
+        }
+
+    }
+
+
+
+
+
+
+    function renderSectionDetails(section, users, members) {
+
+
+      const sectionMembers =
+          members.filter(
+              m => m.section_id == section.id
+          );
+
+
+
+      return `
+
+
+      <div class="detailsHeader">
+
+
+          <div class="sectionDetailsTitle">
+
+              <h2>
+                  ${section.name}
+              </h2>
+
+
+              <p>
+                  ${sectionMembers.length}
+                  /
+                  ${section.max_members}
+                  students
+              </p>
+
+
+          </div>
+
+
+
+          <button
+          class="addStudentsBtn"
+          onclick="openStudentPicker(${section.id})">
+
+
+              <i class="fa-solid fa-user-plus"></i>
+
+              Add Students
+
+
+          </button>
+
+
+
+      </div>
+
+
+
+
+
+
+
+      <div class="membersTable">
+
+
+      ${
+          sectionMembers.length > 0 ?
+
+
+          sectionMembers.map(member=>{
+
+
+              const user =
+              users.find(
+                  u=>u.id == member.user_id
+              );
+
+
+
+              const name =
+              user?.username ||
+              "Unknown";
+
+
+
+              const email =
+              user?.email ||
+              "No email";
+
+
+
+              return `
+
+
+
+              <div class="studentRow">
+
+
+
+                  <div class="studentAvatar">
+
+                      ${
+                          name
+                          .substring(0,1)
+                          .toUpperCase()
+                      }
+
+                  </div>
+
+
+
+
+
+                  <div class="studentInfo">
+
+
+                      <b>
+                          ${name}
+                      </b>
+
+
+                      <small>
+                          ${email}
+                      </small>
+
+
+                  </div>
+
+
+
+
+
+                  <button
+
+                  class="deleteMember"
+
+                  onclick="removeMember(${member.id})">
+
+
+                      <i class="fa-solid fa-trash"></i>
+
+
+                  </button>
+
+
+
+              </div>
+
+
+
+              `;
+
+
+          }).join("")
+
+
+
+          :
+
+
+
+          `
+
+
+          <div class="emptyState">
+
+
+              <i class="fa-solid fa-users-slash"></i>
+
+
+              <h3>
+                  No Students
+              </h3>
+
+
+              <p>
+                  Click "Add Students" to assign members
+              </p>
+
+
+
+          </div>
+
+
+          `
+
+      }
+
+
+
+      </div>
+
+
+
+      `;
+
+
+  }
+
+  let selectedSectionID = null;
+  let selectedStudents = [];
+
+
+
+  function openStudentPicker(sectionId){
+
+      if(!window.allUsers || window.allUsers.length===0){
+
+          alert("Users are still loading");
+          return;
+
+      }
+
+      selectedSectionID = sectionId;
+
+      selectedStudents = [];
+
+
+      document
+      .getElementById("studentPickerModal")
+      .style.display="flex";
+
+
+      renderStudentPicker();
+
+  }
+
+
+
+
+  function closeStudentPicker(){
+
+      document
+      .getElementById("studentPickerModal")
+      .style.display="none";
+
+  }
+
+
+
+  function renderStudentPicker(search = ""){
+console.log("ALL USERS:", window.allUsers);
+
+      const list =
+      document.getElementById("studentList");
+
+
+      if(!list){
+
+          console.error(
+              "studentList not found"
+          );
+
+          return;
+
+      }
+
+
+
+      const users =
+      window.allUsers.filter(user=>{
+
+
+        const role =
+String(user.role || "")
+.toLowerCase();
+
+
+
+if(
+    role === "moderator" ||
+    role === "admin"
+){
+
+    return false;
+
+}
+
+
+
+
+          // Remove users already in this section
+          const alreadyAdded =
+          window.allMembers.some(
+              m =>
+              String(m.section_id)
+              ===
+              String(selectedSectionID)
+              &&
+              String(m.user_id)
+              ===
+              String(user.id)
+          );
+
+
+
+          if(alreadyAdded){
+
+              return false;
+
+          }
+
+
+
+
+          // Search
+          const text =
+          (
+              user.username || ""
+          )
+          +
+          " "
+          +
+          (
+              user.email || ""
+          )
+          +
+          " "
+          +
+          (
+              user.id || ""
+          );
+
+
+
+          return text
+          .toLowerCase()
+          .includes(
+              search
+              .toLowerCase()
+          );
+
+
+      });
+
+
+
+
+
+      if(users.length===0){
+
+
+          list.innerHTML=`
+
+          <div class="emptyPicker">
+
+              🔍 No available students found
+
+          </div>
+
+          `;
+
+
+          return;
+
+      }
+
+
+
+
+
+
+      list.innerHTML =
+      users.map(user=>`
+
+
+          <label class="pickerUser">
+
+
+              <input
+
+              type="checkbox"
+
+              value="${user.id}"
+
+              onchange="toggleStudent('${user.id}')"
+
+              ${selectedStudents.includes(user.id)
+              ?
+              "checked"
+              :
+              ""}
+
+              >
+
+
+
+              <div class="pickerAvatar">
+
+                  ${
+                      (user.username || "U")
+                      .charAt(0)
+                      .toUpperCase()
+                  }
+
+              </div>
+
+
+
+              <div class="pickerInfo">
+
+
+                  <b>
+
+                      ${user.username || "Unknown"}
+
+                  </b>
+
+
+                  <small>
+
+                      ${user.email || "No email"}
+
+                  </small>
+
+
+              </div>
+
+
+
+          </label>
+
+
+      `).join("");
+
+  }
+  function searchStudents(){
+
+      const value =
+      document.getElementById(
+          "studentSearch"
+      ).value;
+
+
+      renderStudentPicker(value);
+
+  }
+
+
+
+
+  function toggleStudent(id){
+
+
+      if(selectedStudents.includes(id)){
+
+
+          selectedStudents =
+          selectedStudents.filter(
+              x=>x!==id
+          );
+
+
+      }
+      else{
+
+
+          selectedStudents.push(id);
+
+      }
+
+
+  }
+
+
+
+
+
+
+  async function confirmAddStudents(){
+
+
+      if(selectedStudents.length===0){
+
+          alert("Select students first");
+
+          return;
+
+      }
+
+
+
+      const insertData =
+      selectedStudents.map(id=>({
+
+          section_id:selectedSectionID,
+
+          user_id:id
+
+      }));
+
+
+
+      const {
+          error
+      } =
+      await supabaseClient
+      .from("section_members")
+      .insert(insertData);
+
+
+
+      if(error){
+
+          alert(error.message);
+
+          return;
+
+      }
+
+
+
+      closeStudentPicker();
+
+
+      openMembersManager();
+
+
+  }
+
+  function filterSections(value){
+
+      const search =
+      value.toLowerCase().trim();
+
+
+      const list =
+      document.getElementById("sectionsList");
+
+
+      if(!list) return;
+
+
+
+      const rows =
+      list.querySelectorAll(".sectionRow");
+
+
+
+      rows.forEach(row=>{
+
+
+          const text =
+          row.innerText.toLowerCase();
+
+
+
+          if(text.includes(search)){
+
+              row.style.display="flex";
+
+          }
+          else{
+
+              row.style.display="none";
+
+          }
+
+
+      });
+
+  }
+
+    async function assignMultipleMembers(sectionId){
+
+
+        const select =
+        document.getElementById(
+            `member_${sectionId}`
+        );
+
+
+        const selectedUsers =
+        Array.from(select.selectedOptions)
+        .map(option=>option.value);
+
+
+
+        if(selectedUsers.length === 0){
+
+            alert("Select at least one student");
+
+            return;
+        }
+
+
+
+        const data =
+        selectedUsers.map(userId=>({
+
+            section_id: sectionId,
+
+            user_id: userId
+
+        }));
+
+
+
+        const {
+            error
+        } =
+        await supabaseClient
+        .from("section_members")
+        .insert(data);
+
+
+
+        if(error){
+
+            console.error(error);
+
+            alert(error.message);
+
+            return;
+
+        }
+
+
+
+        alert(
+            `${selectedUsers.length} students added`
+        );
+
+
+        openMembersManager();
+
+    }
+
+
+    function showSectionMembers(id,element){
+
+
+        document
+        .querySelectorAll(".sectionRow")
+        .forEach(e=>e.classList.remove("active"));
+
+
+        element.classList.add("active");
+
+
+
+        const section =
+        window.allSections.find(
+            s=>s.id==id
+        );
+
+
+        document
+        .getElementById("sectionDetails")
+        .innerHTML =
+        renderSectionDetails(
+            section,
+            window.allUsers,
+            window.allMembers
+        );
+
+    }
+
+
+    async function assignMember(sectionId){
+
+    const select =
+    document.getElementById(`member_${sectionId}`);
+
+    if(!select.value){
+        showNotif("Select a student","error");
+        return;
+    }
+
+    const {error}=await supabaseClient
+    .from("section_members")
+    .insert({
+        section_id:sectionId,
+        user_id:select.value
+    });
+
+    if(error){
+        showNotif(error.message,"error");
+        return;
+    }
+
+    showNotif("Member assigned","success");
+
+    openMembersManager();
+
+}
+
+async function removeMember(id){
+
+    const {error}=await supabaseClient
+    .from("section_members")
+    .delete()
+    .eq("id",id);
+
+    if(error){
+        showNotif(error.message,"error");
+        return;
+    }
+
+    showNotif("Member removed","success");
+
+    openMembersManager();
+
+}
+
+
+
+    // ======================================================
+    // MEMBERS MODAL
+    // ======================================================
+    function openMembersModal(sectionId) {
+        const section = allSections.find(s => s.id === sectionId);
+        if (!section) return;
+
+        const memberUsers = getMemberUsers(sectionId);
+        const modal = document.getElementById('membersModal');
+        const title = document.getElementById('modalTitle');
+        const content = document.getElementById('modalContent');
+
+        title.textContent = `👥 ${section.name} — Members`;
+
+        if (!memberUsers.length) {
+            content.innerHTML = `<div class="modal-empty">No members in this section yet.</div>`;
+        } else {
+            content.innerHTML = memberUsers.map(user => {
+                const initials = getInitials(user.username || user.email || 'U');
+                return `
+                    <div class="modal-member-item">
+                        <div class="avatar-small">${initials}</div>
+                        <div>
+                            <div class="member-name">${escapeHTML(user.username || user.email || 'Unnamed')}</div>
+                            ${user.email ? `<div class="member-email">${escapeHTML(user.email)}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        document.getElementById('membersModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    document.getElementById('membersModal')?.addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeModal();
+    });
+
+    // ======================================================
+    // INITIALIZATION
+    // ======================================================
+    document.addEventListener("DOMContentLoaded", () => {
+        loadModeratorPage();
+    });
+
+    // ======================================================
+    // GLOBAL FUNCTIONS
+    // ======================================================
+    window.openStudentPicker = openStudentPicker;
+window.closeStudentPicker = closeStudentPicker;
+window.searchStudents = searchStudents;
+window.toggleStudent = toggleStudent;
+window.confirmAddStudents = confirmAddStudents;
+window.showSectionMembers = showSectionMembers;
+window.removeMember = removeMember;
+    window.showPage = showPage;
+    window.loadModeratorPage = loadModeratorPage;
+    window.saveSectionModerator = saveSectionModerator;
+    window.showNotif = showNotif;
+    window.openMembersModal = openMembersModal;
+    window.closeModal = closeModal;
+    window.renderCards = renderCards;
+</script>
+
+</body>
+</html>
